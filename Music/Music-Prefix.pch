@@ -6,7 +6,7 @@
 
 #import <Availability.h>
 
-#define BASE_URL    "http://54.201.193.207/index.php"
+#define BASE_URL    "http://54.201.193.207/MusicAPI/index.php"
 
 #ifndef __IPHONE_3_0
 #warning "This project uses features only available in iOS SDK 3.0 and later."

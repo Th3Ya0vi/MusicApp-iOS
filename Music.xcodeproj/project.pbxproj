@@ -66,6 +66,8 @@
 		78705C5A1858FFFE00708E20 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78705C591858FFFE00708E20 /* PlaylistView.xib */; };
 		78705C5D1859003100708E20 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C5C1859003100708E20 /* PlaylistViewController.m */; };
 		78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */; };
+		78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B9BB441879698F0075B2A5 /* iRate.bundle */; };
+		78B9BB481879698F0075B2A5 /* iRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B9BB461879698F0075B2A5 /* iRate.m */; };
 		78C8024E1862501600AE709E /* ExploreView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78C8024D1862501600AE709E /* ExploreView.xib */; };
 		78C802511862504E00AE709E /* ExploreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C802501862504E00AE709E /* ExploreViewController.m */; };
 		78CA43E318510AE200E4A9C9 /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CA43E218510AE200E4A9C9 /* DownloadsViewController.m */; };
@@ -181,6 +183,9 @@
 		78705C5B1859003100708E20 /* PlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistViewController.h; path = Controllers/PlaylistViewController.h; sourceTree = "<group>"; };
 		78705C5C1859003100708E20 /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlaylistViewController.m; path = Controllers/PlaylistViewController.m; sourceTree = "<group>"; };
 		78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageSubtitleCellView.xib; sourceTree = "<group>"; };
+		78B9BB441879698F0075B2A5 /* iRate.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = iRate.bundle; path = iRate/iRate.bundle; sourceTree = "<group>"; };
+		78B9BB451879698F0075B2A5 /* iRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iRate.h; path = iRate/iRate.h; sourceTree = "<group>"; };
+		78B9BB461879698F0075B2A5 /* iRate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iRate.m; path = iRate/iRate.m; sourceTree = "<group>"; };
 		78C8024D1862501600AE709E /* ExploreView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreView.xib; sourceTree = "<group>"; };
 		78C8024F1862504E00AE709E /* ExploreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ExploreViewController.h; path = Controllers/ExploreViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78C802501862504E00AE709E /* ExploreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExploreViewController.m; path = Controllers/ExploreViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -364,6 +369,7 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
+				78B9BB49187969980075B2A5 /* iRate */,
 				780A1808184D0DE00082A89F /* BVReorderTableView */,
 				780A17CB184B621A0082A89F /* AFNetworking */,
 				780A17DF184B621A0082A89F /* FXBlurView */,
@@ -437,6 +443,16 @@
 				780A180A184D0DE00082A89F /* BVReorderTableView.m */,
 			);
 			path = BVReorderTableView;
+			sourceTree = "<group>";
+		};
+		78B9BB49187969980075B2A5 /* iRate */ = {
+			isa = PBXGroup;
+			children = (
+				78B9BB441879698F0075B2A5 /* iRate.bundle */,
+				78B9BB451879698F0075B2A5 /* iRate.h */,
+				78B9BB461879698F0075B2A5 /* iRate.m */,
+			);
+			name = iRate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -531,6 +547,7 @@
 				780A17C5184B62040082A89F /* LoadingView.xib in Resources */,
 				780A17C8184B62040082A89F /* SearchView.xib in Resources */,
 				780A17C9184B62040082A89F /* SubtitleCellView.xib in Resources */,
+				78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */,
 				78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */,
 				78CA43E518510BB400E4A9C9 /* DownloadsView.xib in Resources */,
 				780A172918451C3C0082A89F /* Images.xcassets in Resources */,
@@ -562,6 +579,7 @@
 				7869C82C185DFD5300F877EE /* EmptyPlaylistViewController.m in Sources */,
 				780A17FA184B621A0082A89F /* AFURLSessionManager.m in Sources */,
 				78705C4E1855009000708E20 /* Explore.m in Sources */,
+				78B9BB481879698F0075B2A5 /* iRate.m in Sources */,
 				780A179518452C1E0082A89F /* Song.m in Sources */,
 				780A17FB184B621A0082A89F /* FXBlurView.m in Sources */,
 				780A17FD184B621A0082A89F /* UIActivityIndicatorView+AFNetworking.m in Sources */,

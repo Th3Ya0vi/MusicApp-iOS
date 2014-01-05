@@ -19,6 +19,7 @@
 
 @property (strong, nonatomic) Explore *explore;
 @property (weak, nonatomic) IBOutlet UITableView *tableExplore;
+@property (strong, nonatomic) NSMutableArray *collectionViews;
 
 @end
 
@@ -31,6 +32,7 @@
     {
         [self setTitle:@"Explore"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"Explore"]];
+        self.collectionViews = [[NSMutableArray alloc] init];
         
         self.explore = [[Explore alloc] init];
     }
@@ -51,6 +53,7 @@
 
     [[self explore] fetchWithBlock:^
      {
+         [[self collectionViews] removeAllObjects];
          [[self tableExplore] reloadData];
     }];
 }
@@ -89,8 +92,9 @@
     }
     
     UICollectionView *items = (UICollectionView *)[cell viewWithTag:100];
-    if (items)
-        [items removeFromSuperview];
+    
+    if (items && [items isDescendantOfView:cell])
+        return cell;
     
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     [flow setScrollDirection:UICollectionViewScrollDirectionHorizontal];
@@ -106,8 +110,8 @@
     [items setDelegate:self];
     [items setDataSource:self];
     
+    [[self collectionViews] addObject:items];
     [cell addSubview:items];
-
     
     return cell;
 }
@@ -116,7 +120,8 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [[[[self explore] albums] objectAtIndex:section] count];
+    NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
+    return [[[[self explore] albums] objectAtIndex:sec] count];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

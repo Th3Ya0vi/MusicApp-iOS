@@ -25,7 +25,6 @@
         self.currentStatus = STOPPED;
         self.isRepeatOn = NO;
         self.isShuffleOn = NO;
-        self.wasInterrupted = NO;
         
         __block Player *weakSelf = self;
         

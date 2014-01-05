@@ -49,8 +49,16 @@
     {
         NSLog(@"Failed to fetch album art: %@", [error localizedDescription]);
         
-        self.completionBlock([UIImage imageNamed:@"DefaultAlbumArtDark"], NO);
-        [[[AlbumArtManager shared] requests] removeObject:self];
+        if ([self size] == SMALL)
+        {
+            self.completionBlock([UIImage imageNamed:@"DefaultAlbumArtDark"], NO);
+            [[[AlbumArtManager shared] requests] removeObject:self];
+        }
+        else
+        {
+            [self setSize:SMALL];
+            [self start];
+        }
     }];
     
     [[self requestOperation] start];

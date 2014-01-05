@@ -1,0 +1,322 @@
+//
+//  SearchViewController.m
+//  Music
+//
+//  Created by Tushar Soni on 11/26/13.
+//  Copyright (c) 2013 Tushar Soni. All rights reserved.
+//
+
+#import "SearchViewController.h"
+#import "Search.h"
+#import "Song.h"
+#import "User.h"
+#import "AlbumViewController.h"
+#import "AlbumArtManager.h"
+#import "UIImageView+AFNetworking.h"
+#import "Player.h"
+#import "Activity.h"
+
+#define MIN_SEARCH_LENGTH   3
+
+@interface SearchViewController ()
+
+@property (weak, nonatomic) IBOutlet UIView *viewResults;
+@property (weak, nonatomic) IBOutlet UITextField *searchField;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic) enum SearchScope selectedScope;
+@property (strong, nonatomic) Search *search;
+@property (strong, nonatomic) NSArray *results;
+@property (strong, nonatomic) NSMutableArray *subViews;
+@property (nonatomic) BOOL goingToDisplayAlbum;
+@property (nonatomic) NSInteger selectedRow;
+
+@end
+
+@implementation SearchViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];;
+        self.selectedScope = SONG;
+        self.title = @"Search";
+        self.subViews = [[NSMutableArray alloc] initWithCapacity:2];
+        self.goingToDisplayAlbum = NO;
+    }
+    return self;
+}
+
+#pragma mark - View
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setGoingToDisplayAlbum:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (![self goingToDisplayAlbum])
+    {
+        [self reset];
+        [[self searchField] setText:@""];
+        [[User currentUser] save];
+    }
+}
+
+#pragma mark Table Data Source
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return nil;
+}
+
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return ([self results]) ? [[self results] count] : 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return ([self selectedScope] == SONG || [[self search] isFinalSearch] == NO) ? 65 : 95;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellIdentifier;
+    NSString *cellNib;
+    
+    if ([self selectedScope] == ALBUM && [[self search] isFinalSearch])
+    {
+        cellIdentifier = @"ImageSubtitleCell";
+        cellNib = @"ImageSubtitleCellView";
+    }
+    else
+    {
+        cellIdentifier = @"SubtitleCell";
+        cellNib = @"SubtitleCellView";
+    }
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    if (cell == nil)
+    {
+        NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:cellNib owner:self options:nil];
+        cell = [bundle firstObject];
+    }
+    
+    UILabel *lblTitle = (UILabel *)[cell viewWithTag:100];
+    UILabel *lblSubtitle = (UILabel *)[cell viewWithTag:101];
+    
+    if ([self selectedScope] == SONG)
+    {
+        Song *song = [self.results objectAtIndex:indexPath.row];
+        
+        lblTitle.text = [song name];
+        
+        if ([[song album] year]>0)
+            lblSubtitle.text = [NSString stringWithFormat:@"%@ (%ld)", [[song album] name], (long)[[song album] year]];
+        else
+            lblSubtitle.text= [NSString stringWithFormat:@"%@", [[song album] name]];
+    }
+    else
+    {
+        Album *album = [[self results] objectAtIndex:indexPath.row];
+        
+        if ([[self search] isFinalSearch])
+        {
+            UIImageView *imageAlbumArt = (UIImageView *)[cell viewWithTag:102];
+            [imageAlbumArt setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
+            
+            [[AlbumArtManager shared] fetchAlbumArtForAlbum:album Size:SMALL From:@"SearchView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
+                [imageAlbumArt setImage:image];
+            }];
+        }
+        
+        [lblTitle setText:[album name]];
+        [lblSubtitle setText:[[album cast] componentsJoinedByString:@", "]];
+    }
+    
+    return cell;
+}
+
+#pragma mark - Table Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self selectedScope] == SONG)
+    {
+        Song *song = [self.results objectAtIndex:indexPath.row];
+        if ([song availability] == CLOUD)
+        {
+            UIAlertView *options = [[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", @"Download", nil];
+            
+            self.selectedRow = indexPath.row;
+            
+            [options show];
+        }
+        else if([song availability] == LOCAL)
+        {
+            UIAlertView *options = [[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", nil];
+            self.selectedRow = indexPath.row;
+            [options show];
+        }
+        else if([song availability] == UNAVAILABLE)
+        {
+            [self songIsUnavailable];
+            [Activity addWithSong:song action:INCORRECTDATA];
+        }
+    }
+    else
+    {
+        AlbumViewController *albumDetails = [[AlbumViewController alloc] initWithNibName:@"AlbumView" bundle:nil];
+        UINavigationController *uiNavControllerForAlbumDetails = [[UINavigationController alloc] initWithRootViewController:albumDetails];
+        
+        [albumDetails setAlbum:[[self results] objectAtIndex:indexPath.row]];
+        [albumDetails setOrigin:@"Search"];
+        
+        [self setGoingToDisplayAlbum:YES];
+        [self presentViewController:uiNavControllerForAlbumDetails animated:YES completion:nil];
+    }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Action Methods
+
+- (IBAction)updateScope:(UISegmentedControl *)sender
+{
+    if (sender.selectedSegmentIndex == 0)
+        self.selectedScope = SONG;
+    else if(sender.selectedSegmentIndex == 1)
+        self.selectedScope = ALBUM;
+
+    self.results = [[NSArray alloc] init];
+    [self prepareToSearch:YES];
+    
+}
+
+- (IBAction)updateSearchString:(UITextField *)sender
+{
+    [self prepareToSearch:NO];
+}
+
+#pragma mark Text View Delegate
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    [textField performSelector:@selector(resignFirstResponder) withObject:nil afterDelay:0.1];
+    self.results = nil;
+    [self reset];
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self prepareToSearch: YES];
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)disablesAutomaticKeyboardDismissal
+{
+    return NO;
+}
+
+#pragma mark - Alert View Delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    Song *song = [self.results objectAtIndex:self.selectedRow];
+    switch (buttonIndex)
+    {
+        case 1:
+            [song addToPlaylistAndPostNotificationWithOrigin:@"Search"];
+            [[User currentUser] setCurrentPlaylistIndex:[[[User currentUser] playlist] count] - 1];
+            [[Player shared] loadCurrentSong];
+            [[Player shared] play];
+            break;
+        case 2:
+            [song addToPlaylistAndPostNotificationWithOrigin:@"Search"];
+            break;
+        case 3:
+            [song startDownloadWithOrigin:@"Search"];
+            break;
+        default:
+            break;
+    }
+}
+
+#pragma mark - Others
+
+- (void)loadTableForResults
+{
+    CGSize size = [[self viewResults] frame].size;
+    UITableView *tableResults = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) style:UITableViewStyleGrouped];
+    
+    [tableResults setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    
+    [tableResults setDataSource:self];
+    [tableResults setDelegate:self];
+    
+    [tableResults setAlpha:0.0];
+    [[self viewResults] addSubview:tableResults];
+    [UIView animateWithDuration:0.3 animations:^{
+        [tableResults setAlpha:1.0];
+    }];
+    
+    [self.subViews addObject:tableResults];
+}
+
+- (void)prepareToSearch: (BOOL) isFinal
+{
+    [self reset];
+    
+    if ([[self.searchField text] length] < MIN_SEARCH_LENGTH)
+    {
+        self.results = nil;
+        return;
+    }
+    
+    [[self activityIndicator] startAnimating];
+     
+    [self setSearch:[[Search alloc] initWithQuery:[[self searchField] text] SearchFor:[self selectedScope] IsFinal:isFinal]];
+    [[self search] searchWithBlock:^(NSString *query, enum SearchScope searchFor, NSArray *results) {
+        if ([query isEqualToString:[[self searchField] text]] && searchFor == [self selectedScope])
+        {
+            [[self activityIndicator] stopAnimating];
+            [self setResults:results];
+            [self loadTableForResults];
+        }
+    } OnFailure:^{
+        [[[UIAlertView alloc] initWithTitle:@"Can't Connect" message:@"Please make sure you are connected to the internet" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+        [self reset];
+    }];
+}
+
+- (void)songIsUnavailable
+{
+    [[[UIAlertView alloc] initWithTitle:@"Sorry!" message:@"This song is currently unavailable." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+}
+
+- (void)reset
+{
+    [[[self viewResults] subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [obj removeFromSuperview];
+    }];
+    [[self search] cancel];
+    [[AlbumArtManager shared] cancelFromSender:@"SearchView"];
+    [[self activityIndicator] stopAnimating];
+}
+
+@end

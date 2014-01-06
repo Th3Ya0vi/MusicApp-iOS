@@ -58,6 +58,13 @@
     
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     
+}
+
+- (void)setShadow
+{
+    CGSize size = [self imageSizeAfterAspectFit:[self imageAlbumArt]];
+    
+    [[self imageAlbumArt] setFrame:CGRectMake([[self imageAlbumArt] frame].origin.x, [[self imageAlbumArt] frame].origin.y, size.width, size.height)];
     
     UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:[[self imageAlbumArt] bounds]];
     [self imageAlbumArt].layer.masksToBounds = NO;
@@ -65,6 +72,38 @@
     [self imageAlbumArt].layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
     [self imageAlbumArt].layer.shadowOpacity = 0.5f;
     [self imageAlbumArt].layer.shadowPath = shadowPath.CGPath;
+}
+
+-(CGSize)imageSizeAfterAspectFit:(UIImageView*)imgview
+{
+    float newwidth;
+    float newheight;
+    
+    UIImage *image=imgview.image;
+    
+    if (image.size.height>=image.size.width){
+        newheight=imgview.frame.size.height;
+        newwidth=(image.size.width/image.size.height)*newheight;
+        
+        if(newwidth>imgview.frame.size.width){
+            float diff=imgview.frame.size.width-newwidth;
+            newheight=newheight+diff/newheight*newheight;
+            newwidth=imgview.frame.size.width;
+        }
+        
+    }
+    else{
+        newwidth=imgview.frame.size.width;
+        newheight=(image.size.height/image.size.width)*newwidth;
+        
+        if(newheight>imgview.frame.size.height){
+            float diff=imgview.frame.size.height-newheight;
+            newwidth=newwidth+diff/newwidth*newwidth;
+            newheight=imgview.frame.size.height;
+        }
+    }
+    
+    return CGSizeMake(newwidth, newheight);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -274,6 +313,8 @@
         
         [[self labelTitle] setTextColor:[UIColor blackColor]];
         [[self labelSubtitle] setTextColor:[UIColor blackColor]];
+        
+        [self setShadow];
     }
     
     [[AlbumArtManager shared] fetchAlbumArtForAlbum:[song album] Size:BIG From:@"Player" CompletionBlock:^(UIImage *image, BOOL didSucceed)

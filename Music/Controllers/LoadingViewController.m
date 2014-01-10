@@ -13,6 +13,7 @@
 #import "ExploreViewController.h"
 #import "Activity.h"
 #import "PlayerViewController.h"
+#import "BollywoodAPIClient.h"
 
 @interface LoadingViewController ()
 
@@ -38,14 +39,17 @@
     
     if ([User currentUser] == nil)
     {
-        [User createUserWithBlock:^(User *user) {
+        [[BollywoodAPIClient shared] createNewUserWithSuccess:^(User *user) {
             [self loadMainView];
-        } OnFailure:^{
+        } Failure:^{
             [[[UIAlertView alloc] initWithTitle:@"Can't Connect" message:@"Please make sure you are connected to the internet" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
         }];
     }
     else
+    {
+        [[BollywoodAPIClient shared] postUserActivity];
         [self loadMainView];
+    }
 
 }
 

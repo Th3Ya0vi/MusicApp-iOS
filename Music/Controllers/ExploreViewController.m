@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Tushar Soni. All rights reserved.
 //
 
-#import "Explore.h"
+#import "BollywoodAPIClient.h"
 #import "Album.h"
 #import "AlbumArtManager.h"
 #import "AlbumViewController.h"
@@ -17,9 +17,10 @@
 
 @interface ExploreViewController ()
 
-@property (strong, nonatomic) Explore *explore;
 @property (weak, nonatomic) IBOutlet UITableView *tableExplore;
 @property (strong, nonatomic) NSMutableArray *collectionViews;
+@property (strong, nonatomic) NSArray *titles;
+@property (strong, nonatomic) NSArray *albums;
 
 @end
 
@@ -34,7 +35,6 @@
         [[self tabBarItem] setImage:[UIImage imageNamed:@"Explore"]];
         self.collectionViews = [[NSMutableArray alloc] init];
         
-        self.explore = [[Explore alloc] init];
     }
     return self;
 }
@@ -51,10 +51,12 @@
 {
     [super viewWillAppear:animated];
 
-    [[self explore] fetchWithBlock:^
-     {
-         [[self collectionViews] removeAllObjects];
-         [[self tableExplore] reloadData];
+    [[BollywoodAPIClient shared] fetchExploreAlbumsWithBlock:^(NSArray *titles, NSArray *albums) {
+        [self setTitles:titles];
+        [self setAlbums:albums];
+        
+        
+        [[self tableExplore] reloadData];
     }];
 }
 
@@ -62,7 +64,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [[[self explore] titles] objectAtIndex:section];
+    return [[self titles] objectAtIndex:section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -72,7 +74,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[[self explore] titles] count];
+    return [[self titles] count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -121,7 +123,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
-    return [[[[self explore] albums] objectAtIndex:sec] count];
+    return [[[self albums] objectAtIndex:sec] count];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -143,10 +145,10 @@
     [albumArt setImage:nil];
     [cell addSubview:albumArt];
     
-    NSArray *albums = [[[self explore] albums] objectAtIndex:indexPath.section];
-    
+    NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
+    NSArray *albums = [[self albums] objectAtIndex:sec];
     Album *album = [albums objectAtIndex:indexPath.row];
-    [[AlbumArtManager shared] fetchAlbumArtForAlbum:album Size:SMALL From:@"ExploreView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
+    [[AlbumArtManager shared] fetchAlbumArtForAlbum:album Size:BIG From:@"ExploreView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
         [albumArt setImage:image];
     }];
     
@@ -157,7 +159,8 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *albums = [[[self explore] albums] objectAtIndex:indexPath.section];
+    NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
+    NSArray *albums = [[self albums] objectAtIndex:sec];
     
     AlbumViewController *albumView = [[AlbumViewController alloc] initWithNibName:@"AlbumView" bundle:nil];
     UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];

@@ -34,30 +34,6 @@
     
 }
 
-+ (void) createUserWithBlock:(void (^)(User *user))block OnFailure: (void (^)(void))failureBlock
-{    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-
-    [manager GET:[NSString stringWithFormat:@"%s/user/create", BASE_URL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
-    {
-        NSDictionary *response = (NSDictionary *) responseObject;
-        NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
-        [userDef setObject:[response objectForKey:@"UserID"] forKey:@"userid"];
-        [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"playlist"];
-        [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
-        [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
-        [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
-        [userDef synchronize];
-        
-        block([User currentUser]);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error)
-    {
-        NSLog(@"Error creating user: %@", error);
-        failureBlock();
-    }];
-}
-
 - (void) save
 {
     NSData *playlistData = [NSKeyedArchiver archivedDataWithRootObject:[self playlist]];

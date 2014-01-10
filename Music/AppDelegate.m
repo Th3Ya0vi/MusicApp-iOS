@@ -11,13 +11,17 @@
 #import "User.h"
 #import "Activity.h"
 #import "Player.h"
+#import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
+#import "iRate.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
+    [[iRate sharedInstance] setVerboseLogging:NO];
     
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
@@ -27,8 +31,6 @@
     self.window.rootViewController = loading;
     
     [self.window makeKeyAndVisible];
-    
-    [Activity postActivity];
     
     return YES;
 }
@@ -51,7 +53,7 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
-    [Activity postActivity];
+    [[BollywoodAPIClient shared] postUserActivity];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

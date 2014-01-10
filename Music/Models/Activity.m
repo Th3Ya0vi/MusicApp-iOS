@@ -28,9 +28,6 @@
 
 + (void)addWithSong:(Song *)song action:(enum Activity_Action)action extra:(NSString *)extra
 {
-    if ([extra isEqualToString:[song provider]] == NO)
-        extra = [extra stringByAppendingFormat:@", %@", [song provider]];
-    
     NSLog(@"Activity: %@ - %@ - %@", [song name], [Activity stringForAction:action], extra);
     Activity *activity = [[Activity alloc] initWithSong:song action:action extra:extra];
     [[[User currentUser] activity] addObject:activity];
@@ -38,32 +35,7 @@
 
 + (void)addWithSong:(Song *)song action:(enum Activity_Action)action
 {
-    [Activity addWithSong:song action:action extra:[song provider]];
-}
-
-+ (void)postActivity
-{
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
-    NSArray *activityCopy = [[[User currentUser] activity] copy];
-    [[[User currentUser] activity] removeAllObjects];
-    
-    NSMutableArray *activityToPost = [[NSMutableArray alloc] init];
-    [activityCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [activityToPost addObject:[obj dictionary]];
-    }];
-    
-    NSMutableDictionary *json = [NSMutableDictionary dictionaryWithObject:activityToPost forKey:@"data"];
-    
-    [manager POST:[NSString stringWithFormat:@"%s/user/%d/activity", BASE_URL, [[User currentUser] userid]] parameters:json success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         NSLog(@"Posted activity");
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         NSLog(@"Failed posting activity: %@", [error description]);
-         [[[User currentUser] activity] addObjectsFromArray:activityCopy];
-     }];
+    [Activity addWithSong:song action:action extra:@""];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone
@@ -133,11 +105,6 @@
             return @"IncorrectData";
             break;
     }
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"Song: %@, Timestamp: %ld, Action: %@, Extra: %@", [self songid], (long)[self timestamp], [Activity stringForAction:[self action]], [self extra]];
 }
 
 - (NSDictionary *)dictionary

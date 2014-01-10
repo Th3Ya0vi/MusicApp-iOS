@@ -18,8 +18,6 @@
 @property (nonatomic) NSInteger currentPlaylistIndex;
 
 + (instancetype) currentUser;
-+ (void) createUserWithBlock:(void (^)(User *user))block OnFailure: (void (^)(void))failureBlock;
-
 - (void)save;
 
 @end

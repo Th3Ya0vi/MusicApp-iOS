@@ -31,9 +31,7 @@ enum Activity_Action {
 @property (nonatomic) enum Activity_Action action;
 @property (strong, nonatomic) NSString *extra;
 
-- (NSString *)description;
 - (NSDictionary *)dictionary;
 + (NSString *)stringForAction: (enum Activity_Action) action;
-+ (void)postActivity;
 
 @end

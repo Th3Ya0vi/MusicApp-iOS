@@ -22,7 +22,6 @@
 		780A177518451C9A0082A89F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A175B18451C9A0082A89F /* User.m */; };
 		780A178918451DE40082A89F /* LoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A178718451DE40082A89F /* LoadingViewController.m */; };
 		780A178E1845201E0082A89F /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A178C1845201E0082A89F /* SearchViewController.m */; };
-		780A1792184524730082A89F /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A1791184524730082A89F /* Search.m */; };
 		780A179518452C1E0082A89F /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A179418452C1E0082A89F /* Song.m */; };
 		780A179818452C9E0082A89F /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A179718452C9E0082A89F /* Album.m */; };
 		780A179F184673A10082A89F /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A179E184673A10082A89F /* AlbumViewController.m */; };
@@ -53,13 +52,13 @@
 		780A180B184D0DE00082A89F /* BVReorderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A180A184D0DE00082A89F /* BVReorderTableView.m */; };
 		780A180D184D2BC60082A89F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780A180C184D2BC60082A89F /* MediaPlayer.framework */; };
 		780A1810184FB6DE0082A89F /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A180F184FB6DE0082A89F /* Activity.m */; };
+		7828E74B1880683800A2C2E9 /* BollywoodAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */; };
 		7869C825185D1B3000F877EE /* PlayingCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C824185D1B3000F877EE /* PlayingCellView.xib */; };
 		7869C829185DFBB600F877EE /* EmptyPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */; };
 		7869C82C185DFD5300F877EE /* EmptyPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C82B185DFD5300F877EE /* EmptyPlaylistViewController.m */; };
 		7869C82F185E3C6500F877EE /* AlbumArtManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C82E185E3C6500F877EE /* AlbumArtManager.m */; };
 		7869C838185E41DF00F877EE /* AlbumArtRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C837185E41DF00F877EE /* AlbumArtRequest.m */; };
 		78705C461854A8DC00708E20 /* ProgressCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78705C451854A8DC00708E20 /* ProgressCellView.xib */; };
-		78705C4E1855009000708E20 /* Explore.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C4D1855009000708E20 /* Explore.m */; };
 		78705C511857BA1000708E20 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C501857BA1000708E20 /* Player.m */; };
 		78705C531857BEB600708E20 /* PlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78705C521857BEB600708E20 /* PlayerView.xib */; };
 		78705C561857C04D00708E20 /* PlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C551857C04D00708E20 /* PlayerViewController.m */; };
@@ -107,8 +106,6 @@
 		780A178718451DE40082A89F /* LoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LoadingViewController.m; path = Controllers/LoadingViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		780A178B1845201E0082A89F /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchViewController.h; path = Controllers/SearchViewController.h; sourceTree = "<group>"; };
 		780A178C1845201E0082A89F /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchViewController.m; path = Controllers/SearchViewController.m; sourceTree = "<group>"; };
-		780A1790184524730082A89F /* Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
-		780A1791184524730082A89F /* Search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Search.m; sourceTree = "<group>"; };
 		780A179318452C1E0082A89F /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
 		780A179418452C1E0082A89F /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
 		780A179618452C9E0082A89F /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
@@ -163,6 +160,9 @@
 		780A180C184D2BC60082A89F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		780A180E184FB6DE0082A89F /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Activity.h; sourceTree = "<group>"; };
 		780A180F184FB6DE0082A89F /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
+		7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BollywoodAPIClient.h; sourceTree = "<group>"; };
+		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BollywoodAPIClient.m; sourceTree = "<group>"; };
+		7828E74C1880695D00A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
 		7869C824185D1B3000F877EE /* PlayingCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayingCellView.xib; sourceTree = "<group>"; };
 		7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyPlaylistView.xib; sourceTree = "<group>"; };
 		7869C82A185DFD5300F877EE /* EmptyPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyPlaylistViewController.h; path = Controllers/EmptyPlaylistViewController.h; sourceTree = "<group>"; };
@@ -172,8 +172,6 @@
 		7869C836185E41DF00F877EE /* AlbumArtRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumArtRequest.h; sourceTree = "<group>"; };
 		7869C837185E41DF00F877EE /* AlbumArtRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumArtRequest.m; sourceTree = "<group>"; };
 		78705C451854A8DC00708E20 /* ProgressCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProgressCellView.xib; sourceTree = "<group>"; };
-		78705C4C1855009000708E20 /* Explore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Explore.h; sourceTree = "<group>"; };
-		78705C4D1855009000708E20 /* Explore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Explore.m; sourceTree = "<group>"; };
 		78705C4F1857BA1000708E20 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		78705C501857BA1000708E20 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		78705C521857BEB600708E20 /* PlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerView.xib; sourceTree = "<group>"; };
@@ -276,6 +274,7 @@
 				780A171F18451C3C0082A89F /* InfoPlist.strings */,
 				780A172218451C3C0082A89F /* main.m */,
 				780A172418451C3C0082A89F /* Music-Prefix.pch */,
+				7828E74C1880695D00A2C2E9 /* secret.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -303,22 +302,20 @@
 			children = (
 				780A175A18451C9A0082A89F /* User.h */,
 				780A175B18451C9A0082A89F /* User.m */,
-				780A1790184524730082A89F /* Search.h */,
-				780A1791184524730082A89F /* Search.m */,
 				780A179318452C1E0082A89F /* Song.h */,
 				780A179418452C1E0082A89F /* Song.m */,
 				780A179618452C9E0082A89F /* Album.h */,
 				780A179718452C9E0082A89F /* Album.m */,
 				780A180E184FB6DE0082A89F /* Activity.h */,
 				780A180F184FB6DE0082A89F /* Activity.m */,
-				78705C4C1855009000708E20 /* Explore.h */,
-				78705C4D1855009000708E20 /* Explore.m */,
 				78705C4F1857BA1000708E20 /* Player.h */,
 				78705C501857BA1000708E20 /* Player.m */,
 				7869C82D185E3C6500F877EE /* AlbumArtManager.h */,
 				7869C82E185E3C6500F877EE /* AlbumArtManager.m */,
 				7869C836185E41DF00F877EE /* AlbumArtRequest.h */,
 				7869C837185E41DF00F877EE /* AlbumArtRequest.m */,
+				7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */,
+				7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -575,10 +572,8 @@
 				780A1801184B621A0082A89F /* UIProgressView+AFNetworking.m in Sources */,
 				780A17F2184B621A0082A89F /* AFHTTPRequestOperation.m in Sources */,
 				780A179818452C9E0082A89F /* Album.m in Sources */,
-				780A1792184524730082A89F /* Search.m in Sources */,
 				7869C82C185DFD5300F877EE /* EmptyPlaylistViewController.m in Sources */,
 				780A17FA184B621A0082A89F /* AFURLSessionManager.m in Sources */,
-				78705C4E1855009000708E20 /* Explore.m in Sources */,
 				78B9BB481879698F0075B2A5 /* iRate.m in Sources */,
 				780A179518452C1E0082A89F /* Song.m in Sources */,
 				780A17FB184B621A0082A89F /* FXBlurView.m in Sources */,
@@ -610,6 +605,7 @@
 				780A1802184B621A0082A89F /* UIWebView+AFNetworking.m in Sources */,
 				780A17FF184B621A0082A89F /* UIButton+AFNetworking.m in Sources */,
 				780A172318451C3C0082A89F /* main.m in Sources */,
+				7828E74B1880683800A2C2E9 /* BollywoodAPIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

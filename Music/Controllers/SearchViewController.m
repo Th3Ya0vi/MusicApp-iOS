@@ -7,7 +7,6 @@
 //
 
 #import "SearchViewController.h"
-#import "Search.h"
 #import "Song.h"
 #import "User.h"
 #import "AlbumViewController.h"
@@ -15,6 +14,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "Player.h"
 #import "Activity.h"
+#import "BollywoodAPIClient.h"
 
 #define MIN_SEARCH_LENGTH   3
 
@@ -23,11 +23,11 @@
 @property (weak, nonatomic) IBOutlet UIView *viewResults;
 @property (weak, nonatomic) IBOutlet UITextField *searchField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) UIBarButtonItem *cancelButton;
 @property (nonatomic) enum SearchScope selectedScope;
-@property (strong, nonatomic) Search *search;
+@property (nonatomic) BOOL isFinalSearch;
 @property (strong, nonatomic) NSArray *results;
 @property (strong, nonatomic) NSMutableArray *subViews;
-@property (nonatomic) BOOL goingToDisplayAlbum;
 @property (nonatomic) NSInteger selectedRow;
 
 @end
@@ -43,35 +43,19 @@
         self.selectedScope = SONG;
         self.title = @"Search";
         self.subViews = [[NSMutableArray alloc] initWithCapacity:2];
-        self.goingToDisplayAlbum = NO;
+        
+        self.cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
     }
     return self;
 }
 
 #pragma mark - View
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self setGoingToDisplayAlbum:NO];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    if (![self goingToDisplayAlbum])
-    {
-        [self reset];
-        [[self searchField] setText:@""];
-        [[User currentUser] save];
-    }
+    [[AlbumArtManager shared] cancelFromSender:@"SearchView"];
 }
 
 #pragma mark Table Data Source
@@ -88,7 +72,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return ([self selectedScope] == SONG || [[self search] isFinalSearch] == NO) ? 65 : 95;
+    return ([self selectedScope] == SONG || [self isFinalSearch] == NO) ? 65 : 95;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -96,7 +80,7 @@
     NSString *cellIdentifier;
     NSString *cellNib;
     
-    if ([self selectedScope] == ALBUM && [[self search] isFinalSearch])
+    if ([self selectedScope] == ALBUM && [self isFinalSearch])
     {
         cellIdentifier = @"ImageSubtitleCell";
         cellNib = @"ImageSubtitleCellView";
@@ -133,7 +117,7 @@
     {
         Album *album = [[self results] objectAtIndex:indexPath.row];
         
-        if ([[self search] isFinalSearch])
+        if ([self isFinalSearch])
         {
             UIImageView *imageAlbumArt = (UIImageView *)[cell viewWithTag:102];
             [imageAlbumArt setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
@@ -184,8 +168,7 @@
         
         [albumDetails setAlbum:[[self results] objectAtIndex:indexPath.row]];
         [albumDetails setOrigin:@"Search"];
-        
-        [self setGoingToDisplayAlbum:YES];
+    
         [self presentViewController:uiNavControllerForAlbumDetails animated:YES completion:nil];
     }
     
@@ -213,14 +196,6 @@
 
 #pragma mark Text View Delegate
 
-- (BOOL)textFieldShouldClear:(UITextField *)textField
-{
-    [textField performSelector:@selector(resignFirstResponder) withObject:nil afterDelay:0.1];
-    self.results = nil;
-    [self reset];
-    return YES;
-}
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self prepareToSearch: YES];
@@ -228,9 +203,14 @@
     return YES;
 }
 
-- (BOOL)disablesAutomaticKeyboardDismissal
+- (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    return NO;
+    [[self navigationItem] setRightBarButtonItem:[self cancelButton]];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [[self navigationItem] setRightBarButtonItem:nil];
 }
 
 #pragma mark - Alert View Delegate
@@ -287,18 +267,14 @@
         self.results = nil;
         return;
     }
+    [self setIsFinalSearch:isFinal];
     
     [[self activityIndicator] startAnimating];
-     
-    [self setSearch:[[Search alloc] initWithQuery:[[self searchField] text] SearchFor:[self selectedScope] IsFinal:isFinal]];
-    [[self search] searchWithBlock:^(NSString *query, enum SearchScope searchFor, NSArray *results) {
-        if ([query isEqualToString:[[self searchField] text]] && searchFor == [self selectedScope])
-        {
-            [[self activityIndicator] stopAnimating];
-            [self setResults:results];
-            [self loadTableForResults];
-        }
-    } OnFailure:^{
+    [[BollywoodAPIClient shared] searchFor:[self selectedScope] IsFinal:[self isFinalSearch] Query:[[self searchField] text] Success:^(NSArray *objects) {
+        [[self activityIndicator] stopAnimating];
+        [self setResults:objects];
+        [self loadTableForResults];
+    } Failure:^{
         [[[UIAlertView alloc] initWithTitle:@"Can't Connect" message:@"Please make sure you are connected to the internet" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
         [self reset];
     }];
@@ -314,9 +290,14 @@
     [[[self viewResults] subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj removeFromSuperview];
     }];
-    [[self search] cancel];
+    [[BollywoodAPIClient shared] cancelCurrentSearch];
     [[AlbumArtManager shared] cancelFromSender:@"SearchView"];
     [[self activityIndicator] stopAnimating];
+}
+
+- (void)cancelButtonPressed
+{
+    [[self searchField] resignFirstResponder];
 }
 
 @end

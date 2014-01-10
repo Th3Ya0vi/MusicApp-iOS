@@ -11,7 +11,7 @@
 
 @implementation Album
 
-- (id) initWithJSON:(NSDictionary *)json
+- (instancetype) initWithJSON:(NSDictionary *)json
 {
     self = [super init];
     
@@ -45,7 +45,18 @@
     return self;
 }
 
-- (id) initWithCoder:(NSCoder *)aDecoder
++ (NSArray *) albumsWithJSONArray: (NSArray *)jsonArray
+{
+    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:[jsonArray count]];
+    
+    [jsonArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [tempArray addObject:[[Album alloc] initWithJSON:obj]];
+    }];
+    
+    return tempArray;
+}
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
     

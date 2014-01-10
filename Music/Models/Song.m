@@ -9,7 +9,6 @@
 #import "Song.h"
 #import "Album.h"
 #import "User.h"
-#import "Search.h"
 #import "Activity.h"
 #import "AFURLSessionManager.h"
 
@@ -26,13 +25,23 @@
         self.name = [json objectForKey:@"Name"];
         self.singers = [json objectForKey:@"Singers"];
         self.mp3 = [NSURL URLWithString:[json objectForKey:@"Mp3"]];
-        self.provider = [json objectForKey:@"Provider"];
         
         if ([json objectForKey:@"Album"] != nil)
             self.album = [[Album alloc] initWithJSON:[json objectForKey:@"Album"]];
     }
     
     return self;
+}
+
++ (NSArray *) songsWithJSONArray: (NSArray *)jsonArray
+{
+    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:[jsonArray count]];
+    
+    [jsonArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [tempArray addObject:[[Song alloc] initWithJSON:obj]];
+    }];
+
+    return tempArray;
 }
 
 - (id) initWithCoder:(NSCoder *)aDecoder
@@ -46,7 +55,6 @@
         self.name = [aDecoder decodeObjectForKey:@"name"];
         self.singers = [aDecoder decodeObjectForKey:@"singers"];
         self.mp3 = [aDecoder decodeObjectForKey:@"mp3"];
-        self.provider = [aDecoder decodeObjectForKey:@"provider"];
         
         if ([aDecoder containsValueForKey:@"album"])
             self.album = [aDecoder decodeObjectForKey:@"album"];
@@ -67,7 +75,6 @@
         [copy setName:[self.name copyWithZone:zone]];
         [copy setSingers:[self.singers copyWithZone:zone]];
         [copy setMp3:[self.mp3 copyWithZone:zone]];
-        [copy setProvider:[self.provider copyWithZone:zone]];
         
         if ([self album])
             [copy setAlbum:[self.album copyWithZone:zone]];
@@ -91,7 +98,6 @@
     [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeObject:self.singers forKey:@"singers"];
     [aCoder encodeObject:self.mp3 forKey:@"mp3"];
-    [aCoder encodeObject:self.provider forKey:@"provider"];
     
     if ([self album])
         [aCoder encodeObject:self.album forKey:@"album"];
@@ -166,7 +172,7 @@
 - (NSURL *)localMp3Path
 {
     NSURL *documentDir = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject]];
-    return [documentDir URLByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.mp3", [self songid], [self provider]]];
+    return [documentDir URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", [self songid]]];
 }
 
 - (BOOL) deleteLocalFile

@@ -21,7 +21,7 @@
 @property (strong, nonatomic) NSString *provider;
 @property (strong, nonatomic) NSArray *songs;
 
-- (id) initWithJSON:(NSDictionary *)json;
-
+- (instancetype) initWithJSON:(NSDictionary *)json;
++ (NSArray *) albumsWithJSONArray: (NSArray *)jsonArray;
 
 @end

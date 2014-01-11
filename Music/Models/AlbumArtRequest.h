@@ -10,7 +10,7 @@
 #import "AFHTTPRequestOperationManager.h"
 #import "Album.h"
 
-enum AlbumArtSize {BIG, SMALL};
+enum AlbumArtSize {BIG = 1, SMALL = 0};
 
 @interface AlbumArtRequest : NSObject
 

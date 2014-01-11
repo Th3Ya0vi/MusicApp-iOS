@@ -129,6 +129,7 @@
         {
             [Activity addWithSong:self action:DOWNLOADED extra:origin];
             self.availability = LOCAL;
+            [[self localMp3Path] setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadedSong" object:self];
     }];

@@ -48,7 +48,7 @@
 
 - (UIImage *)existingImageForAlbum: (Album *)album Size: (enum AlbumArtSize)size
 {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@_%d.jpg", [album provider], [album albumid], size]];
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@_%d.jpg", [album provider], [album albumid], size]];
 
     return ([[NSFileManager defaultManager] fileExistsAtPath:path]) ? [UIImage imageWithContentsOfFile:path] : nil;
 }

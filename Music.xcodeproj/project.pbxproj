@@ -162,7 +162,7 @@
 		780A180F184FB6DE0082A89F /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
 		7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BollywoodAPIClient.h; sourceTree = "<group>"; };
 		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BollywoodAPIClient.m; sourceTree = "<group>"; };
-		7828E74C1880695D00A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
+		7828E7511880AA4200A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
 		7869C824185D1B3000F877EE /* PlayingCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayingCellView.xib; sourceTree = "<group>"; };
 		7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyPlaylistView.xib; sourceTree = "<group>"; };
 		7869C82A185DFD5300F877EE /* EmptyPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyPlaylistViewController.h; path = Controllers/EmptyPlaylistViewController.h; sourceTree = "<group>"; };
@@ -274,7 +274,7 @@
 				780A171F18451C3C0082A89F /* InfoPlist.strings */,
 				780A172218451C3C0082A89F /* main.m */,
 				780A172418451C3C0082A89F /* Music-Prefix.pch */,
-				7828E74C1880695D00A2C2E9 /* secret.h */,
+				7828E7511880AA4200A2C2E9 /* secret.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

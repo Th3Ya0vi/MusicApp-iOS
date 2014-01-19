@@ -43,7 +43,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAlbumArtImage) name:@"SongChanged" object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
     return self;
 }
@@ -57,7 +57,6 @@
     [self addGestures];
     
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    
 }
 
 - (void)setShadow
@@ -181,7 +180,6 @@
 - (IBAction)playNextSong:(UIButton *)sender
 {
     [[Player shared] loadNextSong];
-
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
@@ -296,10 +294,22 @@
 
 #pragma mark - Others
 
+- (void)songDidFailToPlay
+{
+    [[[UIAlertView alloc] initWithTitle:@"Failed to play this song" message:@"Please try again later." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    
+    [[Player shared] setCurrentStatus:STOPPED];
+    [self syncView];
+    
+    [[Player shared] loadNextSong];
+    [[Player shared] play];
+}
+
 - (void)updateAlbumArtImage
 {
     if ([[[User currentUser] playlist] count] == 0)
         return;
+    
     Song *song = [Song currentSongInPlaylist];
     
     UIImage *existingImage = [[AlbumArtManager shared] existingImageForAlbum:[song album] Size:BIG];

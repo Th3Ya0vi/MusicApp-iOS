@@ -39,7 +39,7 @@
         UIImage *image = (UIImage *)responseObject;
         
         NSData *data = UIImageJPEGRepresentation(image, 0);
-        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@_%d.jpg", [[self album] provider], [[self album] albumid], [self size]]];
+        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%d.jpg", [[self album] albumid], [self size]]];
         [data writeToFile:path atomically:YES];
         
         self.completionBlock(image, YES);

@@ -92,14 +92,8 @@
         case DELETEDFROMPLAYLIST:
             return @"DeletedFromPlaylist";
             break;
-        case STARTEDLISTENING:
-            return @"StartedListening";
-            break;
         case FINISHEDLISTENING:
             return @"FinishedListening";
-            break;
-        case SHUFFLED:
-            return @"Shuffled";
             break;
         case INCORRECTDATA:
             return @"IncorrectData";

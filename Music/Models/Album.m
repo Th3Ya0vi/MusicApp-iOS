@@ -24,7 +24,6 @@
         self.cast = [json objectForKey:@"Cast"];
         self.musicDirector = [json objectForKey:@"MusicDirector"];
         self.year = [[json objectForKey:@"Year"] integerValue];
-        self.provider = [json objectForKey:@"Provider"];
         
         if ([self.cast isKindOfClass:[NSArray class]] == NO)
             self.cast = [[NSArray alloc] init];
@@ -69,7 +68,6 @@
         self.cast = [aDecoder decodeObjectForKey:@"cast"];
         self.musicDirector = [aDecoder decodeObjectForKey:@"musicDirector"];
         self.year = [aDecoder decodeIntegerForKey:@"year"];
-        self.provider = [aDecoder decodeObjectForKey:@"provider"];
         
         if ([aDecoder containsValueForKey:@"songs"])
             self.songs = [aDecoder decodeObjectForKey:@"songs"];
@@ -87,7 +85,6 @@
     [aCoder encodeObject:self.cast forKey:@"cast"];
     [aCoder encodeObject:self.musicDirector forKey:@"musicDirector"];
     [aCoder encodeInteger:self.year forKey:@"year"];
-    [aCoder encodeObject:self.provider forKey:@"provider"];
     
     if ([self songs])
         [aCoder encodeObject:self.songs forKey:@"songs"];
@@ -106,7 +103,6 @@
         [copy setCast:[[self cast] copyWithZone:zone]];
         [copy setMusicDirector:[[self musicDirector] copyWithZone:zone]];
         [copy setYear:[self year]];
-        [copy setProvider:[[self provider] copyWithZone:zone]];
         
         if ([self songs])
         {

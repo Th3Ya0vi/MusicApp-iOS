@@ -28,10 +28,7 @@
         UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeView)];
         [self.navigationItem setRightBarButtonItem:closeButton];
         
-        UIBarButtonItem *shuffleButton = [[UIBarButtonItem alloc] initWithTitle:@"Shuffle" style:UIBarButtonItemStylePlain target:self action:@selector(shuffle)];
-        [self.navigationItem setLeftBarButtonItem:shuffleButton];
-        
-        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(shuffle)];
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(shuffle:)];
         [swipe setDirection:UISwipeGestureRecognizerDirectionRight];
         [[self view] addGestureRecognizer:swipe];
 
@@ -169,7 +166,7 @@
 
 #pragma mark - Others
 
-- (void)shuffle
+- (IBAction)shuffle:(id)sender
 {
     User *user = [User currentUser];
     Song *currentSong = [[user playlist] objectAtIndex:[user currentPlaylistIndex]];
@@ -191,8 +188,26 @@
     [[self tablePlaylist] deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
     [user setPlaylist:playlistCopy];
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
-    
-    [Activity addWithSong:[Song currentSongInPlaylist] action:SHUFFLED];
+}
+
+- (IBAction)clearPlaylist:(id)sender
+{
+    [[[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Do you want to clear your playlist?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes" , nil] show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        if ([[Player shared] currentStatus] != STOPPED)
+        {
+            [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
+            [[Player shared] togglePlayPause];
+        }
+        
+        [[[User currentUser] playlist] removeAllObjects];
+        [self closeView];
+    }
 }
 
 - (void)closeView

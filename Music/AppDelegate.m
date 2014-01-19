@@ -19,9 +19,25 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"resetCache"] == YES)
+    {
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"resetCache"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSLog(@"Cleared Cache");
+    }
+ 
+    NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+                                                         diskCapacity:20 * 1024 * 1024
+                                                             diskPath:nil];
+    [NSURLCache setSharedURLCache:URLCache];
+    
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
     [[iRate sharedInstance] setVerboseLogging:NO];
+    [iRate sharedInstance].daysUntilPrompt = 5;
+    [iRate sharedInstance].usesUntilPrompt = 10;
     
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     

@@ -22,7 +22,7 @@
                     <rect key="frame" x="0.0" y="65" width="320" height="460"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search for Songs and Albums" textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="7KU-5S-qkf">
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search for Albums or Songs" textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="7KU-5S-qkf">
                     <rect key="frame" x="20" y="77" width="280" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <nil key="textColor"/>
@@ -37,8 +37,8 @@
                     <rect key="frame" x="83" y="115" width="154" height="29"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <segments>
-                        <segment title="Songs"/>
                         <segment title="Albums"/>
+                        <segment title="Songs"/>
                     </segments>
                     <color key="tintColor" red="0.54434390939999999" green="0.54434390939999999" blue="0.54434390939999999" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>

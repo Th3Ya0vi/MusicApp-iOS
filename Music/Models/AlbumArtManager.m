@@ -48,9 +48,14 @@
 
 - (UIImage *)existingImageForAlbum: (Album *)album Size: (enum AlbumArtSize)size
 {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@_%d.jpg", [album provider], [album albumid], size]];
-
-    return ([[NSFileManager defaultManager] fileExistsAtPath:path]) ? [UIImage imageWithContentsOfFile:path] : nil;
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%d.jpg", [album albumid], size]];
+    
+    UIImage *existing = ([[NSFileManager defaultManager] fileExistsAtPath:path]) ? [UIImage imageWithContentsOfFile:path] : nil;
+    
+    if (existing == nil && size == SMALL)
+        return [self existingImageForAlbum:album Size:BIG];
+    
+    return existing;
 }
 
 - (void)cancelFromSender: (NSString *)senderid

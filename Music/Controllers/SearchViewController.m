@@ -40,7 +40,7 @@
     if (self)
     {
         self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];;
-        self.selectedScope = SONG;
+        self.selectedScope = ALBUM;
         self.title = @"Search";
         self.subViews = [[NSMutableArray alloc] initWithCapacity:2];
         
@@ -180,9 +180,9 @@
 - (IBAction)updateScope:(UISegmentedControl *)sender
 {
     if (sender.selectedSegmentIndex == 0)
-        self.selectedScope = SONG;
-    else if(sender.selectedSegmentIndex == 1)
         self.selectedScope = ALBUM;
+    else if(sender.selectedSegmentIndex == 1)
+        self.selectedScope = SONG;
 
     self.results = [[NSArray alloc] init];
     [self prepareToSearch:YES];

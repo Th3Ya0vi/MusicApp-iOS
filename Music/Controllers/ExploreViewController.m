@@ -142,7 +142,7 @@
     
     UIImageView *albumArt = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ITEM_SIZE, ITEM_SIZE)];
     [albumArt setBackgroundColor:[UIColor clearColor]];
-    [albumArt setImage:nil];
+    [albumArt setImage:[UIImage imageNamed:@"DefaultAlbumArtDark"]];
     [cell addSubview:albumArt];
     
     NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];

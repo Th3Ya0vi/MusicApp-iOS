@@ -41,6 +41,7 @@
     NSData *downloadedData = [NSKeyedArchiver archivedDataWithRootObject:[self downloads]];
     
     NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
+    [userDef setObject:[NSString stringWithFormat:@" %@", [userDef objectForKey:@"userid"]] forKey:@"useridSettings"];
     [userDef setObject:playlistData forKey:@"playlist"];
     [userDef setObject:activityData forKey:@"activity"];
     [userDef setObject:downloadedData forKey:@"downloads"];

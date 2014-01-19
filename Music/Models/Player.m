@@ -12,6 +12,12 @@
 #import "AlbumArtManager.h"
 #import <MediaPlayer/MediaPlayer.h>
 
+@interface Player ()
+
+@property (nonatomic) UIBackgroundTaskIdentifier bgTask;
+
+@end
+
 @implementation Player
 
 - (instancetype) init
@@ -21,15 +27,16 @@
     if (self)
     {
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-        
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
         self.currentStatus = STOPPED;
         self.isRepeatOn = NO;
         self.isShuffleOn = NO;
+        self.timesFailed = 0;
+        self.bgTask = UIBackgroundTaskInvalid;
         
         __block Player *weakSelf = self;
-        
+
         [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, 1) queue:nil usingBlock:^(CMTime time) {
-            
             if (!time.value)
                 return;
             
@@ -37,11 +44,15 @@
             {
                 [weakSelf setCurrentStatus: PLAYING];
                 [weakSelf setMediaInfo];
+                [weakSelf setTimesFailed:0];
+                [[UIApplication sharedApplication] endBackgroundTask:[weakSelf bgTask]];
+                [weakSelf setBgTask:UIBackgroundTaskInvalid];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:weakSelf];
         }];
-
+        
+        [self addObserver:self forKeyPath:@"currentItem" options:0 context:nil];
     }
     
     return self;
@@ -55,6 +66,42 @@
         player = [[Player alloc] init];
     }
     return player;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"currentItem"])
+    {
+        [[self currentItem] addObserver:self forKeyPath:@"status" options:0 context:nil];
+        [[self currentItem] addObserver:self forKeyPath:@"playbackBufferEmpty" options:0 context:nil];
+    }
+    else if([keyPath isEqualToString:@"status"]
+            && [[self currentItem] status] == AVPlayerItemStatusFailed)
+    {
+        [self setTimesFailed:[self timesFailed]+1];
+        if ([self timesFailed] == 3)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SongFailed" object:nil];
+            [self setCurrentStatus:STOPPED];
+            [self setTimesFailed:0];
+        }
+        else if ([self timesFailed] < 3)
+        {
+            NSLog(@"Failed to play song. trying again!");
+            [self loadCurrentSong];
+        }
+    }
+    else if([keyPath isEqualToString:@"playbackBufferEmpty"]
+            && [[self currentItem] isPlaybackBufferEmpty])
+    {
+        [self togglePlayPause];
+    }
+    else if([keyPath isEqualToString:@"playbackBufferEmpty"]
+            && ![[self currentItem] isPlaybackBufferEmpty]
+            && [[self currentItem] isPlaybackLikelyToKeepUp])
+    {
+            [self togglePlayPause];
+    }
 }
 
 - (float)getPercentCompleted
@@ -83,6 +130,8 @@
             break;
     }
     
+    [self setMediaInfo];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];
 }
 
@@ -90,12 +139,18 @@
 {
     if ([self currentStatus] == STOPPED)
     {
+        if ([self bgTask] != UIBackgroundTaskInvalid)
+            [[UIApplication sharedApplication] endBackgroundTask:[self bgTask]];
+        
+        self.bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithName:@"PlayNewSong" expirationHandler:^{
+            [[UIApplication sharedApplication] endBackgroundTask:[self bgTask]];
+        }];
+        
         [self setCurrentStatus:LOADING];
         
         Song *song = [Song currentSongInPlaylist];
         
         [self replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:[song mp3]]];
-        [Activity addWithSong:[Song currentSongInPlaylist] action:STARTEDLISTENING];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadNextSongDependingOnRepeat) name:AVPlayerItemDidPlayToEndTimeNotification object:[self currentItem]];
     }
@@ -113,7 +168,7 @@
     
     if (oldStatus == PLAYING || oldStatus == FINISHED || oldStatus == LOADING)
         [self play];
-
+    
     [self setMediaInfo];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];

@@ -24,6 +24,24 @@
                         <outlet property="delegate" destination="-1" id="dXU-bv-OGw"/>
                     </connections>
                 </tableView>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mpG-4a-35d">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem width="25" style="plain" systemItem="fixedSpace" id="Vtt-tJ-DTY"/>
+                        <barButtonItem title="Shuffle" id="ON8-Gk-dWI">
+                            <connections>
+                                <action selector="shuffle:" destination="-1" id="kzt-th-sBO"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="130" style="plain" systemItem="fixedSpace" id="yC4-zO-wV8"/>
+                        <barButtonItem title="Clear" id="Uud-1e-4Db">
+                            <connections>
+                                <action selector="clearPlaylist:" destination="-1" id="2Oc-tf-XgS"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>

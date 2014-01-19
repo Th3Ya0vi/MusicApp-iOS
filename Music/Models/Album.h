@@ -18,7 +18,6 @@
 @property (strong, nonatomic) NSArray *cast;
 @property (strong, nonatomic) NSArray *musicDirector;
 @property (nonatomic) NSInteger year;
-@property (strong, nonatomic) NSString *provider;
 @property (strong, nonatomic) NSArray *songs;
 
 - (instancetype) initWithJSON:(NSDictionary *)json;

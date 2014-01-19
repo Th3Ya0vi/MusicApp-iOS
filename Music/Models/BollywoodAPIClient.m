@@ -33,7 +33,18 @@
     {
         [self setDeveloperID:developerID];
         [self setPrivateKey:privateKey];
-        [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://www.bollywoodapi.com/v1/"]]];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"useTestURL"] == YES)
+        {
+            NSLog(@"Using Test URL");
+            [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://54.201.193.207/Bollywood-API-Dev/v1/"]]];
+        }
+        else
+        {
+            NSLog(@"Using Production URL");
+            [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://www.bollywoodapi.com/v1/"]]];
+        }
+    
     }
     
     return self;
@@ -53,7 +64,13 @@
 
 - (void)fetchExploreAlbumsWithBlock: (void (^)(NSArray *titles, NSArray *albums))block
 {
-    [[self requestOperationManager] GET:[self urlForEndpoint:EXPLORE Parameter:nil] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[self requestOperationManager] setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    
+    NSString *url = [self urlForEndpoint:EXPLORE Parameter:nil];
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
+    [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
         NSDictionary *response = (NSDictionary *)responseObject;
         
@@ -87,8 +104,11 @@
           Success:(void (^)(NSArray *objects))successBlock
           Failure:(void (^)(void))failureBlock
 {
-    [self cancelCurrentSearch];
+    [[self requestOperationManager] setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
     
+    [self cancelCurrentSearch];
+
     NSString *url;
     
     if (scope == ALBUM && isFinal)
@@ -99,22 +119,31 @@
         url = [self urlForEndpoint:SEARCH_SONG Parameter:query];
     else if (scope == SONG && isFinal == NO)
         url = [self urlForEndpoint:SEARCH_LIKE_SONG Parameter:query];
-
+    
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
     AFHTTPRequestOperation *newSearch = [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (scope == ALBUM)
             successBlock([Album albumsWithJSONArray:responseObject]);
         else if(scope == SONG)
             successBlock([Song songsWithJSONArray:responseObject]);
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
             failureBlock();
     }];
+    
     [self setCurrentSearch:newSearch];
 }
 
 - (void)postUserActivity
 {
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
     [[self requestOperationManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
+    
+    NSString *url = [self urlForEndpoint:POST_USER_ACTIVITY Parameter:nil];
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
     
     NSArray *activityCopy = [[[User currentUser] activity] copy];
     [[[User currentUser] activity] removeAllObjects];
@@ -126,10 +155,16 @@
     
     NSMutableDictionary *json = [NSMutableDictionary dictionaryWithObject:activityToPost forKey:@"data"];
     
-    [[self requestOperationManager] POST:[self urlForEndpoint:POST_USER_ACTIVITY Parameter:nil] parameters:json success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Posted activity: %@", responseObject);
+    [[self requestOperationManager] POST:url parameters:json success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"message"] isEqualToString:@"success"])
+            NSLog(@"Posted activity");
+        else
+        {
+            NSLog(@"Failed to post activity (invalid response): %@", responseObject);
+            [[[User currentUser] activity] addObjectsFromArray:activityCopy];
+        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed to post activity: %@", error);
+        NSLog(@"Failed to post activity: %@", [operation responseString]);
         [[[User currentUser] activity] addObjectsFromArray:activityCopy];
     }];
 }
@@ -137,34 +172,43 @@
 - (void)createNewUserWithSuccess:(void (^)(User *))successBlock
                          Failure:(void (^)(void))failureBlock
 {
+    [[self requestOperationManager] setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    
+    NSString *url = [self urlForEndpoint:CREATE_NEW_USER Parameter:nil];
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
+    
 #if DEBUG
-    NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
-    [userDef setObject:[NSNumber numberWithInt:2] forKey:@"userid"];
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"playlist"];
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
-    [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
-    [userDef synchronize];
-    successBlock([User currentUser]);
-#else
-    [[self requestOperationManager] GET:[self urlForEndpoint:CREATE_NEW_USER Parameter:nil] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSDictionary *response = (NSDictionary *) responseObject;
+
+        NSLog(@"Using default user");
         NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
-        [userDef setObject:[response objectForKey:@"UserID"] forKey:@"userid"];
+        [userDef setObject:[NSNumber numberWithInt:155] forKey:@"userid"];
         [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"playlist"];
         [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
         [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
         [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
         [userDef synchronize];
-        
         successBlock([User currentUser]);
+#else
+        NSLog(@"Creating new user");
+        [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSDictionary *response = (NSDictionary *) responseObject;
+            NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
+            [userDef setObject:[response objectForKey:@"UserID"] forKey:@"userid"];
+            [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"playlist"];
+            [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
+            [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
+            [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
+            [userDef synchronize];
+            
+            successBlock([User currentUser]);
 
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error creating user: %@", error);
-        failureBlock();
-    }];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error creating user: %@", error);
+            failureBlock();
+        }];
 #endif
-    
 }
 
 - (NSString *)urlForEndpoint: (enum BOLLYWOODAPI_ENDPOINT) endpoint Parameter: (NSString *)parameter;
@@ -205,26 +249,30 @@
     [[self currentSearch] cancel];
 }
 
+- (NSString *)hmacForRequest: (NSString *) request
+{
+    request = [NSString stringWithFormat:@"/%@", request];
+    /**http://stackoverflow.com/questions/14533621/objective-c-hmac-sha-256-gives-wrong-nsdata-output**/
+     const char *cKey  = [[self privateKey] cStringUsingEncoding:NSASCIIStringEncoding];
+     const char *cData = [request cStringUsingEncoding:NSASCIIStringEncoding];
+     unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
+     CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+     
+     NSMutableString *result = [NSMutableString string];
+     for (int i = 0; i < sizeof(cHMAC); i++)
+     {
+     [result appendFormat:@"%02hhx", cHMAC[i]];
+     }
+    /**--------**/
+
+    return result;
+}
+
 - (NSString *)urlQueryStrings
 {
-    NSTimeInterval timestampDBL = [[[NSDate alloc] init] timeIntervalSince1970];
-    NSString *timestamp = [NSString stringWithFormat:@"%d", (int)timestampDBL];
-    
-    /**http://stackoverflow.com/questions/14533621/objective-c-hmac-sha-256-gives-wrong-nsdata-output**/
-    const char *cKey  = [[self privateKey] cStringUsingEncoding:NSASCIIStringEncoding];
-    const char *cData = [timestamp cStringUsingEncoding:NSASCIIStringEncoding];
-    unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
-    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
-    
-    NSMutableString *result = [NSMutableString string];
-    for (int i = 0; i < sizeof(cHMAC); i++)
-    {
-        [result appendFormat:@"%02hhx", cHMAC[i]];
-    }
-    /**--------**/
-    
-    NSString *url = [NSString stringWithFormat:@"?Timestamp=%@&DeveloperID=%@&hmac=%@", timestamp, [self developerID], result];
-    
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    NSString *url = [NSString stringWithFormat:@"?DeveloperID=%@&Version=%@", [self developerID], appVersion];
+
     return url;
 }
 

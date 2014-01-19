@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "Player.h"
 
-@interface PlaylistViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface PlaylistViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @end

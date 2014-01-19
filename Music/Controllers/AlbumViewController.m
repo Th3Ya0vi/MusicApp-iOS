@@ -164,13 +164,13 @@
     switch (buttonIndex)
     {
         case 1:
-            [song addToPlaylistAndPostNotificationWithOrigin:@"Search"];
+            [song addToPlaylistAndPostNotificationWithOrigin:[self origin]];
             [[User currentUser] setCurrentPlaylistIndex:[[[User currentUser] playlist] count] - 1];
             [[Player shared] loadCurrentSong];
             [[Player shared] play];
             break;
         case 2:
-            [song addToPlaylistAndPostNotificationWithOrigin:@"Search"];
+            [song addToPlaylistAndPostNotificationWithOrigin:[self origin]];
             break;
         case 3:
             [song startDownloadWithOrigin:[self origin]];

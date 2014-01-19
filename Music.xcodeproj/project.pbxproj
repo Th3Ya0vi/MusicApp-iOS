@@ -64,6 +64,7 @@
 		78705C561857C04D00708E20 /* PlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C551857C04D00708E20 /* PlayerViewController.m */; };
 		78705C5A1858FFFE00708E20 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78705C591858FFFE00708E20 /* PlaylistView.xib */; };
 		78705C5D1859003100708E20 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C5C1859003100708E20 /* PlaylistViewController.m */; };
+		78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B01C3B18899C4800E81CAD /* Settings.bundle */; };
 		78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */; };
 		78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B9BB441879698F0075B2A5 /* iRate.bundle */; };
 		78B9BB481879698F0075B2A5 /* iRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B9BB461879698F0075B2A5 /* iRate.m */; };
@@ -180,6 +181,7 @@
 		78705C591858FFFE00708E20 /* PlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
 		78705C5B1859003100708E20 /* PlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistViewController.h; path = Controllers/PlaylistViewController.h; sourceTree = "<group>"; };
 		78705C5C1859003100708E20 /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlaylistViewController.m; path = Controllers/PlaylistViewController.m; sourceTree = "<group>"; };
+		78B01C3B18899C4800E81CAD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Music/Settings.bundle; sourceTree = "<group>"; };
 		78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageSubtitleCellView.xib; sourceTree = "<group>"; };
 		78B9BB441879698F0075B2A5 /* iRate.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = iRate.bundle; path = iRate/iRate.bundle; sourceTree = "<group>"; };
 		78B9BB451879698F0075B2A5 /* iRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iRate.h; path = iRate/iRate.h; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 		780A170A18451C3C0082A89F = {
 			isa = PBXGroup;
 			children = (
+				78B01C3B18899C4800E81CAD /* Settings.bundle */,
 				780A171C18451C3C0082A89F /* Music */,
 				780A173518451C3C0082A89F /* MusicTests */,
 				780A171518451C3C0082A89F /* Frameworks */,
@@ -535,6 +538,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */,
 				7869C829185DFBB600F877EE /* EmptyPlaylistView.xib in Resources */,
 				780A17C2184B62040082A89F /* AlbumView.xib in Resources */,
 				780A172118451C3C0082A89F /* InfoPlist.strings in Resources */,

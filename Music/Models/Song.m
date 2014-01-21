@@ -185,7 +185,6 @@
     
     [[NSFileManager defaultManager] removeItemAtPath:[[self localMp3Path] path] error:nil];
     [[[User currentUser] downloads] removeObject:self];
-    [Activity addWithSong:self action:DELETEDFROMDOWNLOADS];
     return YES;
 }
 
@@ -199,7 +198,6 @@
 
 - (void)removeFromPlaylistAndPostNotification
 {
-    [Activity addWithSong:self action:DELETEDFROMPLAYLIST];
     [[[User currentUser] playlist] removeObjectIdenticalTo:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PlaylistUpdated" object:nil];
 }

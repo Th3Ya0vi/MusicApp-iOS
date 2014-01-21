@@ -83,14 +83,8 @@
         case DOWNLOADED:
             return @"Downloaded";
             break;
-        case DELETEDFROMDOWNLOADS:
-            return @"DeletedFromDownloads";
-            break;
         case ADDEDTOPLAYLIST:
             return @"AddedToPlaylist";
-            break;
-        case DELETEDFROMPLAYLIST:
-            return @"DeletedFromPlaylist";
             break;
         case FINISHEDLISTENING:
             return @"FinishedListening";

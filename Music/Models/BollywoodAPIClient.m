@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSString *privateKey;
 @property (strong, nonatomic) AFHTTPRequestOperation *currentSearch;
 @property (strong, nonatomic) AFHTTPRequestOperationManager *requestOperationManager;
+@property (nonatomic) UIBackgroundTaskIdentifier activityTask;
 
 @end
 
@@ -33,7 +34,8 @@
     {
         [self setDeveloperID:developerID];
         [self setPrivateKey:privateKey];
-
+        [self setActivityTask:UIBackgroundTaskInvalid];
+        
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"useTestURL"] == YES)
         {
             NSLog(@"Using Test URL");
@@ -138,6 +140,17 @@
 
 - (void)postUserActivity
 {
+    if ([self activityTask] != UIBackgroundTaskInvalid)
+    {
+        NSLog(@"Already posting activity. Skipping.. %d", [self activityTask]);
+        return;
+    }
+    if ([[[User currentUser] activity] count] == 0)
+    {
+        NSLog(@"No activity to post. Skipping..");
+        return;
+    }
+    
     [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
     [[self requestOperationManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
     
@@ -153,6 +166,13 @@
         [activityToPost addObject:[obj dictionary]];
     }];
     
+    [self setActivityTask:[[UIApplication sharedApplication] beginBackgroundTaskWithName:@"PostActivity" expirationHandler:^{
+        NSLog(@"Failed to post activity: background time exceeded");
+        [[[User currentUser] activity] addObjectsFromArray:activityCopy];
+        [[UIApplication sharedApplication] endBackgroundTask:[self activityTask]];
+        [self setActivityTask:UIBackgroundTaskInvalid];
+    }]];
+    
     NSMutableDictionary *json = [NSMutableDictionary dictionaryWithObject:activityToPost forKey:@"data"];
     
     [[self requestOperationManager] POST:url parameters:json success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -163,9 +183,15 @@
             NSLog(@"Failed to post activity (invalid response): %@", responseObject);
             [[[User currentUser] activity] addObjectsFromArray:activityCopy];
         }
+        
+        [[UIApplication sharedApplication] endBackgroundTask:[self activityTask]];
+        [self setActivityTask:UIBackgroundTaskInvalid];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Failed to post activity: %@", [operation responseString]);
         [[[User currentUser] activity] addObjectsFromArray:activityCopy];
+        
+        [[UIApplication sharedApplication] endBackgroundTask:[self activityTask]];
+        [self setActivityTask:UIBackgroundTaskInvalid];
     }];
 }
 

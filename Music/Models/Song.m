@@ -86,10 +86,10 @@
 + (instancetype) currentSongInPlaylist
 {
     if ([[User currentUser] currentPlaylistIndex] >= [[[User currentUser] playlist] count])
-    {
         [[User currentUser] setCurrentPlaylistIndex:0];
+    if ([[[User currentUser] playlist] count] == 0)
         return nil;
-    }
+    
     return [[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex]];
 }
 

@@ -98,7 +98,7 @@
     {
         NSInteger currentIndex = [[User currentUser] currentPlaylistIndex];
         
-        if (indexPath.row < currentIndex || indexPath.row == [[[User currentUser] playlist] count])
+        if (indexPath.row < currentIndex || indexPath.row == [[[User currentUser] playlist] count] - 1)
             [[User currentUser] setCurrentPlaylistIndex:currentIndex - 1];
         
         [[[[User currentUser] playlist] objectAtIndex:indexPath.row] removeFromPlaylistAndPostNotification];

@@ -15,8 +15,6 @@
 #import "ExploreCollectionView.h"
 #import "ExploreCollectionViewCell.h"
 
-#define ITEM_SIZE   90
-
 @interface ExploreViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableExplore;
@@ -72,7 +70,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 200;
+    return 165;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -110,7 +108,12 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(90, 150);
+    return CGSizeMake(90, 130);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 20.0;
 }
 
 - (ExploreCollectionViewCell *)collectionView:(ExploreCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath

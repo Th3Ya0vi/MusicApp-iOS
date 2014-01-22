@@ -53,6 +53,10 @@
 		780A180D184D2BC60082A89F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780A180C184D2BC60082A89F /* MediaPlayer.framework */; };
 		780A1810184FB6DE0082A89F /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A180F184FB6DE0082A89F /* Activity.m */; };
 		7828E74B1880683800A2C2E9 /* BollywoodAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */; };
+		78424B0318904BC3000F6E99 /* ExploreCollectionCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */; };
+		78424B05189053C7000F6E99 /* ExploreTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B04189053C7000F6E99 /* ExploreTableCellView.xib */; };
+		78424B0F18905F50000F6E99 /* ExploreCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B0E18905F50000F6E99 /* ExploreCollectionView.m */; };
+		78424B1218906031000F6E99 /* ExploreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B1118906031000F6E99 /* ExploreCollectionViewCell.m */; };
 		7869C825185D1B3000F877EE /* PlayingCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C824185D1B3000F877EE /* PlayingCellView.xib */; };
 		7869C829185DFBB600F877EE /* EmptyPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */; };
 		7869C82C185DFD5300F877EE /* EmptyPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C82B185DFD5300F877EE /* EmptyPlaylistViewController.m */; };
@@ -164,6 +168,12 @@
 		7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BollywoodAPIClient.h; sourceTree = "<group>"; };
 		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BollywoodAPIClient.m; sourceTree = "<group>"; };
 		7828E7511880AA4200A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
+		78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreCollectionCellView.xib; sourceTree = "<group>"; };
+		78424B04189053C7000F6E99 /* ExploreTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreTableCellView.xib; sourceTree = "<group>"; };
+		78424B0D18905F50000F6E99 /* ExploreCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExploreCollectionView.h; path = Music/Views/ExploreCollectionView.h; sourceTree = SOURCE_ROOT; };
+		78424B0E18905F50000F6E99 /* ExploreCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExploreCollectionView.m; path = Music/Views/ExploreCollectionView.m; sourceTree = SOURCE_ROOT; };
+		78424B1018906031000F6E99 /* ExploreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExploreCollectionViewCell.h; path = Music/Views/ExploreCollectionViewCell.h; sourceTree = SOURCE_ROOT; };
+		78424B1118906031000F6E99 /* ExploreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExploreCollectionViewCell.m; path = Music/Views/ExploreCollectionViewCell.m; sourceTree = SOURCE_ROOT; };
 		7869C824185D1B3000F877EE /* PlayingCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayingCellView.xib; sourceTree = "<group>"; };
 		7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyPlaylistView.xib; sourceTree = "<group>"; };
 		7869C82A185DFD5300F877EE /* EmptyPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyPlaylistViewController.h; path = Controllers/EmptyPlaylistViewController.h; sourceTree = "<group>"; };
@@ -261,6 +271,7 @@
 			children = (
 				780A172518451C3C0082A89F /* AppDelegate.h */,
 				780A172618451C3C0082A89F /* AppDelegate.m */,
+				78424B0C18905F0E000F6E99 /* Views */,
 				780A17B9184B62040082A89F /* Nibs */,
 				780A178518451D680082A89F /* Controllers */,
 				780A175918451C9A0082A89F /* Models */,
@@ -362,6 +373,8 @@
 				78705C451854A8DC00708E20 /* ProgressCellView.xib */,
 				780A17BE184B62040082A89F /* OrderedCellView.xib */,
 				7869C824185D1B3000F877EE /* PlayingCellView.xib */,
+				78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */,
+				78424B04189053C7000F6E99 /* ExploreTableCellView.xib */,
 			);
 			path = Nibs;
 			sourceTree = "<group>";
@@ -443,6 +456,18 @@
 				780A180A184D0DE00082A89F /* BVReorderTableView.m */,
 			);
 			path = BVReorderTableView;
+			sourceTree = "<group>";
+		};
+		78424B0C18905F0E000F6E99 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				78424B0D18905F50000F6E99 /* ExploreCollectionView.h */,
+				78424B0E18905F50000F6E99 /* ExploreCollectionView.m */,
+				78424B1018906031000F6E99 /* ExploreCollectionViewCell.h */,
+				78424B1118906031000F6E99 /* ExploreCollectionViewCell.m */,
+			);
+			name = Views;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		78B9BB49187969980075B2A5 /* iRate */ = {
@@ -540,11 +565,13 @@
 			files = (
 				78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */,
 				7869C829185DFBB600F877EE /* EmptyPlaylistView.xib in Resources */,
+				78424B05189053C7000F6E99 /* ExploreTableCellView.xib in Resources */,
 				780A17C2184B62040082A89F /* AlbumView.xib in Resources */,
 				780A172118451C3C0082A89F /* InfoPlist.strings in Resources */,
 				78705C461854A8DC00708E20 /* ProgressCellView.xib in Resources */,
 				78C8024E1862501600AE709E /* ExploreView.xib in Resources */,
 				780A17C6184B62040082A89F /* OrderedCellView.xib in Resources */,
+				78424B0318904BC3000F6E99 /* ExploreCollectionCellView.xib in Resources */,
 				780A17C5184B62040082A89F /* LoadingView.xib in Resources */,
 				780A17C8184B62040082A89F /* SearchView.xib in Resources */,
 				780A17C9184B62040082A89F /* SubtitleCellView.xib in Resources */,
@@ -595,6 +622,8 @@
 				78705C511857BA1000708E20 /* Player.m in Sources */,
 				78705C5D1859003100708E20 /* PlaylistViewController.m in Sources */,
 				780A180B184D0DE00082A89F /* BVReorderTableView.m in Sources */,
+				78424B0F18905F50000F6E99 /* ExploreCollectionView.m in Sources */,
+				78424B1218906031000F6E99 /* ExploreCollectionViewCell.m in Sources */,
 				780A17F6184B621A0082A89F /* AFSecurityPolicy.m in Sources */,
 				78C802511862504E00AE709E /* ExploreViewController.m in Sources */,
 				780A1800184B621A0082A89F /* UIImageView+AFNetworking.m in Sources */,

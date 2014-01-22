@@ -12,15 +12,17 @@
 #import "AlbumViewController.h"
 #import "ExploreViewController.h"
 #import "FXBlurView.h"
+#import "ExploreCollectionView.h"
+#import "ExploreCollectionViewCell.h"
 
-#define ITEM_SIZE   150
+#define ITEM_SIZE   90
 
 @interface ExploreViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableExplore;
-@property (strong, nonatomic) NSMutableArray *collectionViews;
 @property (strong, nonatomic) NSArray *titles;
 @property (strong, nonatomic) NSArray *albums;
+@property (nonatomic) NSInteger currentRow;
 
 @end
 
@@ -33,7 +35,6 @@
     {
         [self setTitle:@"Explore"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"Explore"]];
-        self.collectionViews = [[NSMutableArray alloc] init];
         
     }
     return self;
@@ -45,6 +46,9 @@
 {
     [super viewDidLoad];
     
+    [[self tableExplore] setBackgroundColor:[UIColor whiteColor]];
+    [[self tableExplore] setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -55,112 +59,78 @@
         [self setTitles:titles];
         [self setAlbums:albums];
         
-        
         [[self tableExplore] reloadData];
     }];
 }
 
 #pragma mark - Table Data Source
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return [[self titles] objectAtIndex:section];
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 1;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[self titles] count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 150;
+    return 200;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier = @"ExploreCell";
+    static NSString *cellIdentifier = @"ExploreTableCell";
+    static NSString *cellNib = @"ExploreTableCellView";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:cellNib owner:self options:nil];
+        cell = [nibs firstObject];
     }
     
-    UICollectionView *items = (UICollectionView *)[cell viewWithTag:100];
-    
-    if (items && [items isDescendantOfView:cell])
-        return cell;
-    
-    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
-    [flow setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    
-    items = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, 150) collectionViewLayout:flow];
-    
-    [items setTag:100];
-    
-    [items setBackgroundColor:[UIColor clearColor]];
-    
-    [items registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ImageGridCell"];
+    UILabel *lblHeader = (UILabel *)[cell viewWithTag:100];
+    [lblHeader setText:[[self titles] objectAtIndex:indexPath.row]];
+
+    ExploreCollectionView *items = (ExploreCollectionView *)[cell viewWithTag:101];
     
     [items setDelegate:self];
     [items setDataSource:self];
     
-    [[self collectionViews] addObject:items];
-    [cell addSubview:items];
-    
+    [items setBelongsToRow:indexPath.row];
+
     return cell;
 }
 
 #pragma mark - Collection Data Source
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (NSInteger)collectionView:(ExploreCollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
-    return [[[self albums] objectAtIndex:sec] count];
+    return [[[self albums] objectAtIndex:[collectionView belongsToRow]] count];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(ITEM_SIZE, ITEM_SIZE);
+    return CGSizeMake(90, 150);
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+- (ExploreCollectionViewCell *)collectionView:(ExploreCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UIEdgeInsetsZero;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ImageGridCell" forIndexPath:indexPath];
+    ExploreCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ExploreCollectionCell" forIndexPath:indexPath];
     
-    UIImageView *albumArt = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ITEM_SIZE, ITEM_SIZE)];
-    [albumArt setBackgroundColor:[UIColor clearColor]];
-    [albumArt setImage:[UIImage imageNamed:@"DefaultAlbumArtDark"]];
-    [cell addSubview:albumArt];
-    
-    NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
-    NSArray *albums = [[self albums] objectAtIndex:sec];
+    NSArray *albums = [[self albums] objectAtIndex:[collectionView belongsToRow]];
     Album *album = [albums objectAtIndex:indexPath.row];
-    [[AlbumArtManager shared] fetchAlbumArtForAlbum:album Size:BIG From:@"ExploreView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
-        [albumArt setImage:image];
-    }];
+    
+    [cell setTitleText:[album name]];
+    [cell setImageFromAlbum:album];
     
     return cell;
 }
 
 #pragma mark - Collection View Delegate
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)collectionView:(ExploreCollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger sec = [[self collectionViews] indexOfObjectIdenticalTo:collectionView];
-    NSArray *albums = [[self albums] objectAtIndex:sec];
+    NSArray *albums = [[self albums] objectAtIndex:[collectionView belongsToRow]];
     
     AlbumViewController *albumView = [[AlbumViewController alloc] initWithNibName:@"AlbumView" bundle:nil];
     UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];

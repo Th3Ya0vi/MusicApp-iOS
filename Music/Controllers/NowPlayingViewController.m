@@ -40,7 +40,19 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"song"])
-        [self syncView];
+    {
+        [self resetView];
+        if ([self song])
+            [self syncView];
+    }
+}
+
+- (void)resetView
+{
+    [[self labelTitle] setText:@""];
+    [[self labelSubtitle] setText:@""];
+    [[self imageMain] setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
+    [[self imageBackground] setImage:[UIImage imageNamed:@"DefaultAlbumArtDark"]];
 }
 
 - (void)syncView

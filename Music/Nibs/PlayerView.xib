@@ -12,7 +12,6 @@
                 <outlet property="buttonPrevious" destination="bAp-50-by1" id="u7i-7G-9FQ"/>
                 <outlet property="buttonRepeat" destination="KsL-sT-9QN" id="O5b-l7-1uz"/>
                 <outlet property="labelTimeLeft" destination="TtF-Oa-egb" id="8dK-sl-p3p"/>
-                <outlet property="nowPlayingView" destination="geK-Wg-qN7" id="vG2-7N-f8c"/>
                 <outlet property="sliderSeeker" destination="dLP-va-XeM" id="cF6-Yg-5Qa"/>
                 <outlet property="view" destination="1" id="hDc-e5-GKY"/>
             </connections>
@@ -99,11 +98,6 @@
                         <constraint firstAttribute="height" constant="118" id="iA4-JQ-hvr"/>
                         <constraint firstAttribute="width" constant="320" id="jmi-2i-lO6"/>
                     </constraints>
-                </view>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="geK-Wg-qN7">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

@@ -14,24 +14,23 @@
 #import "FXBlurView.h"
 #import "NowPlayingViewController.h"
 
-#define ANIMATION_SPEED 0.2
+#define ANIMATION_SPEED 0.3
 #define PAN_THRESHOLD   100
 
 @interface PlayerViewController ()
 
-//@property (weak, nonatomic) IBOutlet UILabel *labelTitle;
-//@property (weak, nonatomic) IBOutlet UILabel *labelSubtitle;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
-//@property (weak, nonatomic) IBOutlet UIImageView *imageAlbumArt;
-//@property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
 @property (weak, nonatomic) IBOutlet UISlider *sliderSeeker;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPlayPause;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPrevious;
 @property (weak, nonatomic) IBOutlet UIButton *buttonNext;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRepeat;
-@property (weak, nonatomic) IBOutlet UIView *nowPlayingView;
 
+@property (strong, nonatomic) UIView *nowPlayingView;
 @property (strong, nonatomic) NowPlayingViewController *nowPlaying;
+
+@property (strong, nonatomic) UIView *dummyNowPlayingView;
+@property (strong, nonatomic) NowPlayingViewController *dummyNowPlaying;
 
 @end
 
@@ -47,10 +46,11 @@
         
         NowPlayingViewController *nowPlaying = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
         [self setNowPlaying:nowPlaying];
-        [self addChildViewController:[self nowPlaying]];
+
+        NowPlayingViewController *dummy = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
+        [self setDummyNowPlaying:dummy];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAlbumArtImage) name:@"SongChanged" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
     return self;
@@ -62,66 +62,24 @@
 {
     [super viewDidLoad];
     
-    //[self addGestures];
-    
-    [[[self nowPlaying] view] setFrame:[[self nowPlayingView] bounds]];
+    [self setNowPlayingView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 400)]];
     [[self nowPlayingView] addSubview:[[self nowPlaying] view]];
+    [[self view] addSubview:[self nowPlayingView]];
+    
+    [self setDummyNowPlayingView:[[UIView alloc] initWithFrame:CGRectMake(320, 0, 320, 400)]];
+    [[self dummyNowPlayingView] addSubview:[[self dummyNowPlaying] view]];
+    [[self view] addSubview:[self dummyNowPlayingView]];
 
+    [self addGestures];
+    
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
 }
-/*
-- (void)setShadow
-{
-    CGSize size = [self imageSizeAfterAspectFit:[self imageAlbumArt]];
-    
-    [[self imageAlbumArt] setFrame:CGRectMake([[self imageAlbumArt] frame].origin.x, [[self imageAlbumArt] frame].origin.y, size.width, size.height)];
-    
-    UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:[[self imageAlbumArt] bounds]];
-    [self imageAlbumArt].layer.masksToBounds = NO;
-    [self imageAlbumArt].layer.shadowColor = [UIColor blackColor].CGColor;
-    [self imageAlbumArt].layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
-    [self imageAlbumArt].layer.shadowOpacity = 0.5f;
-    [self imageAlbumArt].layer.shadowPath = shadowPath.CGPath;
-}
 
--(CGSize)imageSizeAfterAspectFit:(UIImageView*)imgview
-{
-    float newwidth;
-    float newheight;
-    
-    UIImage *image=imgview.image;
-    
-    if (image.size.height>=image.size.width){
-        newheight=imgview.frame.size.height;
-        newwidth=(image.size.width/image.size.height)*newheight;
-        
-        if(newwidth>imgview.frame.size.width){
-            float diff=imgview.frame.size.width-newwidth;
-            newheight=newheight+diff/newheight*newheight;
-            newwidth=imgview.frame.size.width;
-        }
-        
-    }
-    else{
-        newwidth=imgview.frame.size.width;
-        newheight=(image.size.height/image.size.width)*newwidth;
-        
-        if(newheight>imgview.frame.size.height){
-            float diff=imgview.frame.size.height-newheight;
-            newwidth=newwidth+diff/newwidth*newwidth;
-            newheight=imgview.frame.size.height;
-        }
-    }
-    
-    return CGSizeMake(newwidth, newheight);
-}
-*/
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     [self syncView];
-    //[self updateAlbumArtImage];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -150,8 +108,6 @@
     Song *song = [Song currentSongInPlaylist];
     
     [[self nowPlaying] setSong:song];
-    //[[self labelTitle] setText:[song name]];
-    //[[self labelSubtitle] setText:[[song album] name]];
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
     [[self sliderSeeker] setValue:[[Player shared] getPercentCompleted] animated:YES];
     [[self buttonNext] setEnabled:![[Player shared] isCurrentIndexLast]];
@@ -225,85 +181,120 @@
 }
 
 #pragma mark - Animations
-/*
-- (void)setAlbumArtPositionToOriginal
+
+- (void)animateNowPlayingToOriginal
 {
-    CGSize size = [[self imageAlbumArt] frame].size;
-    
     [UIView animateWithDuration:ANIMATION_SPEED animations:^{
-        [[self imageAlbumArt] setFrame:CGRectMake(33, 65, size.width, size.height)];
+        [[self nowPlayingView] setFrame:CGRectMake(0, 0, 320, 400)];
+        if ([[self dummyNowPlayingView] frame].origin.x < 0)
+            [[self dummyNowPlayingView] setFrame:CGRectMake(-320, 0, 320, 400)];
+        else
+            [[self dummyNowPlayingView] setFrame:CGRectMake(320, 0, 320, 400)];
     } completion:nil];
 }
 
-- (void)updateAlbumArtWhichIsNext: (BOOL)next
+- (void)animateNowPlayingToNext
 {
-    CGSize size = [[self imageAlbumArt] frame].size;
-    CGPoint origin = [[self imageAlbumArt] frame].origin;
-    
-    [UIView animateWithDuration:ANIMATION_SPEED animations:^
-    {
-        [[self imageAlbumArt] setFrame:CGRectMake((next) ? -320 : 320, origin.y, size.width, size.height)];
-        
-        
-        
-    } completion:^(BOOL finished)
-    {
-        if (finished)
-        {
-            [[self imageAlbumArt] setFrame:CGRectMake((next) ? 320 : -320, origin.y, size.width, size.height)];
-            
-            (next) ? [self playNextSong:nil] : [self playPreviousSong:nil];
-        }
+    [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] + 1]];
+    [UIView animateWithDuration:ANIMATION_SPEED animations:^{
+        [[self nowPlayingView] setFrame:CGRectMake(-320, 0, 320, 400)];
+        [[self dummyNowPlayingView] setFrame:CGRectMake(0, 0, 320, 400)];
+    } completion:^(BOOL finished) {
+        [self swapDummyWithNowPlaying];
+        [self playNextSong:nil];
     }];
-
 }
-*/
-#pragma mark - Gestures
-/*
-- (void)pan: (UIPanGestureRecognizer *)gesture
+
+- (void)animateNowPlayingToPrevious
 {
-    CGPoint origin = [[self imageAlbumArt] frame].origin;
-    CGSize size = [[self imageAlbumArt] frame].size;
+    [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] - 1]];
+    [UIView animateWithDuration:ANIMATION_SPEED animations:^{
+        [[self nowPlayingView] setFrame:CGRectMake(320, 0, 320, 400)];
+        [[self dummyNowPlayingView] setFrame:CGRectMake(0, 0, 320, 400)];
+    } completion:^(BOOL finished) {
+        [self swapDummyWithNowPlaying];
+        [self playPreviousSong:nil];
+    }];
+}
+
+#pragma mark - Gestures
+
+- (void)pan :(UIPanGestureRecognizer *)gesture
+{
+    CGPoint origin = [[self nowPlayingView] frame].origin;
+    CGSize size = [[self nowPlayingView] frame].size;
     CGPoint point = [gesture translationInView:[self view]];
-    
+
     if ([gesture state] == UIGestureRecognizerStateBegan)
-    {
         [gesture setTranslation:origin inView:[self view]];
-    }
     else if([gesture state] == UIGestureRecognizerStateChanged)
     {
-        [[self imageAlbumArt] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
-    }
-    else if([gesture state] == UIGestureRecognizerStateCancelled || [gesture state] == UIGestureRecognizerStateFailed)
-    {
-        [self setAlbumArtPositionToOriginal];
+        if (point.x > 20 && ![[Player shared] isCurrentIndexFirst])
+        {
+            [[self nowPlayingView] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
+            [[self dummyNowPlayingView] setFrame:CGRectMake(point.x - 340, origin.y, size.width, size.height)];
+            if ([[self dummyNowPlaying] song] == nil)
+                [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] - 1]];
+        }
+        else if(point.x < -20 && ![[Player shared] isCurrentIndexLast])
+        {
+            [[self nowPlayingView] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
+            [[self dummyNowPlayingView] setFrame:CGRectMake(point.x + 340, origin.y, size.width, size.height)];
+            if ([[self dummyNowPlaying] song] == nil)
+                [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] + 1]];
+        }
+        else
+        {
+            if ([[self dummyNowPlaying] song] != nil)
+                [[self dummyNowPlaying] setSong:nil];
+           [[self nowPlayingView] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
+        }
+        
     }
     else if([gesture state] == UIGestureRecognizerStateEnded)
     {
-        if (point.x <= -PAN_THRESHOLD && ![[Player shared] isCurrentIndexLast])
-            [self updateAlbumArtWhichIsNext:YES];
-        else if (point.x >= PAN_THRESHOLD && ![[Player shared] isCurrentIndexFirst])
-            [self updateAlbumArtWhichIsNext:NO];
+        if (point.x > 100 && ![[Player shared] isCurrentIndexFirst])
+            [self animateNowPlayingToPrevious];
+        else if(point.x < -100 && ![[Player shared] isCurrentIndexLast])
+            [self animateNowPlayingToNext];
         else
-            [self setAlbumArtPositionToOriginal];
+            [self animateNowPlayingToOriginal];
     }
+    else if([gesture state] == UIGestureRecognizerStateFailed || [gesture state] == UIGestureRecognizerStateCancelled)
+        [self animateNowPlayingToOriginal];
+}
+
+- (void)swapDummyWithNowPlaying
+{
+    NowPlayingViewController *tempNPVC = [self dummyNowPlaying];
+    [self setDummyNowPlaying: [self nowPlaying]];
+    [self setNowPlaying:tempNPVC];
     
+    UIView *tempNP = [self dummyNowPlayingView];
+    [self setDummyNowPlayingView:[self nowPlayingView]];
+    [self setNowPlayingView:tempNP];
+    
+    [self addGestures];
 }
 
 - (void)addGestures
 {
-    UIView *gestureWindow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 272)];
+    [[[self nowPlayingView] gestureRecognizers] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [[self nowPlayingView] removeGestureRecognizer:obj];
+    }];
+    [[[self dummyNowPlayingView] gestureRecognizers] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [[self dummyNowPlayingView] removeGestureRecognizer:obj];
+    }];
     
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(togglePlayPause:)];
     [doubleTap setNumberOfTapsRequired:2];
-    [gestureWindow addGestureRecognizer:doubleTap];
+    [[self nowPlayingView] addGestureRecognizer:doubleTap];
+
     
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-    [gestureWindow addGestureRecognizer:pan];
-    
-    [[self view] addSubview:gestureWindow];
+    [[self nowPlayingView] addGestureRecognizer:pan];
 }
-*/
+
 #pragma mark - Others
 
 - (void)songDidFailToPlay
@@ -316,54 +307,5 @@
     [[Player shared] loadNextSong];
     [[Player shared] play];
 }
-/*
-- (void)updateAlbumArtImage
-{
-    if ([[[User currentUser] playlist] count] == 0)
-        return;
-    
-    Song *song = [Song currentSongInPlaylist];
-    
-    UIImage *existingImage = [[AlbumArtManager shared] existingImageForAlbum:[song album] Size:BIG];
-    
-    if (existingImage == nil)
-    {
-        [[self imageAlbumArt] setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
-        [UIView animateWithDuration:ANIMATION_SPEED animations:^{
-                [[self imageBackground] setAlpha:0.3];
-        }];
-        
-        [[self labelTitle] setTextColor:[UIColor blackColor]];
-        [[self labelSubtitle] setTextColor:[UIColor blackColor]];
-        
-        [self setShadow];
-    }
-    
-    [[AlbumArtManager shared] fetchAlbumArtForAlbum:[song album] Size:BIG From:@"Player" CompletionBlock:^(UIImage *image, BOOL didSucceed)
-     {
-         if (didSucceed == NO)
-             [[self imageAlbumArt] setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
-         else
-             [[self imageAlbumArt] setImage:image];
-         
-         [[self labelTitle] setTextColor:[UIColor whiteColor]];
-         [[self labelSubtitle] setTextColor:[UIColor whiteColor]];
-         
-         [[Player shared] setMediaInfo];
-         
-         [[self imageBackground] setImage:[image blurredImageWithRadius:50 iterations:2 tintColor:[UIColor clearColor]]];
-
-         [UIView animateWithDuration:ANIMATION_SPEED animations:^
-          {
-              CGPoint origin = [[self imageAlbumArt] frame].origin;
-              CGSize size = [[self imageAlbumArt] frame].size;
-              
-              [[self imageAlbumArt] setFrame:CGRectMake(33, origin.y, size.width, size.height)];
-              [[self imageBackground] setAlpha:1.0];
-              
-          } completion:nil];
-     }];
-}
-*/
 
 @end

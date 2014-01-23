@@ -58,7 +58,7 @@
     UITabBarController *tabbar = [[UITabBarController alloc] init];
     [[tabbar tabBar] setTintColor:[UIColor darkGrayColor]];
     
-    PlayerViewController *playlerViewController = [[PlayerViewController alloc] initWithNibName:@"PlayerView" bundle:nil];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] initWithNibName:@"PlayerView" bundle:nil];
     
     SearchViewController *searchViewController = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
     UINavigationController *uiNavControllerForSearch = [[UINavigationController alloc] initWithRootViewController:searchViewController];
@@ -69,7 +69,7 @@
     ExploreViewController *exploreViewController = [[ExploreViewController alloc] initWithNibName:@"ExploreView" bundle:nil];
     UINavigationController *uiNavControllerForExplore = [[UINavigationController alloc] initWithRootViewController:exploreViewController];
     
-    tabbar.viewControllers = [NSArray arrayWithObjects:playlerViewController,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];
+    tabbar.viewControllers = [NSArray arrayWithObjects:playerViewController,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];
     
     [self presentViewController:tabbar animated:NO completion:nil];
 }

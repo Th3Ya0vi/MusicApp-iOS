@@ -31,10 +31,9 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)dealloc
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    [self removeObserver:self forKeyPath:@"song"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

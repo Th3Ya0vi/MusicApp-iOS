@@ -71,7 +71,10 @@
     
     tabbar.viewControllers = [NSArray arrayWithObjects:playerViewController,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];
     
-    [self presentViewController:tabbar animated:NO completion:nil];
+    [self presentViewController:tabbar animated:NO completion:^{
+        if ([[[User currentUser] playlist] count] == 0)
+            [tabbar setSelectedIndex:1];
+    }];
 }
 
 @end

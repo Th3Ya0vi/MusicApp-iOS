@@ -12,22 +12,26 @@
 #import "Player.h"
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
+#import "NowPlayingViewController.h"
 
 #define ANIMATION_SPEED 0.2
 #define PAN_THRESHOLD   100
 
 @interface PlayerViewController ()
 
-@property (weak, nonatomic) IBOutlet UILabel *labelTitle;
-@property (weak, nonatomic) IBOutlet UILabel *labelSubtitle;
+//@property (weak, nonatomic) IBOutlet UILabel *labelTitle;
+//@property (weak, nonatomic) IBOutlet UILabel *labelSubtitle;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
-@property (weak, nonatomic) IBOutlet UIImageView *imageAlbumArt;
-@property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
+//@property (weak, nonatomic) IBOutlet UIImageView *imageAlbumArt;
+//@property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
 @property (weak, nonatomic) IBOutlet UISlider *sliderSeeker;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPlayPause;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPrevious;
 @property (weak, nonatomic) IBOutlet UIButton *buttonNext;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRepeat;
+@property (weak, nonatomic) IBOutlet UIView *nowPlayingView;
+
+@property (strong, nonatomic) NowPlayingViewController *nowPlaying;
 
 @end
 
@@ -41,8 +45,12 @@
         [self setTitle:@"Player"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"music"]];
         
+        NowPlayingViewController *nowPlaying = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
+        [self setNowPlaying:nowPlaying];
+        [self addChildViewController:[self nowPlaying]];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAlbumArtImage) name:@"SongChanged" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAlbumArtImage) name:@"SongChanged" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
     return self;
@@ -54,11 +62,14 @@
 {
     [super viewDidLoad];
     
-    [self addGestures];
+    //[self addGestures];
     
+    [[[self nowPlaying] view] setFrame:[[self nowPlayingView] bounds]];
+    [[self nowPlayingView] addSubview:[[self nowPlaying] view]];
+
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
 }
-
+/*
 - (void)setShadow
 {
     CGSize size = [self imageSizeAfterAspectFit:[self imageAlbumArt]];
@@ -104,13 +115,13 @@
     
     return CGSizeMake(newwidth, newheight);
 }
-
+*/
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     [self syncView];
-    [self updateAlbumArtImage];
+    //[self updateAlbumArtImage];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -138,8 +149,9 @@
         
     Song *song = [Song currentSongInPlaylist];
     
-    [[self labelTitle] setText:[song name]];
-    [[self labelSubtitle] setText:[[song album] name]];
+    [[self nowPlaying] setSong:song];
+    //[[self labelTitle] setText:[song name]];
+    //[[self labelSubtitle] setText:[[song album] name]];
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
     [[self sliderSeeker] setValue:[[Player shared] getPercentCompleted] animated:YES];
     [[self buttonNext] setEnabled:![[Player shared] isCurrentIndexLast]];
@@ -213,7 +225,7 @@
 }
 
 #pragma mark - Animations
-
+/*
 - (void)setAlbumArtPositionToOriginal
 {
     CGSize size = [[self imageAlbumArt] frame].size;
@@ -245,9 +257,9 @@
     }];
 
 }
-
+*/
 #pragma mark - Gestures
-
+/*
 - (void)pan: (UIPanGestureRecognizer *)gesture
 {
     CGPoint origin = [[self imageAlbumArt] frame].origin;
@@ -291,7 +303,7 @@
     
     [[self view] addSubview:gestureWindow];
 }
-
+*/
 #pragma mark - Others
 
 - (void)songDidFailToPlay
@@ -304,7 +316,7 @@
     [[Player shared] loadNextSong];
     [[Player shared] play];
 }
-
+/*
 - (void)updateAlbumArtImage
 {
     if ([[[User currentUser] playlist] count] == 0)
@@ -352,6 +364,6 @@
           } completion:nil];
      }];
 }
-
+*/
 
 @end

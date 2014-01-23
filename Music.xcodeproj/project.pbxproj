@@ -57,6 +57,8 @@
 		78424B05189053C7000F6E99 /* ExploreTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B04189053C7000F6E99 /* ExploreTableCellView.xib */; };
 		78424B0F18905F50000F6E99 /* ExploreCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B0E18905F50000F6E99 /* ExploreCollectionView.m */; };
 		78424B1218906031000F6E99 /* ExploreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B1118906031000F6E99 /* ExploreCollectionViewCell.m */; };
+		78424B5E1891850C000F6E99 /* NowPlayingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B5D1891850C000F6E99 /* NowPlayingView.xib */; };
+		78424B6718918C16000F6E99 /* NowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B6618918C16000F6E99 /* NowPlayingViewController.m */; };
 		7869C825185D1B3000F877EE /* PlayingCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C824185D1B3000F877EE /* PlayingCellView.xib */; };
 		7869C829185DFBB600F877EE /* EmptyPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */; };
 		7869C82C185DFD5300F877EE /* EmptyPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C82B185DFD5300F877EE /* EmptyPlaylistViewController.m */; };
@@ -174,6 +176,9 @@
 		78424B0E18905F50000F6E99 /* ExploreCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExploreCollectionView.m; path = Music/Views/ExploreCollectionView.m; sourceTree = SOURCE_ROOT; };
 		78424B1018906031000F6E99 /* ExploreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExploreCollectionViewCell.h; path = Music/Views/ExploreCollectionViewCell.h; sourceTree = SOURCE_ROOT; };
 		78424B1118906031000F6E99 /* ExploreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExploreCollectionViewCell.m; path = Music/Views/ExploreCollectionViewCell.m; sourceTree = SOURCE_ROOT; };
+		78424B5D1891850C000F6E99 /* NowPlayingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowPlayingView.xib; sourceTree = "<group>"; };
+		78424B6518918C16000F6E99 /* NowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NowPlayingViewController.h; path = Controllers/NowPlayingViewController.h; sourceTree = "<group>"; };
+		78424B6618918C16000F6E99 /* NowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NowPlayingViewController.m; path = Controllers/NowPlayingViewController.m; sourceTree = "<group>"; };
 		7869C824185D1B3000F877EE /* PlayingCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayingCellView.xib; sourceTree = "<group>"; };
 		7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyPlaylistView.xib; sourceTree = "<group>"; };
 		7869C82A185DFD5300F877EE /* EmptyPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyPlaylistViewController.h; path = Controllers/EmptyPlaylistViewController.h; sourceTree = "<group>"; };
@@ -339,6 +344,8 @@
 			children = (
 				78705C541857C04D00708E20 /* PlayerViewController.h */,
 				78705C551857C04D00708E20 /* PlayerViewController.m */,
+				78424B6518918C16000F6E99 /* NowPlayingViewController.h */,
+				78424B6618918C16000F6E99 /* NowPlayingViewController.m */,
 				780A178B1845201E0082A89F /* SearchViewController.h */,
 				780A178C1845201E0082A89F /* SearchViewController.m */,
 				78C8024F1862504E00AE709E /* ExploreViewController.h */,
@@ -362,6 +369,7 @@
 			children = (
 				780A17BD184B62040082A89F /* LoadingView.xib */,
 				78705C521857BEB600708E20 /* PlayerView.xib */,
+				78424B5D1891850C000F6E99 /* NowPlayingView.xib */,
 				78C8024D1862501600AE709E /* ExploreView.xib */,
 				780A17C0184B62040082A89F /* SearchView.xib */,
 				78CA43E418510BB400E4A9C9 /* DownloadsView.xib */,
@@ -577,6 +585,7 @@
 				780A17C9184B62040082A89F /* SubtitleCellView.xib in Resources */,
 				78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */,
 				78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */,
+				78424B5E1891850C000F6E99 /* NowPlayingView.xib in Resources */,
 				78CA43E518510BB400E4A9C9 /* DownloadsView.xib in Resources */,
 				780A172918451C3C0082A89F /* Images.xcassets in Resources */,
 				7869C825185D1B3000F877EE /* PlayingCellView.xib in Resources */,
@@ -612,6 +621,7 @@
 				780A17F7184B621A0082A89F /* AFURLConnectionOperation.m in Sources */,
 				780A17F3184B621A0082A89F /* AFHTTPRequestOperationManager.m in Sources */,
 				780A178918451DE40082A89F /* LoadingViewController.m in Sources */,
+				78424B6718918C16000F6E99 /* NowPlayingViewController.m in Sources */,
 				780A17F5184B621A0082A89F /* AFNetworkReachabilityManager.m in Sources */,
 				780A179F184673A10082A89F /* AlbumViewController.m in Sources */,
 				78705C561857C04D00708E20 /* PlayerViewController.m in Sources */,

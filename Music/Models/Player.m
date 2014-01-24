@@ -180,7 +180,6 @@
 {
     [self setCurrentStatus:FINISHED];
     [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SongFinished" object:nil];
     ([self isRepeatOn]) ? [self loadCurrentSong] : [self loadNextSong];
 }
 

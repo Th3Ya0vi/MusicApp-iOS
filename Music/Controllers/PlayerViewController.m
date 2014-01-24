@@ -44,7 +44,6 @@
         [self addChildViewController:[self nowPlayingPageController]];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFinish) name:@"SongFinished" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
     return self;
@@ -98,6 +97,15 @@
     {
         [self showEmptyPlaylistView];
         return;
+    }
+    
+    if ([[[[self nowPlayingPageController] viewControllers] firstObject] songIndexInPlaylist] != [[User currentUser] currentPlaylistIndex])
+    {
+        [[self nowPlayingPageController]
+         setViewControllers:[NSArray arrayWithObject:[self nowPlayingViewControllerAtIndex:[[User currentUser] currentPlaylistIndex]]]
+                                           direction:UIPageViewControllerNavigationDirectionForward
+                                            animated:NO
+                                          completion:nil];
     }
     
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
@@ -219,15 +227,6 @@
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(togglePlayPause:)];
     [doubleTap setNumberOfTapsRequired:2];
     [[[self nowPlayingPageController] view] addGestureRecognizer:doubleTap];
-}
-
-- (void)songDidFinish
-{
-    [[self nowPlayingPageController]
-     setViewControllers:[NSArray arrayWithObject:[self nowPlayingViewControllerAtIndex:[[User currentUser] currentPlaylistIndex] + 1]]
-     direction:UIPageViewControllerNavigationDirectionForward
-     animated:NO
-     completion:nil];
 }
 
 - (void)songDidFailToPlay

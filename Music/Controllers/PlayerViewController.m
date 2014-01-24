@@ -26,11 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonNext;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRepeat;
 
-@property (strong, nonatomic) UIView *nowPlayingView;
-@property (strong, nonatomic) NowPlayingViewController *nowPlaying;
-
-@property (strong, nonatomic) UIView *dummyNowPlayingView;
-@property (strong, nonatomic) NowPlayingViewController *dummyNowPlaying;
+@property (strong, nonatomic) UIPageViewController *nowPlayingPageController;
 
 @end
 
@@ -44,13 +40,11 @@
         [self setTitle:@"Player"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"music"]];
         
-        NowPlayingViewController *nowPlaying = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
-        [self setNowPlaying:nowPlaying];
+        [self setNowPlayingPageController:[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil]];
+        [self addChildViewController:[self nowPlayingPageController]];
 
-        NowPlayingViewController *dummy = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
-        [self setDummyNowPlaying:dummy];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFinish) name:@"SongFinished" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
     return self;
@@ -62,16 +56,8 @@
 {
     [super viewDidLoad];
     
-    [self setNowPlayingView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 400)]];
-    [[self nowPlayingView] addSubview:[[self nowPlaying] view]];
-    [[self view] addSubview:[self nowPlayingView]];
-    
-    [self setDummyNowPlayingView:[[UIView alloc] initWithFrame:CGRectMake(320, 0, 320, 400)]];
-    [[self dummyNowPlayingView] addSubview:[[self dummyNowPlaying] view]];
-    [[self view] addSubview:[self dummyNowPlayingView]];
-
+    [self setNowPlayingPageControllerView];
     [self addGestures];
-    
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
 }
 
@@ -85,6 +71,15 @@
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
+}
+
+- (void)setNowPlayingPageControllerView
+{
+    [[[self nowPlayingPageController] view] setFrame:CGRectMake(0, 0, 320, 400)];
+    [[self nowPlayingPageController] setViewControllers:[NSArray arrayWithObject:[self nowPlayingViewControllerAtIndex:[[User currentUser] currentPlaylistIndex]]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [[self nowPlayingPageController] setDataSource:self];
+    [[self nowPlayingPageController] setDelegate:self];
+    [[self view] addSubview:[[self nowPlayingPageController] view]];
 }
 
 - (void)showEmptyPlaylistView
@@ -104,10 +99,7 @@
         [self showEmptyPlaylistView];
         return;
     }
-        
-    Song *song = [Song currentSongInPlaylist];
     
-    [[self nowPlaying] setSong:song];
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
     [[self sliderSeeker] setValue:[[Player shared] getPercentCompleted] animated:YES];
     [[self buttonNext] setEnabled:![[Player shared] isCurrentIndexLast]];
@@ -135,6 +127,46 @@
             [[self buttonPlayPause] setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
             [[self buttonPlayPause] setEnabled:YES];
             break;
+    }
+}
+
+#pragma mark - Page View Controller Data Source
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(NowPlayingViewController *)viewController
+{
+    if ([viewController songIndexInPlaylist] == [[[User currentUser] playlist] count] - 1)
+        return nil;
+    
+    return [self nowPlayingViewControllerAtIndex:[viewController songIndexInPlaylist] + 1];
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(NowPlayingViewController *)viewController
+{
+    if ([viewController songIndexInPlaylist] == 0)
+        return nil;
+    
+    return [self nowPlayingViewControllerAtIndex:[viewController songIndexInPlaylist] - 1];
+}
+
+- (NowPlayingViewController *)nowPlayingViewControllerAtIndex: (NSUInteger) index
+{
+    NowPlayingViewController *npvc = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
+    
+    [npvc setSongIndexInPlaylist:index];
+    
+    return npvc;
+}
+
+#pragma mark - Page View Controller Delegate
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
+{
+    if (completed && finished)
+    {
+        if ([[previousViewControllers firstObject] songIndexInPlaylist] < [[[pageViewController viewControllers] firstObject] songIndexInPlaylist])
+            [[Player shared] loadNextSong];
+        else
+            [[Player shared] loadPreviousSong];
     }
 }
 
@@ -180,122 +212,23 @@
     [self syncView];
 }
 
-#pragma mark - Animations
-
-- (void)animateNowPlayingToOriginal
-{
-    [UIView animateWithDuration:ANIMATION_SPEED animations:^{
-        [[self nowPlayingView] setFrame:CGRectMake(0, 0, 320, 400)];
-        if ([[self dummyNowPlayingView] frame].origin.x < 0)
-            [[self dummyNowPlayingView] setFrame:CGRectMake(-320, 0, 320, 400)];
-        else
-            [[self dummyNowPlayingView] setFrame:CGRectMake(320, 0, 320, 400)];
-    } completion:nil];
-}
-
-- (void)animateNowPlayingToNext
-{
-    [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] + 1]];
-    [UIView animateWithDuration:ANIMATION_SPEED animations:^{
-        [[self nowPlayingView] setFrame:CGRectMake(-320, 0, 320, 400)];
-        [[self dummyNowPlayingView] setFrame:CGRectMake(0, 0, 320, 400)];
-    } completion:^(BOOL finished) {
-        [self swapDummyWithNowPlaying];
-        [self playNextSong:nil];
-    }];
-}
-
-- (void)animateNowPlayingToPrevious
-{
-    [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] - 1]];
-    [UIView animateWithDuration:ANIMATION_SPEED animations:^{
-        [[self nowPlayingView] setFrame:CGRectMake(320, 0, 320, 400)];
-        [[self dummyNowPlayingView] setFrame:CGRectMake(0, 0, 320, 400)];
-    } completion:^(BOOL finished) {
-        [self swapDummyWithNowPlaying];
-        [self playPreviousSong:nil];
-    }];
-}
-
-#pragma mark - Gestures
-
-- (void)pan :(UIPanGestureRecognizer *)gesture
-{
-    CGPoint origin = [[self nowPlayingView] frame].origin;
-    CGSize size = [[self nowPlayingView] frame].size;
-    CGPoint point = [gesture translationInView:[self view]];
-
-    if ([gesture state] == UIGestureRecognizerStateBegan)
-        [gesture setTranslation:origin inView:[self view]];
-    else if([gesture state] == UIGestureRecognizerStateChanged)
-    {
-        if (point.x > 20 && ![[Player shared] isCurrentIndexFirst])
-        {
-            [[self nowPlayingView] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
-            [[self dummyNowPlayingView] setFrame:CGRectMake(point.x - 340, origin.y, size.width, size.height)];
-            if ([[self dummyNowPlaying] song] == nil)
-                [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] - 1]];
-        }
-        else if(point.x < -20 && ![[Player shared] isCurrentIndexLast])
-        {
-            [[self nowPlayingView] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
-            [[self dummyNowPlayingView] setFrame:CGRectMake(point.x + 340, origin.y, size.width, size.height)];
-            if ([[self dummyNowPlaying] song] == nil)
-                [[self dummyNowPlaying] setSong:[[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex] + 1]];
-        }
-        else
-        {
-            if ([[self dummyNowPlaying] song] != nil)
-                [[self dummyNowPlaying] setSong:nil];
-           [[self nowPlayingView] setFrame:CGRectMake(point.x, origin.y, size.width, size.height)];
-        }
-        
-    }
-    else if([gesture state] == UIGestureRecognizerStateEnded)
-    {
-        if (point.x > 100 && ![[Player shared] isCurrentIndexFirst])
-            [self animateNowPlayingToPrevious];
-        else if(point.x < -100 && ![[Player shared] isCurrentIndexLast])
-            [self animateNowPlayingToNext];
-        else
-            [self animateNowPlayingToOriginal];
-    }
-    else if([gesture state] == UIGestureRecognizerStateFailed || [gesture state] == UIGestureRecognizerStateCancelled)
-        [self animateNowPlayingToOriginal];
-}
-
-- (void)swapDummyWithNowPlaying
-{
-    NowPlayingViewController *tempNPVC = [self dummyNowPlaying];
-    [self setDummyNowPlaying: [self nowPlaying]];
-    [self setNowPlaying:tempNPVC];
-    
-    UIView *tempNP = [self dummyNowPlayingView];
-    [self setDummyNowPlayingView:[self nowPlayingView]];
-    [self setNowPlayingView:tempNP];
-    
-    [self addGestures];
-}
+#pragma mark - Others
 
 - (void)addGestures
 {
-    [[[self nowPlayingView] gestureRecognizers] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [[self nowPlayingView] removeGestureRecognizer:obj];
-    }];
-    [[[self dummyNowPlayingView] gestureRecognizers] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [[self dummyNowPlayingView] removeGestureRecognizer:obj];
-    }];
-    
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(togglePlayPause:)];
     [doubleTap setNumberOfTapsRequired:2];
-    [[self nowPlayingView] addGestureRecognizer:doubleTap];
-
-    
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-    [[self nowPlayingView] addGestureRecognizer:pan];
+    [[[self nowPlayingPageController] view] addGestureRecognizer:doubleTap];
 }
 
-#pragma mark - Others
+- (void)songDidFinish
+{
+    [[self nowPlayingPageController]
+     setViewControllers:[NSArray arrayWithObject:[self nowPlayingViewControllerAtIndex:[[User currentUser] currentPlaylistIndex] + 1]]
+     direction:UIPageViewControllerNavigationDirectionForward
+     animated:NO
+     completion:nil];
+}
 
 - (void)songDidFailToPlay
 {

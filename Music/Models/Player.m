@@ -180,6 +180,7 @@
 {
     [self setCurrentStatus:FINISHED];
     [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SongFinished" object:nil];
     ([self isRepeatOn]) ? [self loadCurrentSong] : [self loadNextSong];
 }
 
@@ -193,7 +194,6 @@
     if ([self currentStatus] != STOPPED && [self currentStatus] != FINISHED)
         [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
     [[User currentUser] setCurrentPlaylistIndex:[[User currentUser] currentPlaylistIndex] + 1];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SongChanged" object:self];
     return [self loadCurrentSong];
 }
 
@@ -203,7 +203,6 @@
     if ([self currentStatus] != STOPPED)
         [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
     [[User currentUser] setCurrentPlaylistIndex:[[User currentUser] currentPlaylistIndex] - 1];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SongChanged" object:self];
     return [self loadCurrentSong];
 
 }

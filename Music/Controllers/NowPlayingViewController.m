@@ -9,6 +9,7 @@
 #import "NowPlayingViewController.h"
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
+#import "User.h"
 
 @interface NowPlayingViewController ()
 
@@ -16,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelSubtitle;
 @property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
 @property (weak, nonatomic) IBOutlet UIImageView *imageMain;
+
+@property (strong, nonatomic) Song *song;
 
 @end
 
@@ -26,24 +29,25 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        [self addObserver:self forKeyPath:@"song" options:0 context:nil];
+        [self setSongIndexInPlaylist:0];
+        [self setSong:nil];
     }
     return self;
 }
 
-- (void)dealloc
+- (void)viewWillAppear:(BOOL)animated
 {
-    [self removeObserver:self forKeyPath:@"song"];
+    [super viewWillAppear:animated];
+    
+    [self resetView];
+    if ([self song])
+        [self syncView];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)setSongIndexInPlaylist:(NSUInteger)songIndexInPlaylist
 {
-    if ([keyPath isEqualToString:@"song"])
-    {
-        [self resetView];
-        if ([self song])
-            [self syncView];
-    }
+    _songIndexInPlaylist = songIndexInPlaylist;
+    [self setSong:[[[User currentUser] playlist] objectAtIndex:[self songIndexInPlaylist]]];
 }
 
 - (void)resetView

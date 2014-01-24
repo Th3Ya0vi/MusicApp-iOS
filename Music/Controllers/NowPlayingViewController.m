@@ -47,6 +47,8 @@
 - (void)setSongIndexInPlaylist:(NSUInteger)songIndexInPlaylist
 {
     _songIndexInPlaylist = songIndexInPlaylist;
+    if ([[[User currentUser] playlist] count] == 0)
+        return;
     [self setSong:[[[User currentUser] playlist] objectAtIndex:[self songIndexInPlaylist]]];
 }
 

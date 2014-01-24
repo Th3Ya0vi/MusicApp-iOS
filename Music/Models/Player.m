@@ -150,7 +150,8 @@
         
         Song *song = [Song currentSongInPlaylist];
         
-        [self replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:[song mp3]]];
+        [self replaceCurrentItemWithPlayerItem:[song getPlayerItem]];
+        [self seekToPercent:0.00];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadNextSongDependingOnRepeat) name:AVPlayerItemDidPlayToEndTimeNotification object:[self currentItem]];
     }

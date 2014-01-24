@@ -202,4 +202,12 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PlaylistUpdated" object:nil];
 }
 
+- (AVPlayerItem *)getPlayerItem
+{
+    if (_playerItem == nil)
+        [self setPlayerItem:[[AVPlayerItem alloc] initWithURL:[self mp3]]];
+    
+    return _playerItem;
+}
+
 @end

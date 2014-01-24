@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 #import "Album.h"
 
 enum SongAvailability {CLOUD, LOCAL, DOWNLOADING, UNAVAILABLE};
@@ -21,6 +22,7 @@ enum SongAvailability {CLOUD, LOCAL, DOWNLOADING, UNAVAILABLE};
 @property (strong, nonatomic) Album *album;
 @property (nonatomic) enum SongAvailability availability;
 @property (nonatomic, strong) NSURL *localMp3Path;
+@property (strong, nonatomic, getter = getPlayerItem) AVPlayerItem *playerItem;
 
 - (instancetype) initWithJSON:(NSDictionary *)json;
 + (NSArray *) songsWithJSONArray: (NSArray *)jsonArray;

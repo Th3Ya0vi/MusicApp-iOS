@@ -9,6 +9,7 @@
 #import "Song.h"
 #import "Album.h"
 #import "User.h"
+#import "Player.h"
 #import "Activity.h"
 #import "AFURLSessionManager.h"
 
@@ -206,6 +207,8 @@
 {
     if (_playerItem == nil)
         [self setPlayerItem:[[AVPlayerItem alloc] initWithURL:[self mp3]]];
+    else
+        [_playerItem seekToTime:kCMTimeZero];
     
     return _playerItem;
 }

@@ -53,6 +53,7 @@
         }];
         
         [self addObserver:self forKeyPath:@"currentItem" options:0 context:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadNextSongDependingOnRepeat) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     }
     
     return self;
@@ -66,6 +67,12 @@
         player = [[Player alloc] init];
     }
     return player;
+}
+
+- (void)dealloc
+{
+    [self removeObserver:self forKeyPath:@"currentItem"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:AVPlayerItemDidPlayToEndTimeNotification];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -151,9 +158,6 @@
         Song *song = [Song currentSongInPlaylist];
         
         [self replaceCurrentItemWithPlayerItem:[song getPlayerItem]];
-        [self seekToPercent:0.00];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadNextSongDependingOnRepeat) name:AVPlayerItemDidPlayToEndTimeNotification object:[self currentItem]];
     }
     
     [super play];

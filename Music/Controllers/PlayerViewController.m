@@ -51,6 +51,12 @@
 
 #pragma mark - View
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"PlayerUpdated"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"SongFailed"];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

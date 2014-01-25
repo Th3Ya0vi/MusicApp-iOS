@@ -39,6 +39,13 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"didStartDownloadingSong"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"DownloadingSong"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"DownloadedSong"];
+}
+
 #pragma mark - View
 
 - (void)viewDidLoad

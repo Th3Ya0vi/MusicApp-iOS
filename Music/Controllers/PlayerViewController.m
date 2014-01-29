@@ -45,7 +45,7 @@
         
         [self addChildViewController:[self nowPlayingPageController]];
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncNowPlayingViewWithPageDirection:) name:@"SongFinished" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncNowPlayingViewWithPageDirection:ShouldAnimate:) name:@"SongFinished" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
@@ -73,8 +73,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward];
+
+    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
+                                ShouldAnimate:NO];
     [self syncView];
 }
 
@@ -93,12 +94,12 @@
     [[self tabBarController] setViewControllers:viewControllers];
 }
 
-- (void)syncNowPlayingViewWithPageDirection: (UIPageViewControllerNavigationDirection) direction
+- (void)syncNowPlayingViewWithPageDirection: (UIPageViewControllerNavigationDirection) direction ShouldAnimate: (BOOL)animate
 {
     if (direction != UIPageViewControllerNavigationDirectionForward && direction!= UIPageViewControllerNavigationDirectionReverse)
         direction = UIPageViewControllerNavigationDirectionForward;
     
-    [[self nowPlayingPageController] setViewControllers:[NSArray arrayWithObject:[[NowPlayingViewController alloc] initWithSong:[[Playlist shared] currentSong]]] direction:direction animated:YES completion:nil];
+    [[self nowPlayingPageController] setViewControllers:[NSArray arrayWithObject:[[NowPlayingViewController alloc] initWithSong:[[Playlist shared] currentSong]]] direction:direction animated:animate completion:nil];
 }
 
 - (void)syncView
@@ -180,13 +181,15 @@
 - (IBAction)playNextSong:(UIButton *)sender
 {
     [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
-    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward];
+    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
+                                ShouldAnimate:YES];
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
 {
     [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
-    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse];
+    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse
+                                ShouldAnimate:YES];
 }
 
 - (IBAction)seekerTouched:(UISlider *)sender

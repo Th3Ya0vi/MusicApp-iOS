@@ -14,6 +14,7 @@
                 <outlet property="labelTimeLeft" destination="TtF-Oa-egb" id="8dK-sl-p3p"/>
                 <outlet property="sliderSeeker" destination="dLP-va-XeM" id="cF6-Yg-5Qa"/>
                 <outlet property="view" destination="1" id="hDc-e5-GKY"/>
+                <outlet property="viewForNowPlaying" destination="OOi-am-ier" id="vzp-hI-Fid"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -99,16 +100,22 @@
                         <constraint firstAttribute="width" constant="320" id="jmi-2i-lO6"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OOi-am-ier">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OOi-am-ier">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="320" id="8Ze-sf-XOc"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="OOi-am-ier" secondAttribute="bottom" constant="168" id="Cw9-Aa-HOE"/>
+                <constraint firstItem="OOi-am-ier" firstAttribute="top" secondItem="1" secondAttribute="top" id="S2L-Gx-Qz9"/>
                 <constraint firstAttribute="trailing" secondItem="Lqr-8A-uqd" secondAttribute="trailing" id="b1N-bs-Hgy"/>
                 <constraint firstAttribute="bottom" secondItem="Lqr-8A-uqd" secondAttribute="bottom" constant="49" id="bMx-NY-ftR"/>
+                <constraint firstItem="OOi-am-ier" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="qJ4-3s-RFZ"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>

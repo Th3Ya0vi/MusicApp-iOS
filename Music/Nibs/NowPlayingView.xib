@@ -28,22 +28,30 @@
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DefaultAlbumArt" translatesAutoresizingMaskIntoConstraints="NO" id="MS3-2p-GbT">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultAlbumArt" translatesAutoresizingMaskIntoConstraints="NO" id="MS3-2p-GbT">
                     <rect key="frame" x="33" y="60" width="255" height="255"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pym-hx-jLc">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pym-hx-jLc">
                     <rect key="frame" x="36" y="328" width="252" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="EIk-c9-g9R"/>
+                        <constraint firstAttribute="width" constant="252" id="fgI-Sv-4ZD"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
                     <color key="textColor" red="0.93987165179999999" green="0.93987165179999999" blue="0.93987165179999999" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="highlightedColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <color key="shadowColor" red="0.21336052040603437" green="0.24631861831373555" blue="0.28318319515306123" alpha="1" colorSpace="calibratedRGB"/>
                     <size key="shadowOffset" width="-1" height="1"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wny-6b-zj5">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wny-6b-zj5">
                     <rect key="frame" x="36" y="359" width="252" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="252" id="TAT-s2-EBo"/>
+                        <constraint firstAttribute="height" constant="21" id="gX0-vZ-rs0"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                     <color key="textColor" red="0.93987165179999999" green="0.93987165179999999" blue="0.93987165179999999" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="highlightedColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -52,6 +60,16 @@
                 </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="wny-6b-zj5" secondAttribute="bottom" constant="20" id="5V8-vk-omj"/>
+                <constraint firstItem="Pym-hx-jLc" firstAttribute="top" secondItem="MS3-2p-GbT" secondAttribute="bottom" constant="13" id="F0R-cp-L7G"/>
+                <constraint firstAttribute="trailing" secondItem="MS3-2p-GbT" secondAttribute="trailing" constant="32" id="UlA-bb-aNI"/>
+                <constraint firstItem="wny-6b-zj5" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="36" id="ZKb-FF-LSf"/>
+                <constraint firstItem="MS3-2p-GbT" firstAttribute="top" secondItem="1" secondAttribute="top" constant="60" id="ZOZ-t2-Tls"/>
+                <constraint firstItem="Pym-hx-jLc" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="36" id="cMj-wf-bjM"/>
+                <constraint firstAttribute="bottom" secondItem="Pym-hx-jLc" secondAttribute="bottom" constant="42" id="was-nh-cJx"/>
+                <constraint firstItem="MS3-2p-GbT" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="33" id="xnx-xL-R42"/>
+            </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>

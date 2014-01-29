@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonPrevious;
 @property (weak, nonatomic) IBOutlet UIButton *buttonNext;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRepeat;
+@property (weak, nonatomic) IBOutlet UIView *viewForNowPlaying;
 
 @property (strong, nonatomic) UIPageViewController *nowPlayingPageController;
 
@@ -39,7 +40,6 @@
         [[self tabBarItem] setImage:[UIImage imageNamed:@"music"]];
         
         [self setNowPlayingPageController:[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil]];
-        [[[self nowPlayingPageController] view] setFrame:CGRectMake(0, 0, 320, 400)];
         [[self nowPlayingPageController] setDataSource:self];
         [[self nowPlayingPageController] setDelegate:self];
         
@@ -65,6 +65,7 @@
 {
     [super viewDidLoad];
     
+    [[[self nowPlayingPageController] view] setFrame:[[self viewForNowPlaying] frame]];
     [[self view] addSubview:[[self nowPlayingPageController] view]];
     [self addGestures];
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];

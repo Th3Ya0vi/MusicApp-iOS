@@ -36,11 +36,19 @@
         
         [self setIsShuffling:NO];
         
+        [[NSNotificationCenter defaultCenter] addObserverForName:@"SongFinished" object:Nil queue:nil usingBlock:^(NSNotification *note) {
+            [[self tablePlaylist] reloadData];
+        }];
     }
     return self;
 }
 
 #pragma mark - View
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SongFinished" object:nil];
+}
 
 - (void)viewDidLoad
 {

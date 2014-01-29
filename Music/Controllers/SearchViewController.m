@@ -14,6 +14,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "Player.h"
 #import "Activity.h"
+#import "SongOptionsViewController.h"
 #import "BollywoodAPIClient.h"
 
 #define MIN_SEARCH_LENGTH   3
@@ -34,9 +35,9 @@
 
 @implementation SearchViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"SearchView" bundle:nil];
     if (self)
     {
         self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];;
@@ -141,35 +142,17 @@
     if ([self selectedScope] == SONG)
     {
         Song *song = [self.results objectAtIndex:indexPath.row];
-        if ([song availability] == CLOUD)
-        {
-            UIAlertView *options = [[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", @"Download", nil];
-            
-            self.selectedRow = indexPath.row;
-            
-            [options show];
-        }
-        else if([song availability] == LOCAL)
-        {
-            UIAlertView *options = [[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", nil];
-            self.selectedRow = indexPath.row;
-            [options show];
-        }
-        else if([song availability] == UNAVAILABLE)
-        {
-            [self songIsUnavailable];
-            [Activity addWithSong:song action:INCORRECTDATA];
-        }
+        
+        SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:@"Search"];
+        [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
+        [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
     }
     else
     {
-        AlbumViewController *albumDetails = [[AlbumViewController alloc] initWithNibName:@"AlbumView" bundle:nil];
+        AlbumViewController *albumDetails = [[AlbumViewController alloc] initWithAlbum:[[self results] objectAtIndex:indexPath.row] Origin:@"Search"];
         UINavigationController *uiNavControllerForAlbumDetails = [[UINavigationController alloc] initWithRootViewController:albumDetails];
-        
-        [albumDetails setAlbum:[[self results] objectAtIndex:indexPath.row]];
-        [albumDetails setOrigin:@"Search"];
-    
-        [self presentViewController:uiNavControllerForAlbumDetails animated:YES completion:nil];
+        [[self tabBarController] setModalPresentationStyle:UIModalPresentationNone];
+        [[self tabBarController] presentViewController:uiNavControllerForAlbumDetails animated:YES completion:nil];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -211,30 +194,6 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [[self navigationItem] setRightBarButtonItem:nil];
-}
-
-#pragma mark - Alert View Delegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    Song *song = [self.results objectAtIndex:self.selectedRow];
-    switch (buttonIndex)
-    {
-        case 1:
-            [song addToPlaylistAndPostNotificationWithOrigin:@"Search"];
-            [[User currentUser] setCurrentPlaylistIndex:[[[User currentUser] playlist] count] - 1];
-            [[Player shared] loadCurrentSong];
-            [[Player shared] play];
-            break;
-        case 2:
-            [song addToPlaylistAndPostNotificationWithOrigin:@"Search"];
-            break;
-        case 3:
-            [song startDownloadWithOrigin:@"Search"];
-            break;
-        default:
-            break;
-    }
 }
 
 #pragma mark - Others

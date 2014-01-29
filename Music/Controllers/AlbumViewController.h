@@ -15,4 +15,6 @@
 @property (strong, nonatomic) Album* album;
 @property (strong, nonatomic) NSString *origin;
 
+- (id)initWithAlbum: (Album *) album Origin: (NSString *)origin;
+
 @end

@@ -20,5 +20,6 @@
 - (void)fetchAlbumArtForAlbum: (Album *)album Size:(enum AlbumArtSize)size From: (NSString *)senderid CompletionBlock: (void(^)(UIImage *image, BOOL didSucceed))block;
 - (UIImage *)existingImageForAlbum: (Album *)album Size: (enum AlbumArtSize)size;
 - (void)cancelFromSender: (NSString *)senderid;
+- (void)deleteAllSavedImages;
 
 @end

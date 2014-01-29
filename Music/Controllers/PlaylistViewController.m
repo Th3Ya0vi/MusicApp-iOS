@@ -9,19 +9,21 @@
 #import "PlaylistViewController.h"
 #import "BVReorderTableView.h"
 #import "User.h"
+#import "Playlist.h"
 #import "Activity.h"
 
 @interface PlaylistViewController ()
 
 @property (weak, nonatomic) IBOutlet BVReorderTableView *tablePlaylist;
+@property (nonatomic) BOOL isShuffling;
 
 @end
 
 @implementation PlaylistViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"PlaylistView" bundle:nil];
     if (self)
     {
         [self setTitle:@"Playlist"];
@@ -31,7 +33,9 @@
         UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(shuffle:)];
         [swipe setDirection:UISwipeGestureRecognizerDirectionRight];
         [[self view] addGestureRecognizer:swipe];
-
+        
+        [self setIsShuffling:NO];
+        
     }
     return self;
 }
@@ -56,7 +60,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[User currentUser] playlist] count];
+    return ([self isShuffling]) ? 0 : [[Playlist shared] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -66,7 +70,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    BOOL isCurrent = indexPath.row == [[User currentUser] currentPlaylistIndex];
+    BOOL isCurrent = indexPath.row == [[Playlist shared] currentIndex];
     
     NSString *cellIdentifier = (isCurrent) ? @"PlayingCell" : @"OrderedCell";
     NSString *cellNib = (isCurrent) ? @"PlayingCellView" : @"OrderedCellView";
@@ -87,7 +91,7 @@
     else
         [number setText: [NSString stringWithFormat:@"%d.", indexPath.row + 1]];
     
-    title.text = [[[[User currentUser] playlist] objectAtIndex:indexPath.row] name];
+    [title setText:[[[Playlist shared] songAtIndex:indexPath.row] name]];
     
     return cell;
 }
@@ -96,16 +100,8 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        NSInteger currentIndex = [[User currentUser] currentPlaylistIndex];
-        
-        if (indexPath.row < currentIndex || indexPath.row == [[[User currentUser] playlist] count] - 1)
-            [[User currentUser] setCurrentPlaylistIndex:currentIndex - 1];
-        
-        [[[[User currentUser] playlist] objectAtIndex:indexPath.row] removeFromPlaylistAndPostNotification];
-        
-        if ([[[User currentUser] playlist] count] == 0)
-            [[User currentUser] setCurrentPlaylistIndex:0];
-        
+        [[Playlist shared] removeSongAtIndex:indexPath.row];
+
         [CATransaction begin];
         [tableView beginUpdates];
         [CATransaction setCompletionBlock:^{
@@ -122,71 +118,46 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([[Player shared] currentStatus] != STOPPED)
-        [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-    [[User currentUser] setCurrentPlaylistIndex:indexPath.row];
-    [[Player shared] loadCurrentSong];
+    [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:isPlayerPlaying];
     [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return ([[Player shared] currentStatus] == PLAYING && [[User currentUser] currentPlaylistIndex] == indexPath.row) ? NO : YES;
+    return (previousSongInPlaylist && [[Playlist shared] currentIndex] == indexPath.row) ? NO : YES;
 }
 
 #pragma mark Table Row Draggable Delegate
 
 - (id)saveObjectAndInsertBlankRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [[[User currentUser] playlist] objectAtIndex:indexPath.row];
+    return [[Playlist shared] songAtIndex:indexPath.row];
 }
 
 - (void)moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    Song *song = [[[User currentUser] playlist] objectAtIndex:fromIndexPath.row];
-    [[[User currentUser] playlist] removeObjectAtIndex:fromIndexPath.row];
-    [[[User currentUser] playlist] insertObject:song atIndex:toIndexPath.row];
-    
-    NSInteger currentIndex = [[User currentUser] currentPlaylistIndex];
-    
-    if (fromIndexPath.row == currentIndex)
-        [[User currentUser] setCurrentPlaylistIndex:toIndexPath.row];
-    else if(fromIndexPath.row < currentIndex && toIndexPath.row >= currentIndex)
-        [[User currentUser] setCurrentPlaylistIndex:currentIndex - 1];
-    else if(fromIndexPath.row > currentIndex && toIndexPath.row <= currentIndex)
-        [[User currentUser] setCurrentPlaylistIndex:currentIndex + 1];
-        
+    [[Playlist shared] swapSong:[[Playlist shared] songAtIndex:fromIndexPath.row] With:[[Playlist shared] songAtIndex:toIndexPath.row]];
 }
 
 - (void)finishReorderingWithObject:(id)object atIndexPath:(NSIndexPath *)indexPath;
 {
-    [[[User currentUser] playlist] replaceObjectAtIndex:indexPath.row withObject:object];
+    
 }
 
 #pragma mark - Others
 
 - (IBAction)shuffle:(id)sender
 {
-    User *user = [User currentUser];
-    Song *currentSong = [[user playlist] objectAtIndex:[user currentPlaylistIndex]];
-    NSMutableArray *playlistCopy = [[user playlist] mutableCopy];
-    
-    [playlistCopy sortUsingComparator:^NSComparisonResult(id obj1, id obj2)
-    {
-        return rand()%100 < 50;
-    }];
-    
-    [user setCurrentPlaylistIndex:[playlistCopy indexOfObject:currentSong]];
-    
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[[user playlist] count]]
-    ;
-    [[user playlist] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
-    }];
-    [[user playlist] removeAllObjects];
+    [self setIsShuffling:YES];
+    [[Playlist shared] shuffle];
+ 
+    NSArray *indexPaths = [[self tablePlaylist] indexPathsForVisibleRows];
+
     [[self tablePlaylist] deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
-    [user setPlaylist:playlistCopy];
+    
+    [self setIsShuffling:NO];
+    
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
 }
 
@@ -199,13 +170,8 @@
 {
     if (buttonIndex == 1)
     {
-        if ([[Player shared] currentStatus] != STOPPED)
-        {
-            [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-            [[Player shared] togglePlayPause];
-        }
-        
-        [[[User currentUser] playlist] removeAllObjects];
+        [[Player shared] stop];
+        [[Playlist shared] clear];
         [self closeView];
     }
 }

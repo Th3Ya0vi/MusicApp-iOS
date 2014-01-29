@@ -26,10 +26,7 @@ enum SongAvailability {CLOUD, LOCAL, DOWNLOADING, UNAVAILABLE};
 
 - (instancetype) initWithJSON:(NSDictionary *)json;
 + (NSArray *) songsWithJSONArray: (NSArray *)jsonArray;
-+ (instancetype) currentSongInPlaylist;
 - (void)startDownloadWithOrigin: (NSString *)origin;
 - (BOOL) deleteLocalFile;
-- (void) addToPlaylistAndPostNotificationWithOrigin: (NSString *)origin;
-- (void)removeFromPlaylistAndPostNotification;
 
 @end

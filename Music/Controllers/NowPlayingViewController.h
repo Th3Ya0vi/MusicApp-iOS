@@ -11,6 +11,8 @@
 
 @interface NowPlayingViewController : UIViewController
 
-@property (nonatomic) NSUInteger songIndexInPlaylist;
+@property (strong, nonatomic) Song *song;
+
+- (id)initWithSong: (Song *)song;
 
 @end

@@ -10,6 +10,7 @@
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
 #import "User.h"
+#import "Playlist.h"
 
 @interface NowPlayingViewController ()
 
@@ -18,20 +19,19 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
 @property (weak, nonatomic) IBOutlet UIImageView *imageMain;
 
-@property (strong, nonatomic) Song *song;
-
 @end
 
 @implementation NowPlayingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithSong: (Song *)song
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"NowPlayingView" bundle:nil];
+    
     if (self)
     {
-        [self setSongIndexInPlaylist:0];
-        [self setSong:nil];
+        [self setSong:song];
     }
+    
     return self;
 }
 
@@ -42,14 +42,6 @@
     [self resetView];
     if ([self song])
         [self syncView];
-}
-
-- (void)setSongIndexInPlaylist:(NSUInteger)songIndexInPlaylist
-{
-    _songIndexInPlaylist = songIndexInPlaylist;
-    if ([[[User currentUser] playlist] count] == 0)
-        return;
-    [self setSong:[[[User currentUser] playlist] objectAtIndex:[self songIndexInPlaylist]]];
 }
 
 - (void)resetView

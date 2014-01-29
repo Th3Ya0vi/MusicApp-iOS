@@ -10,6 +10,7 @@
 #import "Player.h"
 #import "Activity.h"
 #import "AlbumArtManager.h"
+#import "Playlist.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface Player ()
@@ -28,9 +29,8 @@
     {
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         [[AVAudioSession sharedInstance] setActive:YES error:nil];
-        self.currentStatus = STOPPED;
+        self.currentStatus = NOT_STARTED;
         self.isRepeatOn = NO;
-        self.isShuffleOn = NO;
         self.timesFailed = 0;
         self.bgTask = UIBackgroundTaskInvalid;
         
@@ -79,6 +79,8 @@
 {
     if ([keyPath isEqualToString:@"currentItem"])
     {
+        [self setMediaInfo];
+        
         [[self currentItem] addObserver:self forKeyPath:@"status" options:0 context:nil];
         [[self currentItem] addObserver:self forKeyPath:@"playbackBufferEmpty" options:0 context:nil];
     }
@@ -89,13 +91,13 @@
         if ([self timesFailed] == 3)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SongFailed" object:nil];
-            [self setCurrentStatus:STOPPED];
+            [self setCurrentStatus:NOT_STARTED];
             [self setTimesFailed:0];
         }
         else if ([self timesFailed] < 3)
         {
             NSLog(@"Failed to play song. trying again!");
-            [self loadCurrentSong];
+            [self loadSong:[[Playlist shared] currentSong] ShouldPlay:YES];
         }
     }
     else if([keyPath isEqualToString:@"playbackBufferEmpty"]
@@ -126,14 +128,16 @@
             break;
         case PAUSED:
             [self play];
-            [self setCurrentStatus: PLAYING];
+            [self setCurrentStatus:PLAYING];
             break;
-        case STOPPED:
-            [self loadCurrentSong];
+        case NOT_STARTED:
             [self play];
             break;
-        default:
-            return;
+        case FINISHED:
+            [self loadSong:nextSongInPlaylist ShouldPlay:YES];
+            [self play];
+            break;
+        case LOADING:
             break;
     }
     
@@ -144,7 +148,7 @@
 
 - (void)play
 {
-    if ([self currentStatus] == STOPPED)
+    if ([self currentStatus] == NOT_STARTED)
     {
         if ([self bgTask] != UIBackgroundTaskInvalid)
             [[UIApplication sharedApplication] endBackgroundTask:[self bgTask]];
@@ -155,71 +159,31 @@
         
         [self setCurrentStatus:LOADING];
         
-        Song *song = [Song currentSongInPlaylist];
-        
-        [self replaceCurrentItemWithPlayerItem:[song getPlayerItem]];
+        [self replaceCurrentItemWithPlayerItem:[[[Playlist shared] currentSong] getPlayerItem]];
+ 
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];
     }
     
     [super play];
 }
 
-- (BOOL) loadCurrentSong
-{
-    if ([[[User currentUser] playlist] count] == 0) return NO;
-    
-    [self replaceCurrentItemWithPlayerItem:nil];
-    enum Status oldStatus = [self currentStatus];
-    [self setCurrentStatus:STOPPED];
-    
-    if (oldStatus == PLAYING || oldStatus == FINISHED || oldStatus == LOADING)
-        [self play];
-    
-    [self setMediaInfo];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];
-    
-    return YES;
-}
-
 - (void)loadNextSongDependingOnRepeat
 {
-    [self setCurrentStatus:FINISHED];
-    [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
-    ([self isRepeatOn]) ? [self loadCurrentSong] : [self loadNextSong];
+    ([self isRepeatOn]) ? [self loadSong:[[Playlist shared] currentSong] ShouldPlay:YES] : [self loadSong:nextSongInPlaylist ShouldPlay:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SongFinished" object:nil];
 }
 
-- (BOOL) loadNextSong
+- (void)loadSong: (Song *)song ShouldPlay: (BOOL) play
 {
-    if ([self isCurrentIndexLast])
-    {
-        [self setCurrentStatus:STOPPED];
-        return [self loadCurrentSong];
-    }
-    if ([self currentStatus] != STOPPED && [self currentStatus] != FINISHED)
-        [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
-    [[User currentUser] setCurrentPlaylistIndex:[[User currentUser] currentPlaylistIndex] + 1];
-    return [self loadCurrentSong];
-}
-
-- (BOOL) loadPreviousSong
-{
-    if ([self isCurrentIndexFirst]) return NO;
-    if ([self currentStatus] != STOPPED)
-        [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [self getPercentCompleted]]];
-    [[User currentUser] setCurrentPlaylistIndex:[[User currentUser] currentPlaylistIndex] - 1];
-    return [self loadCurrentSong];
-
-}
-
-- (BOOL) isCurrentIndexLast
-{
-    if ([[[User currentUser] playlist] count] == 0) return YES;
-    return ([[User currentUser] currentPlaylistIndex] == [[[User currentUser] playlist] count] - 1) ? YES : NO;
-}
-
-- (BOOL) isCurrentIndexFirst
-{
-    return ([[User currentUser] currentPlaylistIndex] == 0) ? YES : NO;
+    [self stop];
+    [self setCurrentStatus:NOT_STARTED];
+    
+    [[Playlist shared] setCurrentSong:song];
+    
+    if (play)
+        [self play];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];
 }
 
 - (void)seekToPercent: (float)percent
@@ -232,7 +196,7 @@
 
 - (void)setMediaInfo
 {
-    Song *song = [Song currentSongInPlaylist];
+    Song *song = [[Playlist shared] currentSong];
     UIImage *albumArt = [[AlbumArtManager shared] existingImageForAlbum:[song album] Size:BIG];
     
     NSArray *keys = [NSArray arrayWithObjects:
@@ -268,6 +232,18 @@
     
     NSString *strVal = [NSString stringWithFormat:@"%d:%02d", intMins, secs];
     return strVal;
+}
+
+- (void)stop
+{
+    if ([self currentStatus] == PLAYING)
+        [self togglePlayPause];
+    
+    if ([self currentStatus] == PLAYING || [self currentStatus] == PAUSED)
+    {
+        [Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
+        [self setCurrentStatus:FINISHED];
+    }
 }
 
 @end

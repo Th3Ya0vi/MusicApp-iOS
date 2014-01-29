@@ -10,12 +10,10 @@
 #import "PlaylistViewController.h"
 #import "EmptyPlaylistViewController.h"
 #import "Player.h"
+#import "Playlist.h"
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
 #import "NowPlayingViewController.h"
-
-#define ANIMATION_SPEED 0.3
-#define PAN_THRESHOLD   100
 
 @interface PlayerViewController ()
 
@@ -32,17 +30,22 @@
 
 @implementation PlayerViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"PlayerView" bundle:nil];
     if (self)
     {
         [self setTitle:@"Player"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"music"]];
         
         [self setNowPlayingPageController:[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil]];
+        [[[self nowPlayingPageController] view] setFrame:CGRectMake(0, 0, 320, 400)];
+        [[self nowPlayingPageController] setDataSource:self];
+        [[self nowPlayingPageController] setDelegate:self];
+        
         [self addChildViewController:[self nowPlayingPageController]];
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncNowPlayingViewWithPageDirection:) name:@"SongFinished" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
     }
@@ -53,15 +56,16 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"PlayerUpdated"];
-    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"SongFailed"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SongFinished" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"PlayerUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SongFailed" object:nil];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self setNowPlayingPageControllerView];
+    [[self view] addSubview:[[self nowPlayingPageController] view]];
     [self addGestures];
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
 }
@@ -70,6 +74,7 @@
 {
     [super viewWillAppear:animated];
     
+    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward];
     [self syncView];
 }
 
@@ -78,18 +83,9 @@
     return UIStatusBarStyleLightContent;
 }
 
-- (void)setNowPlayingPageControllerView
-{
-    [[[self nowPlayingPageController] view] setFrame:CGRectMake(0, 0, 320, 400)];
-    [[self nowPlayingPageController] setViewControllers:[NSArray arrayWithObject:[self nowPlayingViewControllerAtIndex:[[User currentUser] currentPlaylistIndex]]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    [[self nowPlayingPageController] setDataSource:self];
-    [[self nowPlayingPageController] setDelegate:self];
-    [[self view] addSubview:[[self nowPlayingPageController] view]];
-}
-
 - (void)showEmptyPlaylistView
 {
-    EmptyPlaylistViewController *empty = [[EmptyPlaylistViewController alloc] initWithNibName:@"EmptyPlaylistView" bundle:nil];
+    EmptyPlaylistViewController *empty = [[EmptyPlaylistViewController alloc] initWithNib];
     UINavigationController *navForEmpty = [[UINavigationController alloc] initWithRootViewController:empty];
 
     NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
@@ -97,27 +93,26 @@
     [[self tabBarController] setViewControllers:viewControllers];
 }
 
+- (void)syncNowPlayingViewWithPageDirection: (UIPageViewControllerNavigationDirection) direction
+{
+    if (direction != UIPageViewControllerNavigationDirectionForward && direction!= UIPageViewControllerNavigationDirectionReverse)
+        direction = UIPageViewControllerNavigationDirectionForward;
+    
+    [[self nowPlayingPageController] setViewControllers:[NSArray arrayWithObject:[[NowPlayingViewController alloc] initWithSong:[[Playlist shared] currentSong]]] direction:direction animated:YES completion:nil];
+}
+
 - (void)syncView
 {
-    if ([[[User currentUser] playlist] count] == 0)
+    if ([[Playlist shared] count] == 0)
     {
         [self showEmptyPlaylistView];
         return;
     }
     
-    if ([[[[self nowPlayingPageController] viewControllers] firstObject] songIndexInPlaylist] != [[User currentUser] currentPlaylistIndex])
-    {
-        [[self nowPlayingPageController]
-         setViewControllers:[NSArray arrayWithObject:[self nowPlayingViewControllerAtIndex:[[User currentUser] currentPlaylistIndex]]]
-                                           direction:UIPageViewControllerNavigationDirectionForward
-                                            animated:NO
-                                          completion:nil];
-    }
-    
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
     [[self sliderSeeker] setValue:[[Player shared] getPercentCompleted] animated:YES];
-    [[self buttonNext] setEnabled:![[Player shared] isCurrentIndexLast]];
-    [[self buttonPrevious] setEnabled:![[Player shared] isCurrentIndexFirst]];
+    [[self buttonNext] setEnabled:![[Playlist shared] isCurrentSongLast]];
+    [[self buttonPrevious] setEnabled:![[Playlist shared] isCurrentSongFirst]];
     [[self buttonRepeat] setImage:[UIImage imageNamed:([[Player shared] isRepeatOn]) ? @"repeat" : @"norepeat"] forState:UIControlStateNormal];
     
     switch ([[Player shared] currentStatus])
@@ -126,7 +121,7 @@
             [[self buttonPlayPause] setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
             [[self buttonPlayPause] setEnabled:YES];
             break;
-        case STOPPED:
+        case NOT_STARTED:
             [[self buttonPlayPause] setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
             [[self buttonPlayPause] setEnabled:YES];
             break;
@@ -148,27 +143,18 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(NowPlayingViewController *)viewController
 {
-    if ([viewController songIndexInPlaylist] == [[[User currentUser] playlist] count] - 1)
+    if ([[Playlist shared] songAfter:[viewController song]] == nil)
         return nil;
     
-    return [self nowPlayingViewControllerAtIndex:[viewController songIndexInPlaylist] + 1];
+    return [[NowPlayingViewController alloc] initWithSong:[[Playlist shared] songAfter:[viewController song]]];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(NowPlayingViewController *)viewController
 {
-    if ([viewController songIndexInPlaylist] == 0)
+    if ([[Playlist shared] songBefore:[viewController song]] == nil)
         return nil;
-    
-    return [self nowPlayingViewControllerAtIndex:[viewController songIndexInPlaylist] - 1];
-}
 
-- (NowPlayingViewController *)nowPlayingViewControllerAtIndex: (NSUInteger) index
-{
-    NowPlayingViewController *npvc = [[NowPlayingViewController alloc] initWithNibName:@"NowPlayingView" bundle:nil];
-    
-    [npvc setSongIndexInPlaylist:index];
-    
-    return npvc;
+    return [[NowPlayingViewController alloc] initWithSong:[[Playlist shared] songBefore:[viewController song]]];
 }
 
 #pragma mark - Page View Controller Delegate
@@ -177,10 +163,10 @@
 {
     if (completed && finished)
     {
-        if ([[previousViewControllers firstObject] songIndexInPlaylist] < [[[pageViewController viewControllers] firstObject] songIndexInPlaylist])
-            [[Player shared] loadNextSong];
-        else
-            [[Player shared] loadPreviousSong];
+        if ([[Playlist shared] songAfter:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
+            [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
+        else if ([[Playlist shared] songBefore:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
+            [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
     }
 }
 
@@ -193,17 +179,19 @@
 
 - (IBAction)playNextSong:(UIButton *)sender
 {
-    [[Player shared] loadNextSong];
+    [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
+    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward];
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
 {
-    [[Player shared] loadPreviousSong];
+    [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
+    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse];
 }
 
 - (IBAction)seekerTouched:(UISlider *)sender
 {
-    if ([[Player shared] currentStatus] == PLAYING)
+    if (isPlayerPlaying)
         [[Player shared] togglePlayPause];
 }
 
@@ -214,10 +202,11 @@
 
 - (IBAction)showPlaylist:(UIButton *)sender
 {
-    PlaylistViewController *playlistView = [[PlaylistViewController alloc] initWithNibName:@"PlaylistView" bundle:nil];
+    PlaylistViewController *playlistView = [[PlaylistViewController alloc] initWithNib];
     UINavigationController *navForPlaylist = [[UINavigationController alloc] initWithRootViewController:playlistView];
     
-    [self presentViewController:navForPlaylist animated:YES completion:nil];
+    [[self tabBarController] setModalPresentationStyle:UIModalPresentationNone];
+    [[self tabBarController] presentViewController:navForPlaylist animated:YES completion:nil];
 }
 
 - (IBAction)toggleRepeat:(UIButton *)sender
@@ -239,11 +228,10 @@
 {
     [[[UIAlertView alloc] initWithTitle:@"Failed to play this song" message:@"Please try again later." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
     
-    [[Player shared] setCurrentStatus:STOPPED];
+    [[Player shared] setCurrentStatus:NOT_STARTED];
     [self syncView];
     
-    [[Player shared] loadNextSong];
-    [[Player shared] play];
+    [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:YES];
 }
 
 @end

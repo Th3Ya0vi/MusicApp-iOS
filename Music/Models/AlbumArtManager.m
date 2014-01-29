@@ -66,4 +66,19 @@
             [request cancel];
     }];
 }
+
+- (void)deleteAllSavedImages
+{
+    NSArray *images = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] error:nil];
+    
+    [images enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj pathExtension] isEqualToString:@"jpg"])
+        {
+            NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+            NSString *filePath = [cacheDir stringByAppendingPathComponent:obj];
+            [[NSFileManager defaultManager] removeItemAtPath:[NSURL URLWithString:filePath] error:nil];
+            NSLog(@"Removing %@", filePath);
+        }
+    }];
+}
 @end

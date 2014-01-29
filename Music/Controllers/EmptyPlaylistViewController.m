@@ -9,6 +9,7 @@
 #import "EmptyPlaylistViewController.h"
 #import "PlayerViewController.h"
 #import "User.h"
+#import "Playlist.h"
 
 @interface EmptyPlaylistViewController ()
 
@@ -16,9 +17,9 @@
 
 @implementation EmptyPlaylistViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"EmptyPlaylistView" bundle:nil];
     if (self)
     {
         [[self navigationItem] setTitle:@"Empty Playlist"];
@@ -38,9 +39,9 @@
 {
     [super viewDidAppear:animated];
     
-    if ([[[User currentUser] playlist] count] > 0)
+    if ( [[Playlist shared] count] > 0)
     {
-        PlayerViewController *player = [[PlayerViewController alloc] initWithNibName:@"PlayerView" bundle:nil];
+        PlayerViewController *player = [[PlayerViewController alloc] initWithNib];
         
         NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
         [viewControllers replaceObjectAtIndex:0 withObject:player];

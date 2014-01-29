@@ -10,4 +10,6 @@
 
 @interface LoadingViewController : UIViewController
 
+- (id)initWithNib;
+
 @end

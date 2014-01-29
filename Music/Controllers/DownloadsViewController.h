@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DownloadsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface DownloadsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+- (id)initWithNib;
 
 @end

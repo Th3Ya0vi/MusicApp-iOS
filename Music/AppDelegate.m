@@ -9,8 +9,10 @@
 #import "AppDelegate.h"
 #import "LoadingViewController.h"
 #import "User.h"
+#import "AlbumArtManager.h"
 #import "Activity.h"
 #import "Player.h"
+#import "Playlist.h"
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "iRate.h"
@@ -27,6 +29,8 @@
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"resetCache"] == YES)
     {
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        [[AlbumArtManager shared] deleteAllSavedImages];
+        
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"resetCache"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
@@ -45,7 +49,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    LoadingViewController *loading = [[LoadingViewController alloc] initWithNibName:@"LoadingView" bundle:nil];
+    LoadingViewController *loading = [[LoadingViewController alloc] initWithNib];
     self.window.rootViewController = loading;
     
     [self.window makeKeyAndVisible];
@@ -81,11 +85,9 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    if ([[Player shared] currentStatus] == PLAYING || [[Player shared] currentStatus] == PAUSED)
-    {
-        [Activity addWithSong:[Song currentSongInPlaylist] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-        [[User currentUser] save];
-    }
+
+    [[Player shared] stop];
+    [[User currentUser] save];
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -106,10 +108,10 @@
                 [[Player shared] togglePlayPause];
                 break;
             case UIEventSubtypeRemoteControlPreviousTrack:
-                [[Player shared] loadPreviousSong];
+                [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
-                [[Player shared] loadNextSong];
+                [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
                 break;
             default:
                 break;

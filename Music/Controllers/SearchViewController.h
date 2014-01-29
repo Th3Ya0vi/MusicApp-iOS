@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SearchViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, /*UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,*/ UIAlertViewDelegate>
+@interface SearchViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+
+- (id)initWithNib;
 
 @end

@@ -14,6 +14,7 @@
 #import "Activity.h"
 #import "PlayerViewController.h"
 #import "BollywoodAPIClient.h"
+#import "Playlist.h"
 
 @interface LoadingViewController ()
 
@@ -21,9 +22,9 @@
 
 @implementation LoadingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"LoadingView" bundle:nil];
     if (self)
     {
         // Custom initialization
@@ -58,21 +59,21 @@
     UITabBarController *tabbar = [[UITabBarController alloc] init];
     [[tabbar tabBar] setTintColor:[UIColor darkGrayColor]];
     
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] initWithNibName:@"PlayerView" bundle:nil];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] initWithNib];
     
-    SearchViewController *searchViewController = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
+    SearchViewController *searchViewController = [[SearchViewController alloc] initWithNib];
     UINavigationController *uiNavControllerForSearch = [[UINavigationController alloc] initWithRootViewController:searchViewController];
     
-    DownloadsViewController *downloadsViewController = [[DownloadsViewController alloc] initWithNibName:@"DownloadsView" bundle:nil];
+    DownloadsViewController *downloadsViewController = [[DownloadsViewController alloc] initWithNib];
     UINavigationController *uiNavControllerForDownloads = [[UINavigationController alloc] initWithRootViewController:downloadsViewController];
     
-    ExploreViewController *exploreViewController = [[ExploreViewController alloc] initWithNibName:@"ExploreView" bundle:nil];
+    ExploreViewController *exploreViewController = [[ExploreViewController alloc] initWithNib];
     UINavigationController *uiNavControllerForExplore = [[UINavigationController alloc] initWithRootViewController:exploreViewController];
     
     tabbar.viewControllers = [NSArray arrayWithObjects:playerViewController,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];
     
     [self presentViewController:tabbar animated:NO completion:^{
-        if ([[[User currentUser] playlist] count] == 0)
+        if ([[Playlist shared] count] == 0)
             [tabbar setSelectedIndex:1];
     }];
 }

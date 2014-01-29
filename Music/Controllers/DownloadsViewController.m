@@ -9,6 +9,7 @@
 #import "DownloadsViewController.h"
 #import "User.h"
 #import "Player.h"
+#import "SongOptionsViewController.h"
 
 @interface DownloadsViewController ()
 
@@ -22,9 +23,9 @@
 
 @implementation DownloadsViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"DownloadsView" bundle:nil];
     if (self)
     {
         [self setTitle:@"Downloads"];
@@ -141,7 +142,10 @@
         [self setSelectedRow:indexPath.row];
         
         Song *song = [[self downloadedSongs] objectAtIndex:indexPath.row];
-        [[[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", nil] show];
+        
+        SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:@"Downloads"];
+        [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
+        [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
     }
     
 }
@@ -232,27 +236,6 @@ dispatch_async(dispatch_get_main_queue(), ^{
     [self setBadge];
     
     [[self tableDownloads] reloadData];
-}
-
-#pragma mark - Alert View Delegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    Song *song = [[self downloadedSongs] objectAtIndex:[self selectedRow]];
-    switch (buttonIndex)
-    {
-        case 1:
-            [song addToPlaylistAndPostNotificationWithOrigin:@"Downloads"];
-            [[User currentUser] setCurrentPlaylistIndex:[[[User currentUser] playlist] count] - 1];
-            [[Player shared] loadCurrentSong];
-            [[Player shared] play];
-            break;
-        case 2:
-            [song addToPlaylistAndPostNotificationWithOrigin:@"Downloads"];
-            break;
-        default:
-            break;
-    }
 }
 
 @end

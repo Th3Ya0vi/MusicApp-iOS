@@ -26,9 +26,9 @@
 
 @implementation ExploreViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNib
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"ExploreView" bundle:nil];
     if (self)
     {
         [self setTitle:@"Explore"];
@@ -135,13 +135,11 @@
 {
     NSArray *albums = [[self albums] objectAtIndex:[collectionView belongsToRow]];
     
-    AlbumViewController *albumView = [[AlbumViewController alloc] initWithNibName:@"AlbumView" bundle:nil];
+    AlbumViewController *albumView = [[AlbumViewController alloc] initWithAlbum:[albums objectAtIndex:indexPath.row] Origin:@"Explore"];
     UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];
     
-    [albumView setOrigin:@"Explore"];
-    [albumView setAlbum:[albums objectAtIndex:indexPath.row]];
-    
-    [self presentViewController:navControllerForAlbumView animated:YES completion:nil];
+    [[self tabBarController] setModalPresentationStyle:UIModalPresentationNone];
+    [[self tabBarController] presentViewController:navControllerForAlbumView animated:YES completion:nil];
 }
 
 @end

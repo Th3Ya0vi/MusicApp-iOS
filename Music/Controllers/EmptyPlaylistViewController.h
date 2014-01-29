@@ -10,4 +10,6 @@
 
 @interface EmptyPlaylistViewController : UIViewController
 
+- (id)initWithNib;
+
 @end

@@ -14,6 +14,7 @@
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
 #import "Player.h"
+#import "SongOptionsViewController.h"
 
 @interface AlbumViewController ()
 
@@ -29,15 +30,19 @@
 
 @implementation AlbumViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithAlbum: (Album *) album Origin: (NSString *)origin
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"AlbumView" bundle:nil];
+    
     if (self)
     {
+        [self setAlbum:album];
+        [self setOrigin:origin];
+        
         UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeAlbumView)];
         [self.navigationItem setRightBarButtonItem:closeButton];
-    
     }
+    
     return self;
 }
 
@@ -77,12 +82,7 @@
     [[AlbumArtManager shared] fetchAlbumArtForAlbum:[self album] Size:SMALL From:@"AlbumView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
         
         [[self imageAlbumArt] setImage:image];
-        [[self imageBackground] setImage:image];
-        FXBlurView *blur = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, 320, 170)];
-        [blur setTintColor:[UIColor blackColor]];
-        [blur setDynamic:NO];
-        [[self imageBackground] addSubview:blur];
-        
+        [[self imageBackground] setImage:[image blurredImageWithRadius:50 iterations:2 tintColor:[UIColor clearColor]]];
     }];
 }
 
@@ -131,53 +131,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Song *song = [self.album.songs objectAtIndex:indexPath.row];
-    if ([song availability] == CLOUD)
-    {
-        UIAlertView *options = [[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", @"Download", nil];
-        self.selectedRow = indexPath.row;
-        [options show];
-    }
-    else if([song availability] == LOCAL)
-    {
-        UIAlertView *options = [[UIAlertView alloc] initWithTitle:[song name] message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Play Now", @"Add to Playlist", nil];
-        self.selectedRow = indexPath.row;
-        [options show];
-    }
-    else if([song availability] == UNAVAILABLE)
-    {
-        [self songIsUnavailable];
-        [Activity addWithSong:song action:INCORRECTDATA];
-    }
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark - Alert View Delegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    Song *song = [self.album.songs objectAtIndex:self.selectedRow];
+    
+    Song *song = [[[self album] songs] objectAtIndex:indexPath.row];
     Album *albumCopy = [[self album] copy];
     [albumCopy setSongs:nil];
     [song setAlbum:albumCopy];
-    switch (buttonIndex)
-    {
-        case 1:
-            [song addToPlaylistAndPostNotificationWithOrigin:[self origin]];
-            [[User currentUser] setCurrentPlaylistIndex:[[[User currentUser] playlist] count] - 1];
-            [[Player shared] loadCurrentSong];
-            [[Player shared] play];
-            break;
-        case 2:
-            [song addToPlaylistAndPostNotificationWithOrigin:[self origin]];
-            break;
-        case 3:
-            [song startDownloadWithOrigin:[self origin]];
-            break;
-        default:
-            break;
-    }
+    
+    SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:[self origin]];
+    [[self navigationController] setModalPresentationStyle:UIModalPresentationCurrentContext];
+    [[self navigationController] presentViewController:songOptions animated:NO completion:nil];
 }
 
 #pragma mark Others

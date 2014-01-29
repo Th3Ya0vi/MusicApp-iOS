@@ -45,6 +45,11 @@
     return tempArray;
 }
 
+- (BOOL) isEqual:(id)object
+{
+    return [[self songid] isEqual:[object songid]];
+}
+
 - (id) initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -82,16 +87,6 @@
     }
     
     return copy;
-}
-
-+ (instancetype) currentSongInPlaylist
-{
-    if ([[User currentUser] currentPlaylistIndex] >= [[[User currentUser] playlist] count])
-        [[User currentUser] setCurrentPlaylistIndex:0];
-    if ([[[User currentUser] playlist] count] == 0)
-        return nil;
-    
-    return [[[User currentUser] playlist] objectAtIndex:[[User currentUser] currentPlaylistIndex]];
 }
 
 - (void) encodeWithCoder:(NSCoder *)aCoder
@@ -187,20 +182,6 @@
     [[NSFileManager defaultManager] removeItemAtPath:[[self localMp3Path] path] error:nil];
     [[[User currentUser] downloads] removeObject:self];
     return YES;
-}
-
-- (void)addToPlaylistAndPostNotificationWithOrigin: (NSString *)origin
-{
-    Song *copy = [self copy];
-    [[[User currentUser] playlist] addObject:copy];
-    [Activity addWithSong:copy action:ADDEDTOPLAYLIST extra:origin];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PlaylistUpdated" object:nil];
-}
-
-- (void)removeFromPlaylistAndPostNotification
-{
-    [[[User currentUser] playlist] removeObjectIdenticalTo:self];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PlaylistUpdated" object:nil];
 }
 
 - (AVPlayerItem *)getPlayerItem

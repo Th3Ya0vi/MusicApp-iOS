@@ -11,12 +11,12 @@
 #import "Player.h"
 #import "SongOptionsViewController.h"
 
+#define isCurrentRowDownloaded  [[[[User currentUser] downloads] objectAtIndex:indexPath.row] availability] == LOCAL
+
 @interface DownloadsViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableDownloads;
 @property (weak, nonatomic) IBOutlet UILabel *labelDownloadSongs;
-@property (strong, nonatomic) NSMutableArray *downloadedSongs;
-@property (strong, nonatomic) NSMutableArray *downloadingSongs;
 @property (nonatomic) NSInteger selectedRow;
 
 @end
@@ -30,8 +30,6 @@
     {
         [self setTitle:@"Downloads"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"cloud_downloads"]];
-        self.downloadedSongs = [[NSMutableArray alloc] init];
-        self.downloadingSongs = [[NSMutableArray alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillData) name:@"didStartDownloadingSong" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidProgress:) name:@"DownloadingSong" object:nil];
@@ -66,27 +64,30 @@
 
 - (void)setBadge
 {
-    ([[self downloadingSongs] count] > 0) ? [[self tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [[self downloadingSongs] count]]] : [[self tabBarItem] setBadgeValue:nil];        
+    __block NSUInteger downloadingCount = 0;
+    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj availability] == DOWNLOADING)
+            downloadingCount++;
+    }];
+    
+    (downloadingCount > 0) ? [[self tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", downloadingCount]] : [[self tabBarItem] setBadgeValue:nil];
 }
 
 #pragma mark - Table Data Source
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.section == 0) ? 65 : 80;
+    return (isCurrentRowDownloaded) ? 65: 80;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger downloadedSongs = [[self downloadedSongs] count];
-    NSInteger downloadingSongs = [[self downloadingSongs] count];
-    
-    if (downloadedSongs == 0 && downloadingSongs == 0)
+    if ([[[User currentUser] downloads] count] == 0)
     {
         [[self labelDownloadSongs] setHidden:NO];
         [[self tableDownloads] setHidden:YES];
@@ -96,35 +97,30 @@
         [[self labelDownloadSongs] setHidden:YES];
         [[self tableDownloads] setHidden:NO];
     }
-    
-    return (section == 0) ? downloadedSongs : downloadingSongs;
+    return [[[User currentUser] downloads] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 1 && [[self downloadingSongs] count] == 0)
-        return nil;
-    
-    return (section == 0) ? @"Downloaded" : @"Downloading";
+    return nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.section == 0) ? YES : NO;
+    return isCurrentRowDownloaded;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.section == 0) ? [self cellForDownloadsSectionForRow:indexPath.row Table:tableView] : [self cellForDownloadingSectionForRow:indexPath.row Table:tableView];
+    return (isCurrentRowDownloaded) ? [self cellForDownloadsSectionForRow:indexPath.row Table:tableView] : [self cellForDownloadingSectionForRow:indexPath.row Table:tableView];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        Song *songToDelete = [[self downloadedSongs] objectAtIndex:indexPath.row];
+        Song *songToDelete = [[[User currentUser] downloads] objectAtIndex:indexPath.row];
         [songToDelete deleteLocalFile];
-        [[self downloadedSongs] removeObject:songToDelete];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
@@ -137,11 +133,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 0)
+    if (isCurrentRowDownloaded)
     {
         [self setSelectedRow:indexPath.row];
         
-        Song *song = [[self downloadedSongs] objectAtIndex:indexPath.row];
+        Song *song = [[[User currentUser] downloads] objectAtIndex:indexPath.row];
         
         SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:@"Downloads"];
         [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
@@ -164,7 +160,7 @@
         cell = [bundle firstObject];
     }
     
-    Song *song = [[self downloadedSongs] objectAtIndex:row];
+    Song *song = [[[User currentUser] downloads] objectAtIndex:row];
     
     UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
     UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
@@ -187,7 +183,7 @@
         cell = [bundle firstObject];
     }
     
-    Song *song = [[self downloadingSongs] objectAtIndex:row];
+    Song *song = [[[User currentUser] downloads] objectAtIndex:row];
     
     UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
     UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
@@ -210,7 +206,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
     Song *song = [progress objectForKey:@"Song"];
     float progressValue = [[progress objectForKey:@"Progress"] floatValue];
     
-    NSInteger index = [[self downloadingSongs] indexOfObject:song];
+    NSInteger index = [[[User currentUser] downloads] indexOfObject:song];
     if (index >= 0 == NO)
         return;
     
@@ -223,14 +219,8 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) fillData
 {
-    [[self downloadedSongs] removeAllObjects];
-    [[self downloadingSongs] removeAllObjects];
-    
-    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj availability] == LOCAL)
-            [[self downloadedSongs] addObject:obj];
-        else if([obj availability] == DOWNLOADING)
-            [[self downloadingSongs] addObject:obj];
+    [[[User currentUser] downloads] sortUsingComparator:^NSComparisonResult(Song *obj1, Song *obj2) {
+        return [[obj1 name] compare:[obj2 name]];
     }];
     
     [self setBadge];

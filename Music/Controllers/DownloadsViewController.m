@@ -256,9 +256,9 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) fillData
 {
-    [self setSearchResults:[[User currentUser] downloads]];
-    
     [self cleanDownloads];
+
+    [self setSearchResults:[[User currentUser] downloads]];
 
     [[self searchResults] sortUsingComparator:^NSComparisonResult(Song *obj1, Song *obj2) {
         return [[obj1 name] compare:[obj2 name]];
@@ -270,9 +270,9 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) cleanDownloads
 {
-    [[self searchResults] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
         if ([obj availability] != DOWNLOADING && [obj availability] != LOCAL)
-            [[self searchResults] removeObject:obj];
+            [[[User currentUser] downloads] removeObject:obj];
     }];
 }
 

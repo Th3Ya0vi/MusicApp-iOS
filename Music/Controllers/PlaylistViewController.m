@@ -11,6 +11,7 @@
 #import "User.h"
 #import "Playlist.h"
 #import "Activity.h"
+#import "SongOptionsViewController.h"
 
 @interface PlaylistViewController ()
 
@@ -134,6 +135,14 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return (previousSongInPlaylist && [[Playlist shared] currentIndex] == indexPath.row) ? NO : YES;
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:[[Playlist shared] songAtIndex:indexPath.row] Origin:@"Playlist"];
+    [[self navigationController] setModalPresentationCapturesStatusBarAppearance:YES];
+    [[self navigationController] setModalPresentationStyle:UIModalPresentationCurrentContext];
+    [[self navigationController] presentViewController:songOptions animated:NO completion:nil];
 }
 
 #pragma mark Table Row Draggable Delegate

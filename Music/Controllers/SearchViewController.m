@@ -168,20 +168,24 @@
         self.selectedScope = SONG;
 
     self.results = [[NSArray alloc] init];
-    [self prepareToSearch:YES];
+    [self setIsFinalSearch:YES];
+    [self prepareToSearchWithQuery:[[self searchField] text]];
     
 }
 
 - (IBAction)updateSearchString:(UITextField *)sender
 {
-    [self prepareToSearch:NO];
+    [self reset];
+    [self setIsFinalSearch:NO];
+    [self performSelector:@selector(prepareToSearchWithQuery:) withObject:[[self searchField] text] afterDelay:1.0];
 }
 
 #pragma mark Text View Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self prepareToSearch: YES];
+    [self setIsFinalSearch:YES];
+    [self prepareToSearchWithQuery:[textField text]];
     [textField resignFirstResponder];
     return YES;
 }
@@ -217,7 +221,7 @@
     [self.subViews addObject:tableResults];
 }
 
-- (void)prepareToSearch: (BOOL) isFinal
+- (void)prepareToSearchWithQuery: (NSString *)query
 {
     [self reset];
     
@@ -226,9 +230,11 @@
         self.results = nil;
         return;
     }
-    [self setIsFinalSearch:isFinal];
+    if (![query isEqualToString:[[self searchField] text]])
+        return;
     
     [[self activityIndicator] startAnimating];
+    NSLog(@"Starting search!");
     [[BollywoodAPIClient shared] searchFor:[self selectedScope] IsFinal:[self isFinalSearch] Query:[[self searchField] text] Success:^(NSArray *objects) {
         [[self activityIndicator] stopAnimating];
         [self setResults:objects];

@@ -247,7 +247,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
     if (index >= 0 == NO)
         return;
     
-    UITableViewCell *cell = [[self tableDownloads] cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:1]];
+    UITableViewCell *cell = [[self tableDownloads] cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
     UIProgressView *progressView = (UIProgressView *)[cell viewWithTag:102];
     [progressView setProgress: progressValue animated:YES];
     

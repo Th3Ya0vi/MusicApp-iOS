@@ -118,7 +118,6 @@
         {
             NSLog(@"Error downloading song: %@", [error localizedDescription]);
             self.availability = CLOUD;
-            [[[User currentUser] downloads] removeObject:self];
         }
         else
         {
@@ -142,7 +141,8 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadingSong" object:progress];
     }];
     
-    [[[User currentUser] downloads] addObject:self];
+    if ([[[User currentUser] downloads] indexOfObject:self] == NSNotFound)
+        [[[User currentUser] downloads] addObject:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"didStartDownloadingSong" object:nil];
     
     [downloadTask resume];

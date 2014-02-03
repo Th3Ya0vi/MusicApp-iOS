@@ -11,7 +11,8 @@
 #import "Player.h"
 #import "SongOptionsViewController.h"
 
-#define isCurrentRowDownloaded  [[[self searchResults] objectAtIndex:indexPath.row] availability] == LOCAL
+#define currentRowAvailability [[[self searchResults] objectAtIndex:indexPath.row] availability]
+#define didCurrentRowFailed    currentRowAvailability != LOCAL && currentRowAvailability != DOWNLOADING
 
 @interface DownloadsViewController ()
 
@@ -77,7 +78,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (isCurrentRowDownloaded) ? 65: 80;
+    if (didCurrentRowFailed)
+        return 65;
+    return (currentRowAvailability == LOCAL) ? 65: 80;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -107,12 +110,39 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return isCurrentRowDownloaded;
+    return currentRowAvailability == LOCAL;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (isCurrentRowDownloaded) ? [self cellForDownloadsSectionForRow:indexPath.row Table:tableView] : [self cellForDownloadingSectionForRow:indexPath.row Table:tableView];
+    NSString *cellIdentifier = @"SubtitleCell";
+    NSString *cellNib = @"SubtitleCellView";
+    
+    Song *song = [[self searchResults] objectAtIndex:indexPath.row];
+    
+    if ([song availability] == DOWNLOADING)
+    {
+        cellIdentifier = @"ProgressCell";
+        cellNib = @"ProgressCellView";
+    }
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (cell == nil)
+    {
+        NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:cellNib owner:self options:nil];
+        cell = [bundle firstObject];
+    }
+    
+    UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
+    UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
+    
+    [labelTitle setText:[song name]];
+    [labelSubtitle setText:[[song album] name]];
+
+    if ([song availability] != LOCAL && [song availability] != DOWNLOADING)
+        [labelSubtitle setText:@"FAILED TO DOWNLOAD"];
+    
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -133,7 +163,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (isCurrentRowDownloaded)
+    if (currentRowAvailability == LOCAL || (didCurrentRowFailed))
     {
         Song *song = [[self searchResults] objectAtIndex:indexPath.row];
         
@@ -142,54 +172,6 @@
         [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
     }
     
-}
-
-#pragma mark - Table Cells
-
-- (UITableViewCell *)cellForDownloadsSectionForRow: (NSInteger) row Table: (UITableView *)tableView
-{
-    static NSString *cellIdentifier = @"SubtitleCell";
-    static NSString *cellNib = @"SubtitleCellView";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil)
-    {
-        NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:cellNib owner:self options:nil];
-        cell = [bundle firstObject];
-    }
-    
-    Song *song = [[self searchResults] objectAtIndex:row];
-    
-    UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
-    UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
-    
-    [labelTitle setText:[song name]];
-    [labelSubtitle setText:[[song album] name]];
-
-    return cell;
-}
-
-- (UITableViewCell *)cellForDownloadingSectionForRow: (NSInteger) row Table: (UITableView *)tableView
-{
-    static NSString *cellIdentifier = @"ProgressCell";
-    static NSString *cellNib = @"ProgressCellView";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil)
-    {
-        NSArray *bundle = [[NSBundle mainBundle] loadNibNamed:cellNib owner:self options:nil];
-        cell = [bundle firstObject];
-    }
-    
-    Song *song = [[self searchResults] objectAtIndex:row];
-    
-    UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
-    UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
-    
-    [labelTitle setText:[song name]];
-    [labelSubtitle setText:[[song album] name]];
-    
-    return cell;
 }
 
 #pragma mark - Search bar Delegate
@@ -270,6 +252,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) cleanDownloads
 {
+    return;
     [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
         if ([obj availability] != DOWNLOADING && [obj availability] != LOCAL)
             [[[User currentUser] downloads] removeObject:obj];

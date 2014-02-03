@@ -65,6 +65,13 @@
     [super viewWillDisappear:animated];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[self tablePlaylist] reloadData];
+}
+
 #pragma mark - Table Data Source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

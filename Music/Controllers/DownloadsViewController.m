@@ -59,6 +59,7 @@
 {
     [super viewWillAppear:animated];
     
+    [self cleanDownloads];
     [self fillData];
 }
 
@@ -226,6 +227,14 @@ dispatch_async(dispatch_get_main_queue(), ^{
     [self setBadge];
     
     [[self tableDownloads] reloadData];
+}
+
+- (void) cleanDownloads
+{
+    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj availability] != DOWNLOADING && [obj availability] != LOCAL)
+            [[[User currentUser] downloads] removeObject:obj];
+    }];
 }
 
 @end

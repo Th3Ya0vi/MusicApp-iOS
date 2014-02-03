@@ -118,10 +118,7 @@
         {
             NSLog(@"Error downloading song: %@", [error localizedDescription]);
             self.availability = CLOUD;
-            [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                if ([[(Song *)obj songid] isEqualToString:[self songid]])
-                    [[[User currentUser] downloads] removeObjectAtIndex:idx];
-            }];
+            [[[User currentUser] downloads] removeObject:self];
         }
         else
         {

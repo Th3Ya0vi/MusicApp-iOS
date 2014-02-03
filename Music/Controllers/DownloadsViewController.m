@@ -11,13 +11,13 @@
 #import "Player.h"
 #import "SongOptionsViewController.h"
 
-#define isCurrentRowDownloaded  [[[[User currentUser] downloads] objectAtIndex:indexPath.row] availability] == LOCAL
+#define isCurrentRowDownloaded  [[[self searchResults] objectAtIndex:indexPath.row] availability] == LOCAL
 
 @interface DownloadsViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableDownloads;
 @property (weak, nonatomic) IBOutlet UILabel *labelDownloadSongs;
-@property (nonatomic) NSInteger selectedRow;
+@property (strong, nonatomic) NSMutableArray *searchResults;
 
 @end
 
@@ -59,14 +59,13 @@
 {
     [super viewWillAppear:animated];
     
-    [self cleanDownloads];
     [self fillData];
 }
 
 - (void)setBadge
 {
     __block NSUInteger downloadingCount = 0;
-    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+    [[self searchResults] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
         if ([obj availability] == DOWNLOADING)
             downloadingCount++;
     }];
@@ -98,7 +97,7 @@
         [[self labelDownloadSongs] setHidden:YES];
         [[self tableDownloads] setHidden:NO];
     }
-    return [[[User currentUser] downloads] count];
+    return ([self searchResults]) ? [[self searchResults] count] : [[self searchResults] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -120,7 +119,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        Song *songToDelete = [[[User currentUser] downloads] objectAtIndex:indexPath.row];
+        Song *songToDelete = [[self searchResults] objectAtIndex:indexPath.row];
         [songToDelete deleteLocalFile];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -136,9 +135,7 @@
     
     if (isCurrentRowDownloaded)
     {
-        [self setSelectedRow:indexPath.row];
-        
-        Song *song = [[[User currentUser] downloads] objectAtIndex:indexPath.row];
+        Song *song = [[self searchResults] objectAtIndex:indexPath.row];
         
         SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:@"Downloads"];
         [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
@@ -161,7 +158,7 @@
         cell = [bundle firstObject];
     }
     
-    Song *song = [[[User currentUser] downloads] objectAtIndex:row];
+    Song *song = [[self searchResults] objectAtIndex:row];
     
     UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
     UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
@@ -184,7 +181,7 @@
         cell = [bundle firstObject];
     }
     
-    Song *song = [[[User currentUser] downloads] objectAtIndex:row];
+    Song *song = [[self searchResults] objectAtIndex:row];
     
     UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
     UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
@@ -193,6 +190,45 @@
     [labelSubtitle setText:[[song album] name]];
     
     return cell;
+}
+
+#pragma mark - Search bar Delegate
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if ([searchText length] > 0)
+    {
+        NSPredicate *songsPredicate = [NSPredicate predicateWithFormat:@"%K contains[cd] %@", @"name", searchText];
+        [self setSearchResults:[[[[User currentUser] downloads] filteredArrayUsingPredicate:songsPredicate] mutableCopy]];
+        [[self tableDownloads] reloadData];
+    }
+    else
+        [self fillData];
+    
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [searchBar setShowsCancelButton:YES animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    [searchBar setShowsCancelButton:NO animated:YES];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar setText:@""];
+    [self fillData];
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar setText:@""];
+    [self fillData];
+    [searchBar resignFirstResponder];
 }
 
 #pragma mark - Others
@@ -207,7 +243,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
     Song *song = [progress objectForKey:@"Song"];
     float progressValue = [[progress objectForKey:@"Progress"] floatValue];
     
-    NSInteger index = [[[User currentUser] downloads] indexOfObject:song];
+    NSInteger index = [[self searchResults] indexOfObject:song];
     if (index >= 0 == NO)
         return;
     
@@ -220,20 +256,23 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) fillData
 {
-    [[[User currentUser] downloads] sortUsingComparator:^NSComparisonResult(Song *obj1, Song *obj2) {
+    [self setSearchResults:[[User currentUser] downloads]];
+    
+    [self cleanDownloads];
+
+    [[self searchResults] sortUsingComparator:^NSComparisonResult(Song *obj1, Song *obj2) {
         return [[obj1 name] compare:[obj2 name]];
     }];
     
     [self setBadge];
-    
     [[self tableDownloads] reloadData];
 }
 
 - (void) cleanDownloads
 {
-    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+    [[self searchResults] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
         if ([obj availability] != DOWNLOADING && [obj availability] != LOCAL)
-            [[[User currentUser] downloads] removeObject:obj];
+            [[self searchResults] removeObject:obj];
     }];
 }
 

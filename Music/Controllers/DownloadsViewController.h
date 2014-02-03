@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DownloadsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface DownloadsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 - (id)initWithNib;
 

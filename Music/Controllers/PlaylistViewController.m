@@ -134,7 +134,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:isPlayerPlaying];
+    [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:YES];
     [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

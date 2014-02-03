@@ -103,7 +103,7 @@
         [[self labelDownload] setText:@"Downloading"];
     }
     
-    if ([[Playlist shared] songInPlaylistWithSong:[self song]] == [[Playlist shared] currentSong])
+    if ([[Playlist shared] currentSong] && [[Playlist shared] songInPlaylistWithSong:[self song]] == [[Playlist shared] currentSong])
     {
         [self disableButton:[self buttonPlayNext]];
         [[self labelPlayNext] setText:@"Current Song"];

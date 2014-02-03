@@ -139,6 +139,7 @@
     [song setAlbum:albumCopy];
     
     SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:[self origin]];
+    [[self navigationController] setModalPresentationCapturesStatusBarAppearance:YES];
     [[self navigationController] setModalPresentationStyle:UIModalPresentationCurrentContext];
     [[self navigationController] presentViewController:songOptions animated:NO completion:nil];
 }

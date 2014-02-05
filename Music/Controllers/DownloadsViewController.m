@@ -110,7 +110,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return currentRowAvailability == LOCAL;
+    return currentRowAvailability == LOCAL || (didCurrentRowFailed);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -150,7 +150,11 @@
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         Song *songToDelete = [[self searchResults] objectAtIndex:indexPath.row];
-        [songToDelete deleteLocalFile];
+        
+        if (currentRowAvailability == LOCAL)
+            [songToDelete deleteLocalFile];
+        else if(didCurrentRowFailed)
+            [[[User currentUser] downloads] removeObjectIdenticalTo:songToDelete];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
@@ -252,10 +256,11 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) cleanDownloads
 {
-    return;
-    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
-        if ([obj availability] != DOWNLOADING && [obj availability] != LOCAL)
-            [[[User currentUser] downloads] removeObject:obj];
+    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj1, NSUInteger idx, BOOL *stop) {
+        [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj2, NSUInteger idx, BOOL *stop) {
+            if ([obj1 isEqual:obj2] && obj1 != obj2)
+                [[[User currentUser] downloads] removeObjectIdenticalTo:obj2];
+        }];
     }];
 }
 

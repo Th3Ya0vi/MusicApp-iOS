@@ -49,6 +49,9 @@
                 [weakSelf setBgTask:UIBackgroundTaskInvalid];
             }
             
+            if ((int)CMTimeGetSeconds(time) % 5)
+                [weakSelf setMediaInfo];
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:weakSelf];
         }];
         
@@ -182,7 +185,7 @@
     
     if (play)
         [self play];
-    
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];
 }
 

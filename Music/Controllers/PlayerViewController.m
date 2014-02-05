@@ -114,7 +114,10 @@
 - (void)syncNowPlayingViewWithPageDirection: (UIPageViewControllerNavigationDirection) direction ShouldAnimate: (BOOL)animate
 {
     if (direction != UIPageViewControllerNavigationDirectionForward && direction!= UIPageViewControllerNavigationDirectionReverse)
+    {
         direction = UIPageViewControllerNavigationDirectionForward;
+        animate = NO;
+    }
     
     [[self nowPlayingPageController] setViewControllers:[NSArray arrayWithObject:[[NowPlayingViewController alloc] initWithSong:[[Playlist shared] currentSong]]] direction:direction animated:animate completion:nil];
 }

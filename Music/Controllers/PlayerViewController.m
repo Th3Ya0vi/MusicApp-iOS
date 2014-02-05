@@ -45,9 +45,24 @@
         
         [self addChildViewController:[self nowPlayingPageController]];
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncNowPlayingViewWithPageDirection:ShouldAnimate:) name:@"SongFinished" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncView) name:@"PlayerUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songDidFailToPlay) name:@"SongFailed" object:nil];
+        [[NSNotificationCenter defaultCenter]       addObserver:self
+                                                    selector:@selector(syncNowPlayingViewWithPageDirection:ShouldAnimate:)
+                                                    name:@"applicationDidBecomeActive"
+                                                    object:nil];
+        
+        [[NSNotificationCenter defaultCenter]       addObserver:self
+                                                    selector:@selector(syncNowPlayingViewWithPageDirection:ShouldAnimate:)
+                                                    name:@"SongFinished" object:nil];
+
+        [[NSNotificationCenter defaultCenter]       addObserver:self
+                                                    selector:@selector(syncView)
+                                                    name:@"PlayerUpdated"
+                                                    object:nil];
+
+        [[NSNotificationCenter defaultCenter]       addObserver:self
+                                                    selector:@selector(songDidFailToPlay)
+                                                    name:@"SongFailed"
+                                                    object:nil];
     }
     return self;
 }
@@ -56,6 +71,7 @@
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"applicationDidBecomeActive" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SongFinished" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"PlayerUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SongFailed" object:nil];

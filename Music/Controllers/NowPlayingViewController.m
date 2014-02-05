@@ -25,7 +25,7 @@
 
 - (id)initWithSong: (Song *)song
 {
-    self = [super initWithNibName:@"NowPlayingView" bundle:nil];
+    self = [super initWithNibName:nil bundle:nil];
     
     if (self)
     {

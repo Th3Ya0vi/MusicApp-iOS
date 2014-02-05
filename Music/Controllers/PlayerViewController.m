@@ -31,9 +31,9 @@
 
 @implementation PlayerViewController
 
-- (id)initWithNib
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"PlayerView" bundle:nil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
         [self setTitle:@"Player"];
@@ -87,7 +87,7 @@
 
 - (void)showEmptyPlaylistView
 {
-    EmptyPlaylistViewController *empty = [[EmptyPlaylistViewController alloc] initWithNib];
+    EmptyPlaylistViewController *empty = [[EmptyPlaylistViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *navForEmpty = [[UINavigationController alloc] initWithRootViewController:empty];
 
     NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
@@ -206,7 +206,7 @@
 
 - (IBAction)showPlaylist:(UIButton *)sender
 {
-    PlaylistViewController *playlistView = [[PlaylistViewController alloc] initWithNib];
+    PlaylistViewController *playlistView = [[PlaylistViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *navForPlaylist = [[UINavigationController alloc] initWithRootViewController:playlistView];
     
     [[self tabBarController] setModalPresentationStyle:UIModalPresentationNone];

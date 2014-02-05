@@ -32,7 +32,7 @@
 
 - (id)initWithAlbum: (Album *) album Origin: (NSString *)origin
 {
-    self = [super initWithNibName:@"AlbumView" bundle:nil];
+    self = [super initWithNibName:nil bundle:nil];
     
     if (self)
     {

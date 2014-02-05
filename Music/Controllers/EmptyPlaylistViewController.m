@@ -17,9 +17,9 @@
 
 @implementation EmptyPlaylistViewController
 
-- (id)initWithNib
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"EmptyPlaylistView" bundle:nil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
         [[self navigationItem] setTitle:@"Empty Playlist"];
@@ -41,7 +41,7 @@
     
     if ( [[Playlist shared] count] > 0)
     {
-        PlayerViewController *player = [[PlayerViewController alloc] initWithNib];
+        PlayerViewController *player = [[PlayerViewController alloc] initWithNibName:nil bundle:nil];
         
         NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
         [viewControllers replaceObjectAtIndex:0 withObject:player];

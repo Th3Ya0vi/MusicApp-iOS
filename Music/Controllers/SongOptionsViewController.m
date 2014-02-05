@@ -31,7 +31,7 @@
 
 - (id)initWithSong: (Song *)song Origin: (NSString *)origin
 {
-    self = [super initWithNibName:@"SongOptionsView" bundle:nil];
+    self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
         [self setSong:song];

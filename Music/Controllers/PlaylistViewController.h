@@ -11,6 +11,6 @@
 
 @interface PlaylistViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
-- (id)initWithNib;
+
 
 @end

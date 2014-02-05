@@ -10,6 +10,6 @@
 
 @interface DownloadsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
-- (id)initWithNib;
+
 
 @end

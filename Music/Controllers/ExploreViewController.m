@@ -26,9 +26,9 @@
 
 @implementation ExploreViewController
 
-- (id)initWithNib
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"ExploreView" bundle:nil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
         [self setTitle:@"Explore"];

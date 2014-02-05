@@ -24,9 +24,9 @@
 
 @implementation DownloadsViewController
 
-- (id)initWithNib
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"DownloadsView" bundle:nil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
         [self setTitle:@"Downloads"];

@@ -22,9 +22,9 @@
 
 @implementation LoadingViewController
 
-- (id)initWithNib
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"LoadingView" bundle:nil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
         // Custom initialization
@@ -59,15 +59,15 @@
     UITabBarController *tabbar = [[UITabBarController alloc] init];
     [[tabbar tabBar] setTintColor:[UIColor darkGrayColor]];
     
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] initWithNib];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] initWithNibName:nil bundle:nil];
     
-    SearchViewController *searchViewController = [[SearchViewController alloc] initWithNib];
+    SearchViewController *searchViewController = [[SearchViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *uiNavControllerForSearch = [[UINavigationController alloc] initWithRootViewController:searchViewController];
     
-    DownloadsViewController *downloadsViewController = [[DownloadsViewController alloc] initWithNib];
+    DownloadsViewController *downloadsViewController = [[DownloadsViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *uiNavControllerForDownloads = [[UINavigationController alloc] initWithRootViewController:downloadsViewController];
     
-    ExploreViewController *exploreViewController = [[ExploreViewController alloc] initWithNib];
+    ExploreViewController *exploreViewController = [[ExploreViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *uiNavControllerForExplore = [[UINavigationController alloc] initWithRootViewController:exploreViewController];
     
     tabbar.viewControllers = [NSArray arrayWithObjects:playerViewController,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];

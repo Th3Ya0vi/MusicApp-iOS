@@ -10,6 +10,6 @@
 
 @interface ExploreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-- (id)initWithNib;
+
 
 @end

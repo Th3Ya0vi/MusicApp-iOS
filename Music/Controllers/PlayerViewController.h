@@ -10,6 +10,6 @@
 
 @interface PlayerViewController : UIViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
-- (id)initWithNib;
+
 
 @end

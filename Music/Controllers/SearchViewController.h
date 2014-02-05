@@ -10,6 +10,6 @@
 
 @interface SearchViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
-- (id)initWithNib;
+
 
 @end

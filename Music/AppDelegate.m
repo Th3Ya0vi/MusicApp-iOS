@@ -49,7 +49,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    LoadingViewController *loading = [[LoadingViewController alloc] initWithNib];
+    LoadingViewController *loading = [[LoadingViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = loading;
     
     [self.window makeKeyAndVisible];

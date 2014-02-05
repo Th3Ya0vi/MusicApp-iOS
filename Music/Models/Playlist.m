@@ -75,7 +75,7 @@
     if (song == nil)
         return;
     
-    [[self playlist] addObject:song];
+    [[self playlist] addObject:[song copy]];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
 }
 
@@ -86,7 +86,7 @@
     if (after == nil)
         return [self addSongInEnd:song Origin:origin];
     
-    [[self playlist] insertObject:song atIndex:[[self playlist] indexOfObjectIdenticalTo:after] + 1];
+    [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:after] + 1];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
 }
 
@@ -97,7 +97,7 @@
     if (before == nil)
         return [self addSongInEnd:song Origin:origin];
     
-    [[self playlist] insertObject:song atIndex:[[self playlist] indexOfObjectIdenticalTo:before] - 1];
+    [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:before] - 1];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
 }
 

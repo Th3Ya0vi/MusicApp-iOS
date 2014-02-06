@@ -36,13 +36,17 @@
     {
         [self setSong:song];
         [self setOrigin:origin];
+        
+        [(FXBlurView *)[self view] setTintColor:[UIColor clearColor]];
+        [(FXBlurView *)[self view] setBlurRadius:5];
+        [(FXBlurView *)[self view] setDynamic:NO];
     }
     return self;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-    return UIStatusBarStyleLightContent;
+    return UIStatusBarStyleDefault;
 }
 
 + (UIImage *)screenImage

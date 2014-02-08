@@ -176,8 +176,11 @@
     [self setIsShuffling:YES];
     [[Playlist shared] shuffle];
  
-    NSArray *indexPaths = [[self tablePlaylist] indexPathsForVisibleRows];
-
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[[Playlist shared] count]];
+    
+    for (int i=0;i<[[Playlist shared] count];i++)
+        [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    
     [[self tablePlaylist] deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
     
     [self setIsShuffling:NO];

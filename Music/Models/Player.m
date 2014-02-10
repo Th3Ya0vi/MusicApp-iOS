@@ -249,7 +249,7 @@
     if ([self currentStatus] == PLAYING || [self currentStatus] == PAUSED)
     {
         [Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-        [Flurry logEvent:@"Song_Listen" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], [self getPercentCompleted], nil]
+        [Flurry logEvent:@"Song_Listen" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], [NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]], nil]
                                                                                    forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed_Percent", nil]]];
         
         [self replaceCurrentItemWithPlayerItem:nil];

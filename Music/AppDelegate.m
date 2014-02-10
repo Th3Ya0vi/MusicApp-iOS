@@ -16,6 +16,7 @@
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "iRate.h"
+#import "Flurry.h"
 
 @implementation AppDelegate
 
@@ -24,6 +25,7 @@
     [self setupCache];
     [self clearCacheIfNecessary];
     [self configureiRate];
+    [self configureFlurry];
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
@@ -96,6 +98,12 @@
                                                          diskCapacity:20 * 1024 * 1024
                                                              diskPath:nil];
     [NSURLCache setSharedURLCache:URLCache];
+}
+
+- (void)configureFlurry
+{
+    [Flurry setCrashReportingEnabled:YES];
+    [Flurry startSession:@"SZSD5G562KDB2PXFCM5S"];
 }
 
 - (void)clearCacheIfNecessary

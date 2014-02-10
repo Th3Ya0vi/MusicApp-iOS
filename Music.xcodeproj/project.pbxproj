@@ -70,6 +70,9 @@
 		78705C561857C04D00708E20 /* PlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C551857C04D00708E20 /* PlayerViewController.m */; };
 		78705C5A1858FFFE00708E20 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78705C591858FFFE00708E20 /* PlaylistView.xib */; };
 		78705C5D1859003100708E20 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C5C1859003100708E20 /* PlaylistViewController.m */; };
+		78AC119E18A949F200B45C8C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */; };
+		78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */; };
+		78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC11A118A94A2B00B45C8C /* Security.framework */; };
 		78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B01C3B18899C4800E81CAD /* Settings.bundle */; };
 		78B511081893EC4400AA7534 /* SongOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B511061893EC4400AA7534 /* SongOptionsViewController.m */; };
 		78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B5110A1893EC7600AA7534 /* SongOptionsView.xib */; };
@@ -199,6 +202,10 @@
 		78705C591858FFFE00708E20 /* PlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
 		78705C5B1859003100708E20 /* PlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistViewController.h; path = Controllers/PlaylistViewController.h; sourceTree = "<group>"; };
 		78705C5C1859003100708E20 /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PlaylistViewController.m; path = Controllers/PlaylistViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		78AC119C18A949F200B45C8C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
+		78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		78AC11A118A94A2B00B45C8C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		78B01C3B18899C4800E81CAD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Music/Settings.bundle; sourceTree = "<group>"; };
 		78B511051893EC4400AA7534 /* SongOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SongOptionsViewController.h; path = Controllers/SongOptionsViewController.h; sourceTree = "<group>"; };
 		78B511061893EC4400AA7534 /* SongOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SongOptionsViewController.m; path = Controllers/SongOptionsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -222,12 +229,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */,
+				78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */,
 				780A180D184D2BC60082A89F /* MediaPlayer.framework in Frameworks */,
 				780A17B6184B3FEF0082A89F /* Accelerate.framework in Frameworks */,
 				780A17AB18493AB60082A89F /* AVFoundation.framework in Frameworks */,
 				780A171918451C3C0082A89F /* CoreGraphics.framework in Frameworks */,
 				780A171B18451C3C0082A89F /* UIKit.framework in Frameworks */,
 				780A171718451C3C0082A89F /* Foundation.framework in Frameworks */,
+				78AC119E18A949F200B45C8C /* libFlurry_4.3.2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +278,8 @@
 			isa = PBXGroup;
 			children = (
 				780A17CA184B621A0082A89F /* Third-Party */,
+				78AC11A118A94A2B00B45C8C /* Security.framework */,
+				78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */,
 				780A180C184D2BC60082A89F /* MediaPlayer.framework */,
 				780A17B5184B3FEF0082A89F /* Accelerate.framework */,
 				780A17AA18493AB60082A89F /* AVFoundation.framework */,
@@ -403,6 +415,7 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
+				78AC119B18A949F200B45C8C /* Flurry */,
 				78B9BB49187969980075B2A5 /* iRate */,
 				780A1808184D0DE00082A89F /* BVReorderTableView */,
 				780A17CB184B621A0082A89F /* AFNetworking */,
@@ -489,6 +502,15 @@
 			);
 			name = Views;
 			path = Models;
+			sourceTree = "<group>";
+		};
+		78AC119B18A949F200B45C8C /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				78AC119C18A949F200B45C8C /* Flurry.h */,
+				78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */,
+			);
+			path = Flurry;
 			sourceTree = "<group>";
 		};
 		78B9BB49187969980075B2A5 /* iRate */ = {
@@ -789,6 +811,10 @@
 				GCC_PREFIX_HEADER = "Music/Music-Prefix.pch";
 				INFOPLIST_FILE = "Music/Music-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party/Flurry",
+				);
 				PRODUCT_NAME = Filmi;
 				PROVISIONING_PROFILE = "24375D4C-B5EC-4F90-A13A-579BCF887A4F";
 				WRAPPER_EXTENSION = app;
@@ -806,6 +832,10 @@
 				GCC_PREFIX_HEADER = "Music/Music-Prefix.pch";
 				INFOPLIST_FILE = "Music/Music-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party/Flurry",
+				);
 				PRODUCT_NAME = Filmi;
 				PROVISIONING_PROFILE = "F5260B8A-1B9D-4ACB-95B8-1DB238CE5348";
 				WRAPPER_EXTENSION = app;

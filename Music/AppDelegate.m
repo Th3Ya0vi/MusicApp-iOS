@@ -103,6 +103,7 @@
 - (void)configureFlurry
 {
     [Flurry setCrashReportingEnabled:YES];
+    [Flurry setDebugLogEnabled:DEBUG];
     [Flurry startSession:@"SZSD5G562KDB2PXFCM5S"];
 }
 

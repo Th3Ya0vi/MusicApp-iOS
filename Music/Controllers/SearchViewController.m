@@ -158,6 +158,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [[self searchField] resignFirstResponder];
+}
+
 #pragma mark - Action Methods
 
 - (IBAction)updateScope:(UISegmentedControl *)sender

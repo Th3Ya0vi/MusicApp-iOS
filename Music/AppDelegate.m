@@ -21,38 +21,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
-                                                         diskCapacity:20 * 1024 * 1024
-                                                             diskPath:nil];
-    [NSURLCache setSharedURLCache:URLCache];
- 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"resetCache"] == YES)
-    {
-        [[NSURLCache sharedURLCache] removeAllCachedResponses];
-        [[AlbumArtManager shared] deleteAllSavedImages];
-        
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"resetCache"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        NSLog(@"Cleared Cache");
-    }
+    [self setupCache];
+    [self clearCacheIfNecessary];
+    [self configureiRate];
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    
-    [[iRate sharedInstance] setVerboseLogging:NO];
-    [iRate sharedInstance].daysUntilPrompt = 3;
-    [iRate sharedInstance].usesUntilPrompt = 5;
-    
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
-    
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
-    
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    LoadingViewController *loading = [[LoadingViewController alloc] initWithNibName:nil bundle:nil];
-    self.window.rootViewController = loading;
-    
-    [self.window makeKeyAndVisible];
+
+    [self setupAndShowLoading];
     
     return YES;
 }
@@ -94,6 +71,45 @@
 - (BOOL)canBecomeFirstResponder
 {
     return YES;
+}
+
+- (void)setupAndShowLoading
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    LoadingViewController *loading = [[LoadingViewController alloc] initWithNibName:nil bundle:nil];
+    self.window.rootViewController = loading;
+    
+    [self.window makeKeyAndVisible];
+}
+
+- (void)configureiRate
+{
+    [[iRate sharedInstance] setVerboseLogging:NO];
+    [iRate sharedInstance].daysUntilPrompt = 3;
+    [iRate sharedInstance].usesUntilPrompt = 5;
+}
+
+- (void)setupCache
+{
+    NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+                                                         diskCapacity:20 * 1024 * 1024
+                                                             diskPath:nil];
+    [NSURLCache setSharedURLCache:URLCache];
+}
+
+- (void)clearCacheIfNecessary
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"resetCache"] == YES)
+    {
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        [[AlbumArtManager shared] deleteAllSavedImages];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"resetCache"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSLog(@"Cleared Cache");
+    }
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent

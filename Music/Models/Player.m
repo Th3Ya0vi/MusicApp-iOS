@@ -107,12 +107,13 @@
     else if([keyPath isEqualToString:@"playbackBufferEmpty"]
             && [[self currentItem] isPlaybackBufferEmpty])
     {
-        [self togglePlayPause];
+        if ([self currentStatus] == PLAYING)
+            [self togglePlayPause];
     }
     else if([keyPath isEqualToString:@"playbackBufferEmpty"]
-            && ![[self currentItem] isPlaybackBufferEmpty]
-            && [[self currentItem] isPlaybackLikelyToKeepUp])
+            && ![[self currentItem] isPlaybackBufferEmpty])
     {
+        if ([self currentStatus] == PAUSED)
             [self togglePlayPause];
     }
 }

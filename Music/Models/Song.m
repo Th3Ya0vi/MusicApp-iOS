@@ -11,6 +11,7 @@
 #import "User.h"
 #import "Player.h"
 #import "Activity.h"
+#import "Flurry.h"
 #import "AFURLSessionManager.h"
 
 @implementation Song
@@ -122,6 +123,10 @@
         else
         {
             [Activity addWithSong:self action:DOWNLOADED extra:origin];
+            [Flurry logEvent:@"Song_Download"
+              withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[self songid], origin, nil]
+                                                         forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
+            
             self.availability = LOCAL;
             [[self localMp3Path] setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
         }

@@ -7,6 +7,7 @@
 //
 
 #import "BollywoodAPIClient.h"
+#import "Flurry.h"
 
 #include <CommonCrypto/CommonDigest.h>
 #include <CommonCrypto/CommonHMAC.h>
@@ -130,6 +131,9 @@
         else if(scope == SONG)
             successBlock([Song songsWithJSONArray:responseObject]);
         
+        [Flurry logEvent:@"Search" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(scope == ALBUM) ? @"Albums" : @"Songs", query, (isFinal) ? @"Yes" : @"No", nil]
+                                                                              forKeys:[NSArray arrayWithObjects:@"For", @"Query", @"Is_Final", nil]]];
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
             failureBlock();
@@ -227,6 +231,8 @@
             [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
             [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
             [userDef synchronize];
+            
+            [Flurry logEvent:@"User_Create" withParameters:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"userid"] forKey:@"UserID"]];
             
             successBlock([User currentUser]);
 

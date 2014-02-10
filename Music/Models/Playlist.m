@@ -9,6 +9,7 @@
 #import "Playlist.h"
 #import "Activity.h"
 #import "Player.h"
+#import "Flurry.h"
 
 @interface Playlist ()
 
@@ -77,6 +78,8 @@
     
     [[self playlist] addObject:[song copy]];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
+    [Flurry logEvent:@"Song_Add_Playlist" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+                                                                                     forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
 - (void)addSong:(Song *)song After:(Song *)after Origin: (NSString *)origin
@@ -88,6 +91,8 @@
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:after] + 1];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
+    [Flurry logEvent:@"Song_Add_Playlist" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+                                                                                     forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
 - (void)addSong:(Song *)song Before:(Song *)before Origin: (NSString *)origin
@@ -99,6 +104,8 @@
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:before] - 1];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
+    [Flurry logEvent:@"Song_Add_Playlist" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+                                                                                     forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
 - (Song *)songBefore: (Song *)song

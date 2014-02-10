@@ -9,6 +9,7 @@
 #import "User.h"
 #import "Activity.h"
 #import "AFHTTPRequestOperationManager.h"
+#import "Flurry.h"
 
 @implementation User
 
@@ -29,6 +30,7 @@
         user.playlist = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"playlist"]] mutableCopy];
         user.downloads = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"downloads"]] mutableCopy];
         
+        [Flurry setUserID:[NSString stringWithFormat:@"%d", [user userid]]];
     }
     return user;
     

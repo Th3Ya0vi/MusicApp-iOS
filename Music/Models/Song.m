@@ -115,10 +115,16 @@
         
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
     {
+        UILocalNotification *notifyDownloaded = [[UILocalNotification alloc] init];
+        [notifyDownloaded setHasAction:NO];
+        [notifyDownloaded setSoundName:UILocalNotificationDefaultSoundName];
+        
         if (error)
         {
             NSLog(@"Error downloading song: %@", [error localizedDescription]);
             self.availability = CLOUD;
+            
+            [notifyDownloaded setAlertBody:[NSString stringWithFormat:@"Failed to download %@", [self name]]];
         }
         else
         {
@@ -129,7 +135,10 @@
             
             self.availability = LOCAL;
             [[self localMp3Path] setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
+            
+            [notifyDownloaded setAlertBody:[NSString stringWithFormat:@"%@ has been downloaded", [self name]]];
         }
+        [[UIApplication sharedApplication] scheduleLocalNotification:notifyDownloaded];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadedSong" object:self];
     }];
     

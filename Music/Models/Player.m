@@ -200,6 +200,9 @@
 - (void)setMediaInfo
 {
     Song *song = [[Playlist shared] currentSong];
+    if (song == nil)
+        return;
+    
     UIImage *albumArt = [[AlbumArtManager shared] existingImageForAlbum:[song album] Size:BIG];
     
     NSArray *keys = [NSArray arrayWithObjects:

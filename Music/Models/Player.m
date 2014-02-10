@@ -248,6 +248,7 @@
     if ([self currentStatus] == PLAYING || [self currentStatus] == PAUSED)
     {
         [Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
+        [self replaceCurrentItemWithPlayerItem:nil];
         [self setCurrentStatus:FINISHED];
     }
 }

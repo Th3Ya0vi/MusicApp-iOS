@@ -125,13 +125,17 @@
             self.availability = CLOUD;
             
             [notifyDownloaded setAlertBody:[NSString stringWithFormat:@"Failed to download %@", [self name]]];
+            
+            [Flurry logEvent:@"Song_Download"
+              withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[self songid], origin, NO, nil]
+                                                         forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
         }
         else
         {
             [Activity addWithSong:self action:DOWNLOADED extra:origin];
             [Flurry logEvent:@"Song_Download"
-              withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[self songid], origin, nil]
-                                                         forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
+              withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[self songid], origin, YES, nil]
+                                                         forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
             
             self.availability = LOCAL;
             [[self localMp3Path] setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];

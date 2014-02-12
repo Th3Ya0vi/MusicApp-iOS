@@ -121,10 +121,10 @@
 {
     if (_availability == DOWNLOADING)
         return _availability;
-    else if([[NSString stringWithFormat:@"%@", _mp3] isEqualToString:@""])
-        return UNAVAILABLE;
     else if ([[NSFileManager defaultManager] fileExistsAtPath:[[self localMp3Path] path] isDirectory:NO])
         return LOCAL;
+    else if([[NSString stringWithFormat:@"%@", [self cloudMp3Path]] isEqualToString:@""])
+        return UNAVAILABLE;
     else
         return CLOUD;
 }

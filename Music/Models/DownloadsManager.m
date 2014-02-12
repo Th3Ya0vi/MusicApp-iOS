@@ -35,6 +35,23 @@
         [self setSessionManager:[[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]];
         [self setDownloadQueue:[[NSMutableArray alloc] init]];
         [self sanitize];
+        
+        [[self sessionManager] setDownloadTaskDidWriteDataBlock:^(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite)
+         {
+             [[self downloadQueue] enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                 if ([obj objectForKey:@"DownloadTask"] == downloadTask)
+                 {
+                     float prog = (float)totalBytesWritten/totalBytesExpectedToWrite;
+                     
+                     NSMutableDictionary *progress = [[NSMutableDictionary alloc] init];
+                     progress[@"Song"] = [obj objectForKey:@"Song"];
+                     progress[@"Progress"] = [NSNumber numberWithFloat:prog];
+                     
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadingSong" object:progress];
+                     *stop = YES;
+                 }
+             }];
+         }];
     }
     
     return self;
@@ -62,6 +79,7 @@
 
 - (void)downloadSong:(Song *)song Origin:(NSString *)origin
 {
+    [self deleteSongFromDownloads:song];
     [[[User currentUser] downloads] addObject:song];
     
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[song mp3] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:30];
@@ -77,23 +95,6 @@
     
     [[self downloadQueue] addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:song, downloadTask, nil]
                                                                 forKeys:[NSArray arrayWithObjects:@"Song", @"DownloadTask", nil]]];
-    
-    [[self sessionManager] setDownloadTaskDidWriteDataBlock:^(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite)
-     {
-         [[self downloadQueue] enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
-             if ([obj objectForKey:@"DownloadTask"] == downloadTask)
-             {
-                 float prog = (float)totalBytesWritten/totalBytesExpectedToWrite;
-                 
-                 NSMutableDictionary *progress = [[NSMutableDictionary alloc] init];
-                 progress[@"Song"] = [obj objectForKey:@"Song"];
-                 progress[@"Progress"] = [NSNumber numberWithFloat:prog];
-                 
-                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadingSong" object:progress];
-                 *stop = YES;
-             }
-         }];
-     }];
     
     [song setAvailability:DOWNLOADING];
     

@@ -77,6 +77,11 @@
     }];
 }
 
+- (NSInteger)currentNumberOfDownloadTasks
+{
+    return [[self downloadQueue] count];
+}
+
 - (void)downloadSong:(Song *)song Origin:(NSString *)origin
 {
     [self deleteSongFromDownloads:song];
@@ -112,6 +117,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadedSong" object:nil];
     [self addActivity];
     [self fireLocalNotification];
+    [self removeDownloadTaskWithSong:[self lastSong]];
 }
 
 - (void)addActivity
@@ -122,6 +128,14 @@
     [Flurry logEvent:@"Song_Download"
       withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]
                                                  forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
+}
+
+- (void)removeDownloadTaskWithSong: (Song *)song
+{
+    [[self downloadQueue] enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj objectForKey:@"Song"] isEqual:song])
+            [[self downloadQueue] removeObjectAtIndex:idx];
+    }];
 }
 
 - (void)fireLocalNotification

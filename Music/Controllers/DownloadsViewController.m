@@ -66,12 +66,7 @@
 
 - (void)setBadge
 {
-    __block NSUInteger downloadingCount = 0;
-    [[self searchResults] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
-        if ([obj availability] == DOWNLOADING)
-            downloadingCount++;
-    }];
-    
+    NSUInteger downloadingCount = [[DownloadsManager shared] currentNumberOfDownloadTasks];
     (downloadingCount > 0) ? [[self tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", downloadingCount]] : [[self tabBarItem] setBadgeValue:nil];
 }
 
@@ -226,7 +221,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
     float progressValue = [[progress objectForKey:@"Progress"] floatValue];
     
     NSInteger index = [[self searchResults] indexOfObject:song];
-    if (index >= 0 == NO)
+    if (index == NSNotFound)
         return;
     
     UITableViewCell *cell = [[self tableDownloads] cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];

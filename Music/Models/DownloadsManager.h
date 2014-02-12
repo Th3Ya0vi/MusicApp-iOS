@@ -11,6 +11,8 @@
 
 @interface DownloadsManager : NSObject
 
+@property (nonatomic, readonly) NSInteger currentNumberOfDownloadTasks;
+
 + (instancetype) shared;
 
 - (void) downloadSong: (Song *)song Origin: (NSString *)origin;

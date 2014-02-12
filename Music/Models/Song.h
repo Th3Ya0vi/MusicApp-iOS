@@ -21,12 +21,11 @@ enum SongAvailability {CLOUD, LOCAL, DOWNLOADING, UNAVAILABLE};
 @property (strong, nonatomic) NSURL *mp3;
 @property (strong, nonatomic) Album *album;
 @property (nonatomic) enum SongAvailability availability;
+@property (strong, nonatomic) NSURL *cloudMp3Path;
 @property (nonatomic, strong) NSURL *localMp3Path;
 @property (strong, nonatomic, getter = getPlayerItem) AVPlayerItem *playerItem;
 
 - (instancetype) initWithJSON:(NSDictionary *)json;
 + (NSArray *) songsWithJSONArray: (NSArray *)jsonArray;
-- (void)startDownloadWithOrigin: (NSString *)origin;
-- (BOOL) deleteLocalFile;
 
 @end

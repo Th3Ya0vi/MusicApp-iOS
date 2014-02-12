@@ -12,6 +12,7 @@
 #import "Player.h"
 #import "Activity.h"
 #import "Flurry.h"
+#import "BollywoodAPIClient.h"
 #import "AFURLSessionManager.h"
 
 @implementation Song
@@ -26,7 +27,7 @@
         self.albumid = [json objectForKey:@"AlbumID"];
         self.name = [json objectForKey:@"Name"];
         self.singers = [json objectForKey:@"Singers"];
-        self.mp3 = [NSURL URLWithString:[json objectForKey:@"Mp3"]];
+        self.cloudMp3Path = [NSURL URLWithString:[json objectForKey:@"Mp3"]];
         
         if ([json objectForKey:@"Album"] != nil)
             self.album = [[Album alloc] initWithJSON:[json objectForKey:@"Album"]];
@@ -58,10 +59,24 @@
     if (self)
     {
         self.songid = [aDecoder decodeObjectForKey:@"songid"];
-        self.albumid = [aDecoder decodeObjectForKey:@"albumid"];
-        self.name = [aDecoder decodeObjectForKey:@"name"];
-        self.singers = [aDecoder decodeObjectForKey:@"singers"];
-        self.mp3 = [aDecoder decodeObjectForKey:@"mp3"];
+        
+        if ([aDecoder decodeObjectForKey:@"cloudMp3"] == nil)
+        {
+            __block Song *weakSelf = self;
+            [[BollywoodAPIClient shared] fetchSongWithSongID:[self songid] CompletionBlock:^(Song *song) {
+                [weakSelf setAlbumid:[song albumid]];
+                [weakSelf setName:[song name]];
+                [weakSelf setSingers:[song singers]];
+                [weakSelf setCloudMp3Path:[song cloudMp3Path]];
+            }];
+        }
+        else
+        {
+            self.albumid = [aDecoder decodeObjectForKey:@"albumid"];
+            self.name = [aDecoder decodeObjectForKey:@"name"];
+            self.singers = [aDecoder decodeObjectForKey:@"singers"];
+            self.cloudMp3Path = [aDecoder decodeObjectForKey:@"cloudMp3"];
+        }
         
         if ([aDecoder containsValueForKey:@"album"])
             self.album = [aDecoder decodeObjectForKey:@"album"];
@@ -81,7 +96,7 @@
         [copy setAlbumid:self.albumid];
         [copy setName:[self.name copyWithZone:zone]];
         [copy setSingers:[self.singers copyWithZone:zone]];
-        [copy setMp3:[self.mp3 copyWithZone:zone]];
+        [copy setCloudMp3Path:[[self cloudMp3Path] copyWithZone:zone]];
         
         if ([self album])
             [copy setAlbum:[self.album copyWithZone:zone]];
@@ -96,74 +111,10 @@
     [aCoder encodeObject:self.albumid forKey:@"albumid"];
     [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeObject:self.singers forKey:@"singers"];
-    [aCoder encodeObject:self.mp3 forKey:@"mp3"];
+    [aCoder encodeObject:self.cloudMp3Path forKey:@"cloudMp3"];
     
     if ([self album])
         [aCoder encodeObject:self.album forKey:@"album"];
-}
-
-- (void)startDownloadWithOrigin: (NSString *)origin
-{
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:config];
-    
-    self.availability = DOWNLOADING;
-    
-    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:[NSURLRequest requestWithURL:[self mp3]] progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response)
-    {
-        return [self localMp3Path];
-        
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
-    {
-        UILocalNotification *notifyDownloaded = [[UILocalNotification alloc] init];
-        [notifyDownloaded setHasAction:NO];
-        [notifyDownloaded setSoundName:UILocalNotificationDefaultSoundName];
-        
-        if (error)
-        {
-            NSLog(@"Error downloading song: %@", [error localizedDescription]);
-            self.availability = CLOUD;
-            
-            [notifyDownloaded setAlertBody:[NSString stringWithFormat:@"Failed to download %@", [self name]]];
-            
-            [Flurry logEvent:@"Song_Download"
-              withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[self songid], origin, NO, nil]
-                                                         forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
-        }
-        else
-        {
-            [Activity addWithSong:self action:DOWNLOADED extra:origin];
-            [Flurry logEvent:@"Song_Download"
-              withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[self songid], origin, YES, nil]
-                                                         forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
-            
-            self.availability = LOCAL;
-            [[self localMp3Path] setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
-            
-            [notifyDownloaded setAlertBody:[NSString stringWithFormat:@"%@ has been downloaded", [self name]]];
-        }
-        [[UIApplication sharedApplication] scheduleLocalNotification:notifyDownloaded];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadedSong" object:self];
-    }];
-    
-    
-    __block Song *weakCopy = self;
-    [manager setDownloadTaskDidWriteDataBlock:^(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite)
-    {
-        float prog = (float)totalBytesWritten/totalBytesExpectedToWrite;
-        
-        NSMutableDictionary *progress = [[NSMutableDictionary alloc] init];
-        progress[@"Song"] = weakCopy;
-        progress[@"Progress"] = [NSNumber numberWithFloat:prog];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadingSong" object:progress];
-    }];
-    
-    if ([[[User currentUser] downloads] indexOfObject:self] == NSNotFound)
-        [[[User currentUser] downloads] addObject:self];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didStartDownloadingSong" object:nil];
-    
-    [downloadTask resume];
 }
 
 - (enum SongAvailability)availability
@@ -180,7 +131,7 @@
 
 - (NSURL *)mp3
 {
-    return ([self availability] == LOCAL) ? [self localMp3Path] : _mp3;
+    return ([self availability] == LOCAL) ? [self localMp3Path] : [self cloudMp3Path];
 }
 
 - (NSURL *)localMp3Path
@@ -189,19 +140,9 @@
     return [documentDir URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", [self songid]]];
 }
 
-- (BOOL) deleteLocalFile
-{
-    if ([self availability] != LOCAL)
-        return NO;
-    
-    [[NSFileManager defaultManager] removeItemAtPath:[[self localMp3Path] path] error:nil];
-    [[[User currentUser] downloads] removeObject:self];
-    return YES;
-}
-
 - (AVPlayerItem *)getPlayerItem
 {
-    if (_playerItem == nil)
+    if (_playerItem == nil || [self availability] == LOCAL)
         [self setPlayerItem:[[AVPlayerItem alloc] initWithURL:[self mp3]]];
     else
         [_playerItem seekToTime:kCMTimeZero];

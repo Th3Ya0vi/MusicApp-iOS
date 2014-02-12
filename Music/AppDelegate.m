@@ -69,6 +69,7 @@
 
     [[Player shared] stop];
     [[User currentUser] save];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 }
 
 - (BOOL)canBecomeFirstResponder

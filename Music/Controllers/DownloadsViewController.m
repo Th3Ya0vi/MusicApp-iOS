@@ -238,8 +238,6 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) fillData
 {
-    [self cleanDownloads];
-
     [self setSearchResults:[[User currentUser] downloads]];
 
     [[self searchResults] sortUsingComparator:^NSComparisonResult(Song *obj1, Song *obj2) {
@@ -248,16 +246,6 @@ dispatch_async(dispatch_get_main_queue(), ^{
     
     [self setBadge];
     [[self tableDownloads] reloadData];
-}
-
-- (void) cleanDownloads
-{
-    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj1, NSUInteger idx, BOOL *stop) {
-        [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj2, NSUInteger idx, BOOL *stop) {
-            if ([obj1 isEqual:obj2] && obj1 != obj2)
-                [[[User currentUser] downloads] removeObjectIdenticalTo:obj2];
-        }];
-    }];
 }
 
 @end

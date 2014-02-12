@@ -34,6 +34,7 @@
     {
         [self setSessionManager:[[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]];
         [self setDownloadQueue:[[NSMutableArray alloc] init]];
+        [self sanitize];
     }
     
     return self;
@@ -47,6 +48,16 @@
         downloadsManager = [[DownloadsManager alloc] init];
     
     return downloadsManager;
+}
+
+- (void)sanitize
+{
+    [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj1, NSUInteger idx, BOOL *stop) {
+        [[[User currentUser] downloads] enumerateObjectsUsingBlock:^(Song *obj2, NSUInteger idx, BOOL *stop) {
+            if ([obj1 isEqual:obj2] && obj1 != obj2)
+                [[[User currentUser] downloads] removeObjectIdenticalTo:obj2];
+        }];
+    }];
 }
 
 - (void)downloadSong:(Song *)song Origin:(NSString *)origin

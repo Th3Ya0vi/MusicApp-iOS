@@ -188,7 +188,7 @@
     
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
     
-    [Flurry logEvent:@"Shuffle" withParameters:[NSDictionary dictionaryWithObject:([sender class] == [UIButton class]) ? @"No" : @"Yes" forKey:@"Swipe"]];
+    [Flurry logEvent:@"Shuffle" withParameters:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
 }
 
 - (IBAction)clearPlaylist:(id)sender

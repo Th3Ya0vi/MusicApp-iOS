@@ -59,24 +59,10 @@
     if (self)
     {
         self.songid = [aDecoder decodeObjectForKey:@"songid"];
-        
-        if ([aDecoder decodeObjectForKey:@"cloudMp3"] == nil)
-        {
-            __block Song *weakSelf = self;
-            [[BollywoodAPIClient shared] fetchSongWithSongID:[self songid] CompletionBlock:^(Song *song) {
-                [weakSelf setAlbumid:[song albumid]];
-                [weakSelf setName:[song name]];
-                [weakSelf setSingers:[song singers]];
-                [weakSelf setCloudMp3Path:[song cloudMp3Path]];
-            }];
-        }
-        else
-        {
-            self.albumid = [aDecoder decodeObjectForKey:@"albumid"];
-            self.name = [aDecoder decodeObjectForKey:@"name"];
-            self.singers = [aDecoder decodeObjectForKey:@"singers"];
-            self.cloudMp3Path = [aDecoder decodeObjectForKey:@"cloudMp3"];
-        }
+        self.albumid = [aDecoder decodeObjectForKey:@"albumid"];
+        self.name = [aDecoder decodeObjectForKey:@"name"];
+        self.singers = [aDecoder decodeObjectForKey:@"singers"];
+        self.cloudMp3Path = [aDecoder decodeObjectForKey:@"cloudMp3"];
         
         if ([aDecoder containsValueForKey:@"album"])
             self.album = [aDecoder decodeObjectForKey:@"album"];

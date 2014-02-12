@@ -10,6 +10,7 @@
 #import "Activity.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "Flurry.h"
+#import "BollywoodAPIClient.h"
 
 @implementation User
 
@@ -49,6 +50,38 @@
     [userDef setObject:downloadedData forKey:@"downloads"];
     [userDef setInteger:self.currentPlaylistIndex forKey:@"currentPlaylistIndex"];
     [userDef synchronize];
+}
+
+#define updateSongData  \
+doNeedToUpdate = YES; \
+[[BollywoodAPIClient shared] fetchSongWithSongID:[obj songid] CompletionBlock:^(Song *song) { \
+    [obj setCloudMp3Path:[song cloudMp3Path]]; \
+    totalChecked++; \
+    if (totalChecked == [[self playlist] count] + [[self downloads] count]) \
+        completionBlock(); \
+}];
+
+- (void)updateStoredSongDataIfNecessaryWithCompletionBlock: (void(^)(void))completionBlock
+{
+    __block NSUInteger totalChecked = 0;
+    __block BOOL doNeedToUpdate = NO;
+    
+    [[self downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj cloudMp3Path] == nil)
+        {
+            updateSongData
+        }
+    }];
+    
+    [[self playlist] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj cloudMp3Path] == nil)
+        {
+            updateSongData
+        }
+    }];
+    
+    if (doNeedToUpdate == NO)
+        completionBlock();
 }
 
 @end

@@ -49,7 +49,10 @@
     else
     {
         [[BollywoodAPIClient shared] postUserActivity];
-        [self loadMainView];
+        
+        [[User currentUser] updateStoredSongDataIfNecessaryWithCompletionBlock:^{
+            [self loadMainView];
+        }];
     }
 
 }

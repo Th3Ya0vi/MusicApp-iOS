@@ -243,6 +243,24 @@
 #endif
 }
 
+- (void)fetchSongWithSongID: (NSString *)songid CompletionBlock: (void(^)(Song *song))block
+{
+    [[self requestOperationManager] setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    
+    NSString *url = [self urlForEndpoint:FETCH_SONG Parameter:songid];
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
+    
+    [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        Song *song = [[Song alloc] initWithJSON:responseObject];
+        block(song);
+        NSLog(@"Fetched data for %@", [song name]);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error fetching song: %@", error);
+    }];
+}
+
 - (NSString *)urlForEndpoint: (enum BOLLYWOODAPI_ENDPOINT) endpoint Parameter: (NSString *)parameter;
 {
     if (parameter)
@@ -272,6 +290,9 @@
             break;
         case EXPLORE:
             return [NSString stringWithFormat:@"explore%@", queryStrings];
+            break;
+        case FETCH_SONG:
+            return [NSString stringWithFormat:@"song/%@%@", parameter, queryStrings];
             break;
     }
 }

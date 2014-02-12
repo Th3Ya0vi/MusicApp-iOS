@@ -91,7 +91,6 @@
     [[iRate sharedInstance] setVerboseLogging:NO];
     [iRate sharedInstance].daysUntilPrompt = 3;
     [iRate sharedInstance].usesUntilPrompt = 5;
-    [[iRate sharedInstance] setPreviewMode:YES];
 }
 
 - (void)setupCache

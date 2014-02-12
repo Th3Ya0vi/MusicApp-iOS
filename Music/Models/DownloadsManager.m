@@ -114,10 +114,10 @@
         [[[self lastSong] localMp3Path] setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
     
     [[self lastSong] setAvailability:([self lastSuccess]) ? LOCAL : CLOUD];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadedSong" object:nil];
     [self addActivity];
-    [self fireLocalNotification];
     [self removeDownloadTaskWithSong:[self lastSong]];
+    [self fireLocalNotification];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadedSong" object:nil];
 }
 
 - (void)addActivity

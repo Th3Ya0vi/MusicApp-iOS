@@ -48,9 +48,6 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    if ([[Player shared] currentStatus] != LOADING && [[Player shared] currentStatus] != PLAYING)
-        [Flurry pauseBackgroundSession];
-    
     [[BollywoodAPIClient shared] postUserActivity];
     [[User currentUser] save];
 }
@@ -108,7 +105,6 @@
 {
     [Flurry setCrashReportingEnabled:YES];
     [Flurry setDebugLogEnabled:DEBUG];
-    [Flurry setBackgroundSessionEnabled:YES];
 }
 
 - (void)clearCacheIfNecessary
@@ -133,7 +129,6 @@
         {
             case UIEventSubtypeRemoteControlPause:
                 [[Player shared] togglePlayPause];
-                [Flurry pauseBackgroundSession];
                 break;
             case UIEventSubtypeRemoteControlPlay:
                 [[Player shared] togglePlayPause];

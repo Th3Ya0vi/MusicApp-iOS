@@ -10,6 +10,7 @@
 #import "Player.h"
 #import "Playlist.h"
 #import "FXBlurView.h"
+#import "DownloadsManager.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface SongOptionsViewController ()
@@ -161,7 +162,7 @@
 
 - (IBAction)download:(UIButton *)sender
 {
-    [[self song] startDownloadWithOrigin:[self origin]];
+    [[DownloadsManager shared] downloadSong:[[self song] copy] Origin:[self origin]];
     [self close];
 }
 

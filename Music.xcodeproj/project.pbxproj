@@ -73,6 +73,7 @@
 		78AC119E18A949F200B45C8C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */; };
 		78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */; };
 		78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC11A118A94A2B00B45C8C /* Security.framework */; };
+		78AC11A518A9792D00B45C8C /* DownloadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC11A418A9792D00B45C8C /* DownloadsManager.m */; };
 		78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B01C3B18899C4800E81CAD /* Settings.bundle */; };
 		78B511081893EC4400AA7534 /* SongOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B511061893EC4400AA7534 /* SongOptionsViewController.m */; };
 		78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B5110A1893EC7600AA7534 /* SongOptionsView.xib */; };
@@ -206,6 +207,8 @@
 		78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
 		78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		78AC11A118A94A2B00B45C8C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		78AC11A318A9792D00B45C8C /* DownloadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DownloadsManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		78AC11A418A9792D00B45C8C /* DownloadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DownloadsManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		78B01C3B18899C4800E81CAD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Music/Settings.bundle; sourceTree = "<group>"; };
 		78B511051893EC4400AA7534 /* SongOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SongOptionsViewController.h; path = Controllers/SongOptionsViewController.h; sourceTree = "<group>"; };
 		78B511061893EC4400AA7534 /* SongOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SongOptionsViewController.m; path = Controllers/SongOptionsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -357,6 +360,8 @@
 				7869C837185E41DF00F877EE /* AlbumArtRequest.m */,
 				7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */,
 				7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */,
+				78AC11A318A9792D00B45C8C /* DownloadsManager.h */,
+				78AC11A418A9792D00B45C8C /* DownloadsManager.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -681,6 +686,7 @@
 				7869C838185E41DF00F877EE /* AlbumArtRequest.m in Sources */,
 				78CA43E318510AE200E4A9C9 /* DownloadsViewController.m in Sources */,
 				780A177518451C9A0082A89F /* User.m in Sources */,
+				78AC11A518A9792D00B45C8C /* DownloadsManager.m in Sources */,
 				780A17F4184B621A0082A89F /* AFHTTPSessionManager.m in Sources */,
 				78B5110E189596F000AA7534 /* Playlist.m in Sources */,
 				780A1802184B621A0082A89F /* UIWebView+AFNetworking.m in Sources */,

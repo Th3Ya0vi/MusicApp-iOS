@@ -10,6 +10,7 @@
 #import "User.h"
 #import "Player.h"
 #import "SongOptionsViewController.h"
+#import "DownloadsManager.h"
 
 #define currentRowAvailability [[[self searchResults] objectAtIndex:indexPath.row] availability]
 #define didCurrentRowFailed    currentRowAvailability != LOCAL && currentRowAvailability != DOWNLOADING
@@ -150,12 +151,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         Song *songToDelete = [[self searchResults] objectAtIndex:indexPath.row];
-        
-        if (currentRowAvailability == LOCAL)
-            [songToDelete deleteLocalFile];
-        else if(didCurrentRowFailed)
-            [[[User currentUser] downloads] removeObjectIdenticalTo:songToDelete];
-        
+        [[DownloadsManager shared] deleteSongFromDownloads:songToDelete];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }

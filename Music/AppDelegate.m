@@ -15,7 +15,6 @@
 #import "Playlist.h"
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
-#import "iRate.h"
 #import "Flurry.h"
 
 @implementation AppDelegate
@@ -92,6 +91,7 @@
     [[iRate sharedInstance] setVerboseLogging:NO];
     [iRate sharedInstance].daysUntilPrompt = 3;
     [iRate sharedInstance].usesUntilPrompt = 5;
+    [[iRate sharedInstance] setPreviewMode:YES];
 }
 
 - (void)setupCache
@@ -146,6 +146,28 @@
                 break;
         }
     }
+}
+
+#pragma mark - iRate Delegate
+
+- (void)iRateDidPromptForRating
+{
+    [Flurry logEvent:@"iRate_Prompt"];
+}
+
+- (void)iRateUserDidAttemptToRateApp
+{
+    [Flurry logEvent:@"iRate_Attempt"];
+}
+
+- (void)iRateUserDidDeclineToRateApp
+{
+    [Flurry logEvent:@"iRate_Decline"];
+}
+
+- (void)iRateUserDidRequestReminderToRateApp
+{
+    [Flurry logEvent:@"iRate_Remind"];
 }
 
 @end

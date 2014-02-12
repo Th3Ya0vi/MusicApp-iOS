@@ -13,6 +13,7 @@
 #import "Playlist.h"
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
+#import "Flurry.h"
 #import "NowPlayingViewController.h"
 
 @interface PlayerViewController ()
@@ -188,6 +189,8 @@
             [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
         else if ([[Playlist shared] songBefore:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
             [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
+        
+        [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
     }
 }
 
@@ -203,6 +206,7 @@
     [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
                                 ShouldAnimate:YES];
+    [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Player_Control" forKey:@"How"]];
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
@@ -210,6 +214,7 @@
     [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse
                                 ShouldAnimate:YES];
+    [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Player_Control" forKey:@"How"]];
 }
 
 - (IBAction)seekerTouched:(UISlider *)sender

@@ -12,6 +12,7 @@
 #import "Playlist.h"
 #import "Activity.h"
 #import "SongOptionsViewController.h"
+#import "Flurry.h"
 
 @interface PlaylistViewController ()
 
@@ -186,6 +187,8 @@
     [self setIsShuffling:NO];
     
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
+    
+    [Flurry logEvent:@"Shuffle" withParameters:[NSDictionary dictionaryWithObject:([sender class] == [UIButton class]) ? @"No" : @"Yes" forKey:@"Swipe"]];
 }
 
 - (IBAction)clearPlaylist:(id)sender

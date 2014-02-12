@@ -135,9 +135,11 @@
                 break;
             case UIEventSubtypeRemoteControlPreviousTrack:
                 [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
+                [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Remote_Control" forKey:@"How"]];
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
                 [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
+                [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Remote_Control" forKey:@"How"]];
                 break;
             default:
                 break;

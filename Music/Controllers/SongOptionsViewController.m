@@ -11,6 +11,7 @@
 #import "Playlist.h"
 #import "FXBlurView.h"
 #import "DownloadsManager.h"
+#import "Flurry.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface SongOptionsViewController ()
@@ -141,6 +142,8 @@
         [[Playlist shared] addSong:[self song] After:[[Playlist shared] currentSong] Origin:[self origin]];
 
     [[Player shared] loadSong:[[Playlist shared] songInPlaylistWithSong:[self song]] ShouldPlay:YES];
+    
+    [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Song_Options" forKey:@"How"]];
     
     [self close];
 }

@@ -138,6 +138,7 @@
     [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:YES];
     [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [Flurry logEvent:@"Song_Change" withParameters:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

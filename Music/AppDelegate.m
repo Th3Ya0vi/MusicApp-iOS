@@ -151,22 +151,29 @@
 
 - (void)iRateDidPromptForRating
 {
-    [Flurry logEvent:@"iRate_Prompt"];
+    [self logiRateEventWithEvent:@"iRate_Prompt"];
 }
 
 - (void)iRateUserDidAttemptToRateApp
 {
-    [Flurry logEvent:@"iRate_Attempt"];
+    [self logiRateEventWithEvent:@"iRate_Attempt"];
 }
 
 - (void)iRateUserDidDeclineToRateApp
 {
-    [Flurry logEvent:@"iRate_Decline"];
+    [self logiRateEventWithEvent:@"iRate_Decline"];
 }
 
 - (void)iRateUserDidRequestReminderToRateApp
 {
-    [Flurry logEvent:@"iRate_Remind"];
+    [self logiRateEventWithEvent:@"iRate_Remind"];
+}
+
+#pragma mark - iRate Delegate Helper Method(s)
+
+- (void)logiRateEventWithEvent: (NSString *)event
+{
+    [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use_Count"]];
 }
 
 @end

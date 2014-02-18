@@ -104,7 +104,9 @@
 - (void)configureFlurry
 {
     [Flurry setCrashReportingEnabled:YES];
-    [Flurry setDebugLogEnabled:DEBUG];
+#if DEBUG
+    [Flurry setDebugLogEnabled:YES];
+#endif
 }
 
 - (void)clearCacheIfNecessary

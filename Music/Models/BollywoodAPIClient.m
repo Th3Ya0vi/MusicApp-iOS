@@ -217,7 +217,6 @@
     NSString *url = [self urlForEndpoint:CREATE_NEW_USER Parameter:nil];
     [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
     
-    
 #if DEBUG
 
         NSLog(@"Using default user");
@@ -241,7 +240,7 @@
             [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
             [userDef synchronize];
             
-            [Flurry logEvent:@"User_Create" withParameters:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"userid"] forKey:@"UserID"]];
+            [Flurry logEvent:@"User_Create" withParameters:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
             
             successBlock([User currentUser]);
 

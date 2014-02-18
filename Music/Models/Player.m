@@ -87,6 +87,7 @@
         
         [[self currentItem] addObserver:self forKeyPath:@"status" options:0 context:nil];
         [[self currentItem] addObserver:self forKeyPath:@"playbackBufferEmpty" options:0 context:nil];
+        [[self currentItem] addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:0 context:nil];
     }
     else if([keyPath isEqualToString:@"status"]
             && [[self currentItem] status] == AVPlayerItemStatusFailed)
@@ -108,13 +109,18 @@
             && [[self currentItem] isPlaybackBufferEmpty])
     {
         if ([self currentStatus] == PLAYING)
+        {
             [self togglePlayPause];
+            [self setCurrentStatus:LOADING];
+        }
+        NSLog(@"Buffer empty");
     }
-    else if([keyPath isEqualToString:@"playbackBufferEmpty"]
-            && ![[self currentItem] isPlaybackBufferEmpty])
+    else if([keyPath isEqualToString:@"playbackLikelyToKeepUp"]
+            && [[self currentItem] isPlaybackLikelyToKeepUp])
     {
-        if ([self currentStatus] == PAUSED)
+        if ([self currentStatus] == LOADING)
             [self togglePlayPause];
+        NSLog(@"Playback likely to keep up.");
     }
 }
 

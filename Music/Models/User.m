@@ -31,6 +31,8 @@
         user.playlist = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"playlist"]] mutableCopy];
         user.downloads = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"downloads"]] mutableCopy];
         
+        [user removeOldData];
+        
         [Flurry setUserID:[NSString stringWithFormat:@"%d", [user userid]]];
     }
     return user;
@@ -52,36 +54,19 @@
     [userDef synchronize];
 }
 
-#define updateSongData  \
-doNeedToUpdate = YES; \
-[[BollywoodAPIClient shared] fetchSongWithSongID:[obj songid] CompletionBlock:^(Song *song) { \
-    [obj setCloudMp3Path:[song cloudMp3Path]]; \
-    totalChecked++; \
-    if (totalChecked == [[self playlist] count] + [[self downloads] count]) \
-        completionBlock(); \
-}];
-
-- (void)updateStoredSongDataIfNecessaryWithCompletionBlock: (void(^)(void))completionBlock
+- (void)removeOldData
 {
-    __block NSUInteger totalChecked = 0;
-    __block BOOL doNeedToUpdate = NO;
-    
-    [[self downloads] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
-        if ([obj cloudMp3Path] == nil)
-        {
-            updateSongData
-        }
-    }];
-    
+    /**Remove songs from playlist with no cloudMp3Path**/
+    NSMutableArray *oldSongs = [[NSMutableArray alloc] init];
     [[self playlist] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
         if ([obj cloudMp3Path] == nil)
         {
-            updateSongData
+            NSLog(@"%@ is being removed from playlist.", [obj name]);
+            [oldSongs addObject:obj];
         }
     }];
-    
-    if (doNeedToUpdate == NO)
-        completionBlock();
+    [[self playlist] removeObjectsInArray:oldSongs];
+    /**----------------------------------------------**/
 }
 
 @end

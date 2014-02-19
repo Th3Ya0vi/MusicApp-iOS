@@ -19,6 +19,5 @@
 
 + (instancetype) currentUser;
 - (void)save;
-- (void)updateStoredSongDataIfNecessaryWithCompletionBlock: (void(^)(void))completionBlock;
 
 @end

@@ -269,6 +269,26 @@
     }];
 }
 
+- (void)fetchAlbumWithAlbumID: (NSString *)albumid CompletionBlock: (void(^)(Album *album))block
+{
+    [[self requestOperationManager] setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    
+    NSString *url = [self urlForEndpoint:FETCH_ALBUM Parameter:albumid];
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
+    
+    [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        Album *album = [[Album alloc] initWithJSON:responseObject];
+        block(album);
+        NSLog(@"Fetched data for %@", [album name]);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error fetching album: %@", error);
+    }];
+}
+
+
+
 - (NSString *)urlForEndpoint: (enum BOLLYWOODAPI_ENDPOINT) endpoint Parameter: (NSString *)parameter;
 {
     if (parameter)
@@ -300,7 +320,10 @@
             return [NSString stringWithFormat:@"explore%@", queryStrings];
             break;
         case FETCH_SONG:
-            return [NSString stringWithFormat:@"song/%@%@", parameter, queryStrings];
+            return [NSString stringWithFormat:@"song/%@%@/album", parameter, queryStrings];
+            break;
+        case FETCH_ALBUM:
+            return [NSString stringWithFormat:@"album/%@%@/songs", parameter, queryStrings];
             break;
     }
 }

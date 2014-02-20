@@ -164,4 +164,12 @@
     }];
 }
 
+- (BOOL) isSongDownloaded: (Song *)song
+{
+    BOOL isSongInUserDownloads = [[[User currentUser] downloads] indexOfObject:song] != NSNotFound;
+    BOOL isSongAvailibilityLocal = [song availability] == LOCAL;
+    
+    return isSongAvailibilityLocal && isSongInUserDownloads;
+}
+
 @end

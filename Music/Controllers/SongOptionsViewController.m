@@ -97,7 +97,7 @@
         [[self labelAddToPlaylist] setText:@"Unavailable"];
     }
     
-    if ([[self song] availability] == LOCAL)
+    if ([[DownloadsManager shared] isSongDownloaded:[self song]])
     {
         [self disableButton:[self buttonDownload]];
         [[self labelDownload] setText:@"Downloaded"];

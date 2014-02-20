@@ -17,5 +17,6 @@
 
 - (void) downloadSong: (Song *)song Origin: (NSString *)origin;
 - (void) deleteSongFromDownloads: (Song *)song;
+- (BOOL) isSongDownloaded: (Song *)song;
 
 @end

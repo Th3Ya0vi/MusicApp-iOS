@@ -259,8 +259,16 @@
         if ([self getPercentCompleted] >= 0.01)
         {
             [Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-            [[LocalyticsSession shared] tagEvent:@"Song Listen" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], [NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]], nil]
-                                                                                   forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
+            
+            NSString *percentCompletedBucket = @"75 - 100%";
+            if ([self getPercentCompleted] < 0.25)
+                percentCompletedBucket = @"0 - 25%";
+            else if([self getPercentCompleted] >= 0.25 && [self getPercentCompleted] < 0.50)
+                percentCompletedBucket = @"25 - 50%";
+            else if([self getPercentCompleted] >= 0.50 && [self getPercentCompleted] < 0.75)
+                percentCompletedBucket = @"50 - 75%";
+                
+            [[LocalyticsSession shared] tagEvent:@"Song Listen" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
         }
         [self replaceCurrentItemWithPlayerItem:nil];
         [self setCurrentStatus:FINISHED];

@@ -85,7 +85,7 @@
     static NSString *cellIdentifier = @"ExploreTableCell";
     static NSString *cellNib = @"ExploreTableCellView";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
     
     if (cell == nil)
     {

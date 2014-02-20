@@ -202,4 +202,19 @@
     [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use_Count"]];
 }
 
+#pragma mark - Crash Resolver
+
+- (BOOL)didAppCrashLastTime
+{
+    NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
+    
+    if ([userDef boolForKey:@"didCrash"] == YES)
+        return YES;
+    
+    [userDef setBool:YES forKey:@"didCrash"];
+    [userDef synchronize];
+    
+    return NO;
+}
+
 @end

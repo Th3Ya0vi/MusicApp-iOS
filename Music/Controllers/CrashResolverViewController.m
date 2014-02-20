@@ -8,6 +8,7 @@
 
 #import "CrashResolverViewController.h"
 #import "AppDelegate.h"
+#import "AlbumArtManager.h"
 
 @interface CrashResolverViewController ()
 
@@ -70,11 +71,7 @@
 
 - (IBAction)fixIt:(UIButton *)sender
 {
-    [self resetAllSetings];
-    [self setDidFix:YES];
-    [[self lblStatus] setText:@"Filmi should be fixed now. Tap 'Continue'"];
-    [[self buttonFix] setEnabled:NO];
-    [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+    [[[UIAlertView alloc] initWithTitle:@"Continue?" message:@"This will clear your playlist and downloads. You can re-download your favorite songs for free!" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil] show];
 }
 
 - (IBAction)workingFine:(UIButton *)sender
@@ -82,6 +79,22 @@
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self resumeNormalLoading];
+}
+
+#pragma mark - Alert view delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self resetAllSetings];
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        [[AlbumArtManager shared] deleteAllSavedImages];
+        [self setDidFix:YES];
+        [[self lblStatus] setText:@"Filmi should be fixed now. Tap 'Continue'"];
+        [[self buttonFix] setEnabled:NO];
+        [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+    }
 }
 
 @end

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CrashResolverViewController : UIViewController
+@interface CrashResolverViewController : UIViewController <UIAlertViewDelegate>
 
 @end

@@ -63,7 +63,7 @@
 
 - (void)resumeNormalLoading
 {
-    [(AppDelegate *)[[UIApplication sharedApplication] delegate] setup];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Actions
@@ -79,6 +79,8 @@
 
 - (IBAction)workingFine:(UIButton *)sender
 {
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [self resumeNormalLoading];
 }
 

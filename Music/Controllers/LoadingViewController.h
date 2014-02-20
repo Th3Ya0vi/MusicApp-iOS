@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iRate.h"
 
-@interface LoadingViewController : UIViewController
+@interface LoadingViewController : UIViewController <iRateDelegate>
 
 
 

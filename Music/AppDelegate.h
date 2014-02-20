@@ -7,12 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "iRate.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, iRateDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-- (void)setup;
 
 @end

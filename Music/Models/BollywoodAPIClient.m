@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Tushar Soni. All rights reserved.
 //
 
+#import "LocalyticsSession.h"
 #import "BollywoodAPIClient.h"
-#import "Flurry.h"
 
 #include <CommonCrypto/CommonDigest.h>
 #include <CommonCrypto/CommonHMAC.h>
@@ -127,7 +127,6 @@
     
     __block NSMutableDictionary *flurrySearchParams = [[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(scope == ALBUM) ? @"Albums" : @"Songs", query, (isFinal) ? @"Yes" : @"No", nil]
                                                                    forKeys:[NSArray arrayWithObjects:@"For", @"Query", @"Is_Final", nil]] mutableCopy];
-    [Flurry logEvent:@"Search" withParameters:nil timed:YES];
     
     AFHTTPRequestOperation *newSearch = [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (scope == ALBUM)
@@ -137,7 +136,7 @@
         
         [flurrySearchParams setObject:@"Yes" forKey:@"Success"];
         [flurrySearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result_Count"];
-        [Flurry endTimedEvent:@"Search" withParameters: flurrySearchParams];
+        [[LocalyticsSession shared] tagEvent:@"Search" attributes:flurrySearchParams];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
@@ -145,7 +144,7 @@
         
         [flurrySearchParams setObject:@"No" forKey:@"Success"];
         [flurrySearchParams setObject:[error localizedDescription] forKey:@"Error"];
-        [Flurry endTimedEvent:@"Search" withParameters: flurrySearchParams];
+        [[LocalyticsSession shared] tagEvent:@"Search" attributes:flurrySearchParams];
     }];
     
     [self setCurrentSearch:newSearch];

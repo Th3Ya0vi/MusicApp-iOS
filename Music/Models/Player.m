@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 Tushar Soni. All rights reserved.
 //
 
+#import "LocalyticsSession.h"
 #import "AFNetworkReachabilityManager.h"
 #import "Player.h"
 #import "Activity.h"
 #import "AlbumArtManager.h"
 #import "Playlist.h"
-#import "Flurry.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface Player ()
@@ -258,8 +258,8 @@
         if ([self getPercentCompleted] >= 0.01)
         {
             [Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-            [Flurry logEvent:@"Song_Listen" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], [NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]], nil]
-                                                                                   forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed_Percent", nil]]];
+            [[LocalyticsSession shared] tagEvent:@"Song Listen" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], [NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]], nil]
+                                                                                   forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
         }
         [self replaceCurrentItemWithPlayerItem:nil];
         [self setCurrentStatus:FINISHED];

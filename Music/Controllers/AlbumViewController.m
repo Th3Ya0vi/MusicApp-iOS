@@ -15,6 +15,7 @@
 #import "FXBlurView.h"
 #import "Player.h"
 #import "SongOptionsViewController.h"
+#import "LocalyticsSession.h"
 
 @interface AlbumViewController ()
 
@@ -60,6 +61,12 @@
     [super viewWillDisappear:animated];
     
     [[User currentUser] save];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[LocalyticsSession shared] tagScreen:@"Album"];
 }
 
 - (void)updateUI

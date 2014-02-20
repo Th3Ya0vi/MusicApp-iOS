@@ -10,6 +10,7 @@
 #import "PlayerViewController.h"
 #import "User.h"
 #import "Playlist.h"
+#import "LocalyticsSession.h"
 
 @interface EmptyPlaylistViewController ()
 
@@ -47,6 +48,8 @@
         [viewControllers replaceObjectAtIndex:0 withObject:player];
         [[self tabBarController] setViewControllers:viewControllers];
     }
+    
+    [[LocalyticsSession shared] tagScreen:@"Empty Playlist"];
 }
 
 @end

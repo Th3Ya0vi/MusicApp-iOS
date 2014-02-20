@@ -14,6 +14,7 @@
 #import "FXBlurView.h"
 #import "ExploreCollectionView.h"
 #import "ExploreCollectionViewCell.h"
+#import "LocalyticsSession.h"
 
 @interface ExploreViewController ()
 
@@ -59,6 +60,12 @@
         
         [[self tableExplore] reloadData];
     }];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[LocalyticsSession shared] tagScreen:@"Explore"];
 }
 
 #pragma mark - Table Data Source

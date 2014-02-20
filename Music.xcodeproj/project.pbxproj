@@ -72,7 +72,6 @@
 		78705C5D1859003100708E20 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C5C1859003100708E20 /* PlaylistViewController.m */; };
 		787AAF8C18B5A8BE006446A3 /* CrashResolverView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */; };
 		787AAF8F18B5B071006446A3 /* CrashResolverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */; };
-		78AC119E18A949F200B45C8C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */; };
 		78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */; };
 		78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC11A118A94A2B00B45C8C /* Security.framework */; };
 		78AC11A518A9792D00B45C8C /* DownloadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC11A418A9792D00B45C8C /* DownloadsManager.m */; };
@@ -80,6 +79,10 @@
 		78B511081893EC4400AA7534 /* SongOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B511061893EC4400AA7534 /* SongOptionsViewController.m */; };
 		78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B5110A1893EC7600AA7534 /* SongOptionsView.xib */; };
 		78B5110E189596F000AA7534 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5110D189596F000AA7534 /* Playlist.m */; };
+		78B7481418B68ED7002949E6 /* libLocalyticsAMP_x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B7481118B68ED7002949E6 /* libLocalyticsAMP_x64.a */; };
+		78B7481718B68F16002949E6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B7481618B68F16002949E6 /* libz.dylib */; };
+		78B7481918B68F24002949E6 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B7481818B68F24002949E6 /* libsqlite3.dylib */; };
+		78B7481B18B69614002949E6 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B7481A18B69614002949E6 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */; };
 		78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B9BB441879698F0075B2A5 /* iRate.bundle */; };
 		78B9BB481879698F0075B2A5 /* iRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B9BB461879698F0075B2A5 /* iRate.m */; };
@@ -208,8 +211,6 @@
 		787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashResolverView.xib; sourceTree = "<group>"; };
 		787AAF8D18B5B071006446A3 /* CrashResolverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashResolverViewController.h; path = Controllers/CrashResolverViewController.h; sourceTree = "<group>"; };
 		787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashResolverViewController.m; path = Controllers/CrashResolverViewController.m; sourceTree = "<group>"; };
-		78AC119C18A949F200B45C8C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
 		78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		78AC11A118A94A2B00B45C8C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		78AC11A318A9792D00B45C8C /* DownloadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DownloadsManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -220,6 +221,12 @@
 		78B5110A1893EC7600AA7534 /* SongOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongOptionsView.xib; sourceTree = "<group>"; };
 		78B5110C189596F000AA7534 /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
 		78B5110D189596F000AA7534 /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
+		78B7481118B68ED7002949E6 /* libLocalyticsAMP_x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP_x64.a; sourceTree = "<group>"; };
+		78B7481218B68ED7002949E6 /* LocalyticsAmpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsAmpSession.h; sourceTree = "<group>"; };
+		78B7481318B68ED7002949E6 /* LocalyticsSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsSession.h; sourceTree = "<group>"; };
+		78B7481618B68F16002949E6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		78B7481818B68F24002949E6 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		78B7481A18B69614002949E6 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageSubtitleCellView.xib; sourceTree = "<group>"; };
 		78B9BB441879698F0075B2A5 /* iRate.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = iRate.bundle; path = iRate/iRate.bundle; sourceTree = "<group>"; };
 		78B9BB451879698F0075B2A5 /* iRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iRate.h; path = iRate/iRate.h; sourceTree = "<group>"; };
@@ -237,15 +244,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78B7481B18B69614002949E6 /* AdSupport.framework in Frameworks */,
+				78B7481918B68F24002949E6 /* libsqlite3.dylib in Frameworks */,
+				78B7481718B68F16002949E6 /* libz.dylib in Frameworks */,
 				78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */,
 				78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */,
+				78B7481418B68ED7002949E6 /* libLocalyticsAMP_x64.a in Frameworks */,
 				780A180D184D2BC60082A89F /* MediaPlayer.framework in Frameworks */,
 				780A17B6184B3FEF0082A89F /* Accelerate.framework in Frameworks */,
 				780A17AB18493AB60082A89F /* AVFoundation.framework in Frameworks */,
 				780A171918451C3C0082A89F /* CoreGraphics.framework in Frameworks */,
 				780A171B18451C3C0082A89F /* UIKit.framework in Frameworks */,
 				780A171718451C3C0082A89F /* Foundation.framework in Frameworks */,
-				78AC119E18A949F200B45C8C /* libFlurry_4.3.2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +295,9 @@
 		780A171518451C3C0082A89F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78B7481A18B69614002949E6 /* AdSupport.framework */,
+				78B7481818B68F24002949E6 /* libsqlite3.dylib */,
+				78B7481618B68F16002949E6 /* libz.dylib */,
 				780A17CA184B621A0082A89F /* Third-Party */,
 				78AC11A118A94A2B00B45C8C /* Security.framework */,
 				78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */,
@@ -428,7 +441,7 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
-				78AC119B18A949F200B45C8C /* Flurry */,
+				78B7481518B68EDE002949E6 /* Localytics */,
 				78B9BB49187969980075B2A5 /* iRate */,
 				780A1808184D0DE00082A89F /* BVReorderTableView */,
 				780A17CB184B621A0082A89F /* AFNetworking */,
@@ -517,13 +530,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		78AC119B18A949F200B45C8C /* Flurry */ = {
+		78B7481518B68EDE002949E6 /* Localytics */ = {
 			isa = PBXGroup;
 			children = (
-				78AC119C18A949F200B45C8C /* Flurry.h */,
-				78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */,
+				78B7481118B68ED7002949E6 /* libLocalyticsAMP_x64.a */,
+				78B7481218B68ED7002949E6 /* LocalyticsAmpSession.h */,
+				78B7481318B68ED7002949E6 /* LocalyticsSession.h */,
 			);
-			path = Flurry;
+			name = Localytics;
 			sourceTree = "<group>";
 		};
 		78B9BB49187969980075B2A5 /* iRate */ = {
@@ -828,6 +842,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party/Flurry",
+					"$(PROJECT_DIR)/Music/Third-Party",
 				);
 				PRODUCT_NAME = Filmi;
 				PROVISIONING_PROFILE = "24375D4C-B5EC-4F90-A13A-579BCF887A4F";
@@ -849,6 +864,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party/Flurry",
+					"$(PROJECT_DIR)/Music/Third-Party",
 				);
 				PRODUCT_NAME = Filmi;
 				PROVISIONING_PROFILE = "F5260B8A-1B9D-4ACB-95B8-1DB238CE5348";

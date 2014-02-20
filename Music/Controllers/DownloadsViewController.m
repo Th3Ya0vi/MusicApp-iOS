@@ -11,6 +11,7 @@
 #import "Player.h"
 #import "SongOptionsViewController.h"
 #import "DownloadsManager.h"
+#import "LocalyticsSession.h"
 
 #define currentRowAvailability [[[self searchResults] objectAtIndex:indexPath.row] availability]
 #define didCurrentRowFailed    currentRowAvailability != LOCAL && currentRowAvailability != DOWNLOADING
@@ -62,6 +63,12 @@
     [super viewWillAppear:animated];
     
     [self fillData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[LocalyticsSession shared] tagScreen:@"Downloads"];
 }
 
 - (void)setBadge

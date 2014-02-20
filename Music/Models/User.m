@@ -8,8 +8,8 @@
 
 #import "User.h"
 #import "Activity.h"
+#import "LocalyticsSession.h"
 #import "AFHTTPRequestOperationManager.h"
-#import "Flurry.h"
 #import "BollywoodAPIClient.h"
 
 @implementation User
@@ -33,7 +33,7 @@
         
         [user removeOldData];
         
-        [Flurry setUserID:[NSString stringWithFormat:@"%d", [user userid]]];
+        [[LocalyticsSession shared] setCustomerId:[NSString stringWithFormat:@"%d", [user userid]]];
     }
     return user;
     

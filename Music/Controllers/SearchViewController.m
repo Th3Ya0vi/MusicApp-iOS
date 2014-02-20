@@ -16,6 +16,7 @@
 #import "Activity.h"
 #import "SongOptionsViewController.h"
 #import "BollywoodAPIClient.h"
+#import "LocalyticsSession.h"
 
 #define MIN_SEARCH_LENGTH   3
 
@@ -57,6 +58,12 @@
     [super viewWillDisappear:animated];
     
     [[AlbumArtManager shared] cancelFromSender:@"SearchView"];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[LocalyticsSession shared] tagScreen:@"Search"];
 }
 
 #pragma mark Table Data Source

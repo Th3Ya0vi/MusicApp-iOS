@@ -15,8 +15,8 @@
 #import "PlayerViewController.h"
 #import "BollywoodAPIClient.h"
 #import "Playlist.h"
-#import "Flurry.h"
 #import "AlbumArtManager.h"
+#import "LocalyticsSession.h"
 #import "CrashResolverViewController.h"
 
 @interface LoadingViewController ()
@@ -31,7 +31,6 @@
     if (self)
     {
         [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
-        [self configureFlurry];
         [self configureiRate];
         [self setupCache];
         [self clearCacheIfNecessary];
@@ -67,6 +66,8 @@
             [self loadMainView];
         }
     }
+    
+    [[LocalyticsSession shared] tagScreen:@"Loading"];
 }
 
 - (void)loadMainView
@@ -106,29 +107,29 @@
 
 - (void)iRateDidPromptForRating
 {
-    [self logiRateEventWithEvent:@"iRate_Prompt"];
+    [self logiRateEventWithEvent:@"iRate Prompt"];
 }
 
 - (void)iRateUserDidAttemptToRateApp
 {
-    [self logiRateEventWithEvent:@"iRate_Attempt"];
+    [self logiRateEventWithEvent:@"iRate Attempt"];
 }
 
 - (void)iRateUserDidDeclineToRateApp
 {
-    [self logiRateEventWithEvent:@"iRate_Decline"];
+    [self logiRateEventWithEvent:@"iRate Decline"];
 }
 
 - (void)iRateUserDidRequestReminderToRateApp
 {
-    [self logiRateEventWithEvent:@"iRate_Remind"];
+    [self logiRateEventWithEvent:@"iRate Remind"];
 }
 
 #pragma mark - iRate Delegate Helper Method(s)
 
 - (void)logiRateEventWithEvent: (NSString *)event
 {
-    [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use_Count"]];
+    [[LocalyticsSession shared] tagEvent:event attributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use Count"]];
 }
 
 #pragma mark - Cache methods
@@ -153,16 +154,6 @@
         
         NSLog(@"Cleared Cache");
     }
-}
-
-#pragma mark - Flurry methods
-
-- (void)configureFlurry
-{
-    [Flurry setCrashReportingEnabled:YES];
-#if DEBUG
-    [Flurry setDebugLogEnabled:NO];
-#endif
 }
 
 #pragma mark - Crash Resolver

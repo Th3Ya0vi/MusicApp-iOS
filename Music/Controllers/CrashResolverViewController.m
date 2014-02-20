@@ -9,6 +9,7 @@
 #import "CrashResolverViewController.h"
 #import "AppDelegate.h"
 #import "AlbumArtManager.h"
+#import "LocalyticsSession.h"
 
 @interface CrashResolverViewController ()
 
@@ -38,6 +39,12 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [[self lblStatus] setText:@""];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[LocalyticsSession shared] tagScreen:@"CrashResolver"];
 }
 
 - (void)didReceiveMemoryWarning

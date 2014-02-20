@@ -21,6 +21,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    if ([self didAppCrashLastTime])
+        return NO;
+    
     [self setupCache];
     [self clearCacheIfNecessary];
     [self configureiRate];
@@ -69,6 +72,9 @@
     [[Player shared] stop];
     [[User currentUser] save];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -105,7 +111,7 @@
 {
     [Flurry setCrashReportingEnabled:YES];
 #if DEBUG
-    [Flurry setDebugLogEnabled:YES];
+    [Flurry setDebugLogEnabled:NO];
 #endif
 }
 
@@ -176,6 +182,51 @@
 - (void)logiRateEventWithEvent: (NSString *)event
 {
     [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use_Count"]];
+}
+
+#pragma mark - Crash Resolver
+
+- (BOOL)didAppCrashLastTime
+{
+    NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
+    
+    if ([userDef boolForKey:@"didCrash"] == YES)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Is Filmi Crashing Repeatedly?" message:@"" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"YES! Please fix it", nil] show];
+        return YES;
+    }
+    
+    [userDef setBool:YES forKey:@"didCrash"];
+    [userDef synchronize];
+    
+    return NO;
+}
+
+- (void)resetAllSetings
+{
+    NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
+
+    [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
+    
+    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
+                forKey:@"activity"];
+    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
+                forKey:@"playlist"];
+    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
+                forKey:@"downloads"];
+    
+    [userDef synchronize];
+}
+
+#pragma mark - Alert view delegate for crash resolver
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self resetAllSetings];
+        [[[UIAlertView alloc] initWithTitle:@"I've cleared all the data. EXIT the app and open it again to enjoy free Bollywood music!" message:@"If you are still having problems, email me at tusharsoni1205@gmail.com" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    }
 }
 
 @end

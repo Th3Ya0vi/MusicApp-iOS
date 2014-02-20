@@ -70,6 +70,8 @@
 		78705C561857C04D00708E20 /* PlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C551857C04D00708E20 /* PlayerViewController.m */; };
 		78705C5A1858FFFE00708E20 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78705C591858FFFE00708E20 /* PlaylistView.xib */; };
 		78705C5D1859003100708E20 /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78705C5C1859003100708E20 /* PlaylistViewController.m */; };
+		787AAF8C18B5A8BE006446A3 /* CrashResolverView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */; };
+		787AAF8F18B5B071006446A3 /* CrashResolverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */; };
 		78AC119E18A949F200B45C8C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */; };
 		78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */; };
 		78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC11A118A94A2B00B45C8C /* Security.framework */; };
@@ -203,6 +205,9 @@
 		78705C591858FFFE00708E20 /* PlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
 		78705C5B1859003100708E20 /* PlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistViewController.h; path = Controllers/PlaylistViewController.h; sourceTree = "<group>"; };
 		78705C5C1859003100708E20 /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PlaylistViewController.m; path = Controllers/PlaylistViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashResolverView.xib; sourceTree = "<group>"; };
+		787AAF8D18B5B071006446A3 /* CrashResolverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashResolverViewController.h; path = Controllers/CrashResolverViewController.h; sourceTree = "<group>"; };
+		787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashResolverViewController.m; path = Controllers/CrashResolverViewController.m; sourceTree = "<group>"; };
 		78AC119C18A949F200B45C8C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		78AC119D18A949F200B45C8C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
 		78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -389,6 +394,8 @@
 				7869C82B185DFD5300F877EE /* EmptyPlaylistViewController.m */,
 				78B511051893EC4400AA7534 /* SongOptionsViewController.h */,
 				78B511061893EC4400AA7534 /* SongOptionsViewController.m */,
+				787AAF8D18B5B071006446A3 /* CrashResolverViewController.h */,
+				787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -413,6 +420,7 @@
 				7869C824185D1B3000F877EE /* PlayingCellView.xib */,
 				78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */,
 				78424B04189053C7000F6E99 /* ExploreTableCellView.xib */,
+				787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */,
 			);
 			path = Nibs;
 			sourceTree = "<group>";
@@ -623,6 +631,7 @@
 				780A17C5184B62040082A89F /* LoadingView.xib in Resources */,
 				780A17C8184B62040082A89F /* SearchView.xib in Resources */,
 				780A17C9184B62040082A89F /* SubtitleCellView.xib in Resources */,
+				787AAF8C18B5A8BE006446A3 /* CrashResolverView.xib in Resources */,
 				78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */,
 				78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */,
 				78424B5E1891850C000F6E99 /* NowPlayingView.xib in Resources */,
@@ -660,6 +669,7 @@
 				780A17FB184B621A0082A89F /* FXBlurView.m in Sources */,
 				780A17FD184B621A0082A89F /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				780A17F7184B621A0082A89F /* AFURLConnectionOperation.m in Sources */,
+				787AAF8F18B5B071006446A3 /* CrashResolverViewController.m in Sources */,
 				780A17F3184B621A0082A89F /* AFHTTPRequestOperationManager.m in Sources */,
 				780A178918451DE40082A89F /* LoadingViewController.m in Sources */,
 				78424B6718918C16000F6E99 /* NowPlayingViewController.m in Sources */,

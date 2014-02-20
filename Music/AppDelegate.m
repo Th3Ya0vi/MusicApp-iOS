@@ -16,25 +16,16 @@
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "Flurry.h"
+#import "CrashResolverViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     if ([self didAppCrashLastTime])
-        return NO;
-    
-    [self setupCache];
-    [self clearCacheIfNecessary];
-    [self configureiRate];
-    [self configureFlurry];
-    
-    [Flurry startSession:@FLURRY_APP_KEY withOptions:launchOptions];
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
-    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
-
-    [self setupAndShowLoading];
+        [self setupAndShowCrashResolver];
+    else
+        [self setup];
     
     return YES;
 }
@@ -80,6 +71,33 @@
 - (BOOL)canBecomeFirstResponder
 {
     return YES;
+}
+
+- (void)setup
+{
+    [self setupCache];
+    [self clearCacheIfNecessary];
+    [self configureiRate];
+    [self configureFlurry];
+    
+    [Flurry startSession:@FLURRY_APP_KEY];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
+    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
+    
+    [self setupAndShowLoading];
+
+}
+
+- (void)setupAndShowCrashResolver
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    CrashResolverViewController *crashResolver = [[CrashResolverViewController alloc] initWithNibName:nil bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:crashResolver];
+    self.window.rootViewController = navController;
+    
+    [self.window makeKeyAndVisible];
 }
 
 - (void)setupAndShowLoading
@@ -182,51 +200,6 @@
 - (void)logiRateEventWithEvent: (NSString *)event
 {
     [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use_Count"]];
-}
-
-#pragma mark - Crash Resolver
-
-- (BOOL)didAppCrashLastTime
-{
-    NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
-    
-    if ([userDef boolForKey:@"didCrash"] == YES)
-    {
-        [[[UIAlertView alloc] initWithTitle:@"Is Filmi Crashing Repeatedly?" message:@"" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"YES! Please fix it", nil] show];
-        return YES;
-    }
-    
-    [userDef setBool:YES forKey:@"didCrash"];
-    [userDef synchronize];
-    
-    return NO;
-}
-
-- (void)resetAllSetings
-{
-    NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
-
-    [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
-    
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
-                forKey:@"activity"];
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
-                forKey:@"playlist"];
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
-                forKey:@"downloads"];
-    
-    [userDef synchronize];
-}
-
-#pragma mark - Alert view delegate for crash resolver
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1)
-    {
-        [self resetAllSetings];
-        [[[UIAlertView alloc] initWithTitle:@"I've cleared all the data. EXIT the app and open it again to enjoy free Bollywood music!" message:@"If you are still having problems, email me at tusharsoni1205@gmail.com" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
-    }
 }
 
 @end

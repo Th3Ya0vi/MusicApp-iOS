@@ -45,6 +45,9 @@
     
     [[BollywoodAPIClient shared] postUserActivity];
     [[User currentUser] save];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -65,9 +68,6 @@
     [[Player shared] stop];
     [[User currentUser] save];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)canBecomeFirstResponder

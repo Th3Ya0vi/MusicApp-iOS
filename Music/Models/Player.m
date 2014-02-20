@@ -194,6 +194,7 @@
     if (play)
         [self play];
 
+    [self setMediaInfo];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayerUpdated" object:self];
 }
 

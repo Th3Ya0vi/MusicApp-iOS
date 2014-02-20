@@ -126,7 +126,7 @@
     [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
     
     __block NSMutableDictionary *flurrySearchParams = [[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(scope == ALBUM) ? @"Albums" : @"Songs", query, (isFinal) ? @"Yes" : @"No", nil]
-                                                                   forKeys:[NSArray arrayWithObjects:@"For", @"Query", @"Is_Final", nil]] mutableCopy];
+                                                                   forKeys:[NSArray arrayWithObjects:@"For", @"Query", @"Is Final", nil]] mutableCopy];
     
     AFHTTPRequestOperation *newSearch = [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (scope == ALBUM)
@@ -135,7 +135,7 @@
             successBlock([Song songsWithJSONArray:responseObject]);
         
         [flurrySearchParams setObject:@"Yes" forKey:@"Success"];
-        [flurrySearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result_Count"];
+        [flurrySearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result Count"];
         [[LocalyticsSession shared] tagEvent:@"Search" attributes:flurrySearchParams];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

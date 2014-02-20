@@ -66,8 +66,6 @@
             [self loadMainView];
         }
     }
-    
-    [[LocalyticsSession shared] tagScreen:@"Loading"];
 }
 
 - (void)loadMainView

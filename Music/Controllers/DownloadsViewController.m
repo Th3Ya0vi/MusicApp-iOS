@@ -43,9 +43,9 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"didStartDownloadingSong"];
-    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"DownloadingSong"];
-    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"DownloadedSong"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didStartDownloadingSong" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadingSong" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadedSong" object:nil];
 }
 
 #pragma mark - View

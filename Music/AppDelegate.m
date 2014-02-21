@@ -23,10 +23,7 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    LoadingViewController *loading = [[LoadingViewController alloc] initWithNibName:nil bundle:nil];
-    self.window.rootViewController = loading;
-    [self.window makeKeyAndVisible];
+    [self showLoadingScreen];
     
     return YES;
 }
@@ -64,6 +61,8 @@
     
     [[LocalyticsSession shared] resume];
     [[LocalyticsSession shared] upload];
+    
+    [self showLoadingScreen];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -110,6 +109,12 @@
     [[LocalyticsSession shared] tagEvent:@"Device Token" attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Success"]];
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSLog(@"Received notification!");
+    [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"NotificationInfo"];
+}
+
 - (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent
 {
     if (receivedEvent.type == UIEventTypeRemoteControl)
@@ -138,5 +143,13 @@
     }
 }
 
+
+- (void)showLoadingScreen
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    LoadingViewController *loading = [[LoadingViewController alloc] initWithNibName:nil bundle:nil];
+    self.window.rootViewController = loading;
+    [self.window makeKeyAndVisible];
+}
 
 @end

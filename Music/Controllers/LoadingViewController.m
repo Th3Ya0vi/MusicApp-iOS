@@ -18,6 +18,7 @@
 #import "AlbumArtManager.h"
 #import "LocalyticsSession.h"
 #import "CrashResolverViewController.h"
+#import "AlbumViewController.h"
 
 @interface LoadingViewController ()
 
@@ -59,6 +60,21 @@
             } Failure:^{
                 [[[UIAlertView alloc] initWithTitle:@"Can't Connect" message:@"Please make sure you are connected to the internet" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
             }];
+        }
+        else if([[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] != nil)
+        {
+            if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] objectForKey:@"Type"] isEqualToString:@"Release"])
+            {
+                NSString *albumid = [[[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] objectForKey:@"AlbumID"];
+                [[BollywoodAPIClient shared] fetchAlbumWithAlbumID:albumid CompletionBlock:^(Album *album) {
+                    
+                    AlbumViewController *albumView = [[AlbumViewController alloc] initWithAlbum:album Origin:@"Notification"];
+                    UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];
+                    
+                    [self presentViewController:navControllerForAlbumView animated:YES completion:nil];
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NotificationInfo"];
+                }];
+            }
         }
         else
         {

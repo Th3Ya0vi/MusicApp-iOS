@@ -321,10 +321,10 @@
             return [NSString stringWithFormat:@"explore%@", queryStrings];
             break;
         case FETCH_SONG:
-            return [NSString stringWithFormat:@"song/%@%@/album", parameter, queryStrings];
+            return [NSString stringWithFormat:@"song/%@/album%@", parameter, queryStrings];
             break;
         case FETCH_ALBUM:
-            return [NSString stringWithFormat:@"album/%@%@/songs", parameter, queryStrings];
+            return [NSString stringWithFormat:@"album/%@/songs%@", parameter, queryStrings];
             break;
     }
 }

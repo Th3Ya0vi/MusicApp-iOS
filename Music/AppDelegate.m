@@ -19,6 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
@@ -91,6 +92,22 @@
 - (BOOL)canBecomeFirstResponder
 {
     return YES;
+}
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveDeviceToken"] == NO)
+    {
+        [[LocalyticsSession shared] tagEvent:@"Device Token" attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Success"]];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    [[LocalyticsSession shared] setPushToken:deviceToken];
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+    [[LocalyticsSession shared] tagEvent:@"Device Token" attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Success"]];
 }
 
 - (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent

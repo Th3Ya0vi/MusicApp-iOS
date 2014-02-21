@@ -85,6 +85,10 @@
 {
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if (![self didFix])
+        [[LocalyticsSession shared] tagEvent:@"Crash Resolver" attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
+    
     [self resumeNormalLoading];
 }
 
@@ -101,6 +105,8 @@
         [[self lblStatus] setText:@"Filmi should be fixed now. Tap 'Continue'"];
         [[self buttonFix] setEnabled:NO];
         [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+        
+        [[LocalyticsSession shared] tagEvent:@"Crash Resolver" attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
     }
 }
 

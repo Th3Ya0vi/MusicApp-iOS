@@ -17,10 +17,13 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" image="CrashBG" translatesAutoresizingMaskIntoConstraints="NO" id="ybm-c1-bSv">
+                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="CrashBG" translatesAutoresizingMaskIntoConstraints="NO" id="ybm-c1-bSv">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="320" id="KSA-7h-2k8"/>
+                    </constraints>
                 </imageView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Is Filmi Crashing Repeatedly?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5D-yq-Unw">
                     <rect key="frame" x="20" y="82" width="285" height="45"/>
@@ -29,9 +32,13 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40F-A8-NHH">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40F-A8-NHH">
                     <rect key="frame" x="55" y="394" width="210" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="210" id="HAT-7v-C1C"/>
+                        <constraint firstAttribute="height" constant="40" id="UEv-kc-wpq"/>
+                    </constraints>
                     <state key="normal" backgroundImage="fixit">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -39,9 +46,13 @@
                         <action selector="fixIt:" destination="-1" eventType="touchUpInside" id="UMs-eY-5Ql"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pfk-Z9-C0l">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pfk-Z9-C0l">
                     <rect key="frame" x="55" y="466" width="210" height="39"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="39" id="23k-NF-4mi"/>
+                        <constraint firstAttribute="width" constant="210" id="hds-OH-qy1"/>
+                    </constraints>
                     <state key="normal" backgroundImage="workingfine">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -55,14 +66,28 @@
                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="15"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="For support, email tusharsoni1205@gmail.com" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FNq-gJ-qyp">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For support, email tusharsoni1205@gmail.com" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FNq-gJ-qyp">
                     <rect key="frame" x="20" y="527" width="285" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="8qu-CB-nk5"/>
+                        <constraint firstAttribute="width" constant="285" id="jZV-zi-V4l"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="12"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
+            <constraints>
+                <constraint firstItem="pfk-Z9-C0l" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="55" id="HCF-Ej-waX"/>
+                <constraint firstAttribute="bottom" secondItem="40F-A8-NHH" secondAttribute="bottom" constant="134" id="KWB-vq-gDk"/>
+                <constraint firstItem="40F-A8-NHH" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="55" id="Mca-Kr-jKY"/>
+                <constraint firstItem="FNq-gJ-qyp" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="U4a-LD-8Ua"/>
+                <constraint firstAttribute="bottom" secondItem="FNq-gJ-qyp" secondAttribute="bottom" constant="20" id="VxS-14-snQ"/>
+                <constraint firstItem="ybm-c1-bSv" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="ZaM-ae-FVV"/>
+                <constraint firstAttribute="bottom" secondItem="pfk-Z9-C0l" secondAttribute="bottom" constant="63" id="ZiB-Gm-oWD"/>
+                <constraint firstAttribute="bottom" secondItem="ybm-c1-bSv" secondAttribute="bottom" id="wIX-qx-QYk"/>
+            </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

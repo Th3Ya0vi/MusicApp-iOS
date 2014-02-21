@@ -125,7 +125,7 @@
     
     [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
     
-    __block NSMutableDictionary *flurrySearchParams = [[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(scope == ALBUM) ? @"Albums" : @"Songs", query, (isFinal) ? @"Yes" : @"No", nil]
+    __block NSMutableDictionary *analyticsSearchParams = [[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(scope == ALBUM) ? @"Albums" : @"Songs", query, (isFinal) ? @"Yes" : @"No", nil]
                                                                    forKeys:[NSArray arrayWithObjects:@"For", @"Query", @"Is Final", nil]] mutableCopy];
     
     AFHTTPRequestOperation *newSearch = [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -134,17 +134,19 @@
         else if(scope == SONG)
             successBlock([Song songsWithJSONArray:responseObject]);
         
-        [flurrySearchParams setObject:@"Yes" forKey:@"Success"];
-        [flurrySearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result Count"];
-        [[LocalyticsSession shared] tagEvent:@"Search" attributes:flurrySearchParams];
+        [analyticsSearchParams setObject:@"Yes" forKey:@"Success"];
+        [analyticsSearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result Count"];
+        [[LocalyticsSession shared] tagEvent:@"Search" attributes:analyticsSearchParams];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
+        {
             failureBlock();
-        
-        [flurrySearchParams setObject:@"No" forKey:@"Success"];
-        [flurrySearchParams setObject:[error localizedDescription] forKey:@"Error"];
-        [[LocalyticsSession shared] tagEvent:@"Search" attributes:flurrySearchParams];
+            
+            [analyticsSearchParams setObject:@"No" forKey:@"Success"];
+            [analyticsSearchParams setObject:[error localizedDescription] forKey:@"Error"];
+            [[LocalyticsSession shared] tagEvent:@"Search" attributes:analyticsSearchParams];
+        }
     }];
     
     [self setCurrentSearch:newSearch];

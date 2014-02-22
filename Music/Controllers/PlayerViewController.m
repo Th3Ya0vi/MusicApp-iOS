@@ -14,7 +14,7 @@
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
 #import "NowPlayingViewController.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface PlayerViewController ()
 
@@ -88,12 +88,6 @@
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
 }
 
-- (void) viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[LocalyticsSession shared] tagScreen:@"Player"];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -101,6 +95,12 @@
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
                                 ShouldAnimate:NO];
     [self syncView];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [Flurry logPageView];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -196,7 +196,7 @@
         else if ([[Playlist shared] songBefore:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
             [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
         
-        [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
+        [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
     }
 }
 
@@ -212,7 +212,7 @@
     [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
                                 ShouldAnimate:YES];
-    [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
+    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
@@ -220,7 +220,7 @@
     [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse
                                 ShouldAnimate:YES];
-    [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
+    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
 }
 
 - (IBAction)seekerTouched:(UISlider *)sender

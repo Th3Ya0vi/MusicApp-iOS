@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Tushar Soni. All rights reserved.
 //
 
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 #import "AFNetworkReachabilityManager.h"
 #import "Player.h"
 #import "Activity.h"
@@ -268,7 +268,7 @@
             else if([self getPercentCompleted] >= 0.50 && [self getPercentCompleted] < 0.75)
                 percentCompletedBucket = @"50 - 75%";
                 
-            [[LocalyticsSession shared] tagEvent:@"Song Listen" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
+            [Flurry logEvent:@"Song Listen" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
         }
         [self replaceCurrentItemWithPlayerItem:nil];
         [self setCurrentStatus:FINISHED];

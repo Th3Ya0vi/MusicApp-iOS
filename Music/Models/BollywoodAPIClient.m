@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Tushar Soni. All rights reserved.
 //
 
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 #import "BollywoodAPIClient.h"
 
 #include <CommonCrypto/CommonDigest.h>
@@ -136,7 +136,7 @@
         
         [analyticsSearchParams setObject:@"Yes" forKey:@"Success"];
         [analyticsSearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result Count"];
-        [[LocalyticsSession shared] tagEvent:@"Search" attributes:analyticsSearchParams];
+        [Flurry logEvent:@"Search" withParameters:analyticsSearchParams];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
@@ -145,7 +145,7 @@
             
             [analyticsSearchParams setObject:@"No" forKey:@"Success"];
             [analyticsSearchParams setObject:[error localizedDescription] forKey:@"Error"];
-            [[LocalyticsSession shared] tagEvent:@"Search" attributes:analyticsSearchParams];
+            [Flurry logEvent:@"Search" withParameters:analyticsSearchParams];
         }
     }];
     

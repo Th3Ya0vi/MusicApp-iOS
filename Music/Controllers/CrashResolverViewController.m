@@ -9,7 +9,7 @@
 #import "CrashResolverViewController.h"
 #import "AppDelegate.h"
 #import "AlbumArtManager.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface CrashResolverViewController ()
 
@@ -44,7 +44,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[LocalyticsSession shared] tagScreen:@"CrashResolver"];
+    [Flurry logPageView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,7 +87,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     if (![self didFix])
-        [[LocalyticsSession shared] tagEvent:@"Crash Resolver" attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
+        [Flurry logEvent:@"Crash Resolver" withParameters:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
     
     [self resumeNormalLoading];
 }
@@ -106,7 +106,7 @@
         [[self buttonFix] setEnabled:NO];
         [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
         
-        [[LocalyticsSession shared] tagEvent:@"Crash Resolver" attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
+        [Flurry logEvent:@"Crash Resolver" withParameters:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
     }
 }
 

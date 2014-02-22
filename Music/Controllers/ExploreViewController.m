@@ -14,7 +14,7 @@
 #import "FXBlurView.h"
 #import "ExploreCollectionView.h"
 #import "ExploreCollectionViewCell.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface ExploreViewController ()
 
@@ -65,7 +65,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[LocalyticsSession shared] tagScreen:@"Explore"];
+    [Flurry logPageView];
 }
 
 #pragma mark - Table Data Source

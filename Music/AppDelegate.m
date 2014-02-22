@@ -13,12 +13,14 @@
 #import "Playlist.h"
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Flurry setCrashReportingEnabled:YES];
+    [Flurry startSession:@FLURRY_APP_KEY];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
@@ -32,9 +34,6 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-
-    // [[LocalyticsSession shared] close];
-    // [[LocalyticsSession shared] upload];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -44,8 +43,6 @@
     
     if ([[Player shared] currentStatus] != PLAYING && [[Player shared] currentStatus] != LOADING)
     {
-        [[LocalyticsSession shared] close];
-        [[LocalyticsSession shared] upload];
     }
     
     [[BollywoodAPIClient shared] postUserActivity];
@@ -59,19 +56,12 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
-    [[LocalyticsSession shared] resume];
-    [[LocalyticsSession shared] upload];
-    
     [self showLoadingScreen];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [[LocalyticsSession shared] LocalyticsSession:@LOCALYTICS_APP_KEY];
-    [[LocalyticsSession shared] setLoggingEnabled:YES];
-    [[LocalyticsSession shared] resume];
-    [[LocalyticsSession shared] upload];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"applicationDidBecomeActive" object:nil];
 }
@@ -79,9 +69,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-
-    [[LocalyticsSession shared] close];
-    [[LocalyticsSession shared] upload];
     
     [[Player shared] stop];
     [[User currentUser] save];
@@ -97,16 +84,16 @@
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveDeviceToken"] == NO)
     {
-        [[LocalyticsSession shared] tagEvent:@"Device Token" attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Success"]];
+        [Flurry logEvent:@"Device Token" withParameters:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Success"]];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveDeviceToken"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    [[LocalyticsSession shared] setPushToken:deviceToken];
+    [Flurry setPushToken:[[NSString alloc] initWithData:deviceToken encoding:NSASCIIStringEncoding]];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
-    [[LocalyticsSession shared] tagEvent:@"Device Token" attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Success"]];
+    [Flurry logEvent:@"Device Token" withParameters:[NSDictionary dictionaryWithObject:@"No" forKey:@"Success"]];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -123,19 +110,17 @@
         {
             case UIEventSubtypeRemoteControlPause:
                 [[Player shared] togglePlayPause];
-                [[LocalyticsSession shared] close];
                 break;
             case UIEventSubtypeRemoteControlPlay:
                 [[Player shared] togglePlayPause];
-                [[LocalyticsSession shared] resume];
                 break;
             case UIEventSubtypeRemoteControlPreviousTrack:
                 [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
-                [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
                 [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
-                [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
                 break;
             default:
                 break;

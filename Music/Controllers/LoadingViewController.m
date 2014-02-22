@@ -16,7 +16,7 @@
 #import "BollywoodAPIClient.h"
 #import "Playlist.h"
 #import "AlbumArtManager.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 #import "CrashResolverViewController.h"
 #import "AlbumViewController.h"
 
@@ -143,7 +143,7 @@
 
 - (void)logiRateEventWithEvent: (NSString *)event
 {
-    [[LocalyticsSession shared] tagEvent:event attributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use Count"]];
+    [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use Count"]];
 }
 
 #pragma mark - Cache methods

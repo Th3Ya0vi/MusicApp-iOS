@@ -10,7 +10,7 @@
 #import "PlayerViewController.h"
 #import "User.h"
 #import "Playlist.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface EmptyPlaylistViewController ()
 
@@ -49,7 +49,7 @@
         [[self tabBarController] setViewControllers:viewControllers];
     }
     
-    [[LocalyticsSession shared] tagScreen:@"Empty Playlist"];
+    [Flurry logPageView];
 }
 
 @end

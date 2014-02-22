@@ -15,7 +15,7 @@
 #import "FXBlurView.h"
 #import "Player.h"
 #import "SongOptionsViewController.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface AlbumViewController ()
 
@@ -66,7 +66,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[LocalyticsSession shared] tagScreen:@"Album"];
+    [Flurry logPageView];
 }
 
 - (void)updateUI

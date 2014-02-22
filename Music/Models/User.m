@@ -8,7 +8,7 @@
 
 #import "User.h"
 #import "Activity.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "BollywoodAPIClient.h"
 
@@ -32,8 +32,8 @@
         user.downloads = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"downloads"]] mutableCopy];
         
         [user removeOldData];
-        
-        [[LocalyticsSession shared] setCustomerId:[NSString stringWithFormat:@"%d", [user userid]]];
+    
+        [Flurry setUserID:[NSString stringWithFormat:@"%d", [user userid]]];
     }
     return user;
     

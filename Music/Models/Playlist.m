@@ -9,7 +9,7 @@
 #import "Playlist.h"
 #import "Activity.h"
 #import "Player.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface Playlist ()
 
@@ -78,7 +78,7 @@
     
     [[self playlist] addObject:[song copy]];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
-    [[LocalyticsSession shared] tagEvent:@"Song Add Playlist" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+    [Flurry logEvent:@"Song Add Playlist" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
@@ -91,7 +91,7 @@
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:after] + 1];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
-    [[LocalyticsSession shared] tagEvent:@"Song Add Playlist" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+    [Flurry logEvent:@"Song Add Playlist" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
@@ -104,7 +104,7 @@
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:before] - 1];
     [Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
-    [[LocalyticsSession shared] tagEvent:@"Song Add Playlist" attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+    [Flurry logEvent:@"Song Add Playlist" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 

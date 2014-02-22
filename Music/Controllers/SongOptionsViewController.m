@@ -11,7 +11,7 @@
 #import "Playlist.h"
 #import "FXBlurView.h"
 #import "DownloadsManager.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface SongOptionsViewController ()
@@ -80,7 +80,7 @@
         [[self view] setAlpha:1.0];
     }];
     
-    [[LocalyticsSession shared] tagScreen:@"SongOptions"];
+    [Flurry logPageView];
 }
 
 - (void)syncView
@@ -145,7 +145,7 @@
 
     [[Player shared] loadSong:[[Playlist shared] songInPlaylistWithSong:[self song]] ShouldPlay:YES];
     
-    [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Song Options" forKey:@"How"]];
+    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Song Options" forKey:@"How"]];
     
     [self close];
 }

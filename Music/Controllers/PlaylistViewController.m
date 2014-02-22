@@ -12,7 +12,7 @@
 #import "Playlist.h"
 #import "Activity.h"
 #import "SongOptionsViewController.h"
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 
 @interface PlaylistViewController ()
 
@@ -76,7 +76,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[LocalyticsSession shared] tagScreen:@"Playlist"];
+    [Flurry logPageView];
 }
 
 #pragma mark - Table Data Source
@@ -144,7 +144,7 @@
     [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:YES];
     [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [[LocalyticsSession shared] tagEvent:@"Song Change" attributes:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
+    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -195,7 +195,7 @@
     
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
     
-    [[LocalyticsSession shared] tagEvent:@"Shuffle" attributes:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
+    [Flurry logEvent:@"Shuffle" withParameters:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
 }
 
 - (IBAction)clearPlaylist:(id)sender

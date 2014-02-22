@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Tushar Soni. All rights reserved.
 //
 
-#import "LocalyticsSession.h"
+#import "Flurry.h"
 #import "DownloadsManager.h"
 #import "Activity.h"
 #import "AFURLSessionManager.h"
@@ -125,8 +125,8 @@
     if ([self lastSuccess])
         [Activity addWithSong:[self lastSong] action:DOWNLOADED extra:[self lastOrigin]];
     
-    [[LocalyticsSession shared] tagEvent:@"Song Download"
-      attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]
+    [Flurry logEvent:@"Song Download"
+      withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]
                                                  forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
 }
 

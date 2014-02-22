@@ -151,7 +151,7 @@
     
     [self setCurrentSearch:newSearch];
 }
-
+/*
 - (void)postUserActivity
 {
     if ([self activityTask] != UIBackgroundTaskInvalid)
@@ -208,7 +208,7 @@
         [self setActivityTask:UIBackgroundTaskInvalid];
     }];
 }
-
+*/
 - (void)createNewUserWithSuccess:(void (^)(User *))successBlock
                          Failure:(void (^)(void))failureBlock
 {

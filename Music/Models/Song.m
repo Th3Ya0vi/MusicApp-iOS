@@ -10,7 +10,6 @@
 #import "Album.h"
 #import "User.h"
 #import "Player.h"
-#import "Activity.h"
 #import "BollywoodAPIClient.h"
 #import "AFURLSessionManager.h"
 

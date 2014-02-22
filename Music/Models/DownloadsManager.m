@@ -8,7 +8,6 @@
 
 #import "Flurry.h"
 #import "DownloadsManager.h"
-#import "Activity.h"
 #import "AFURLSessionManager.h"
 #import "User.h"
 
@@ -122,8 +121,8 @@
 
 - (void)addActivity
 {
-    if ([self lastSuccess])
-        [Activity addWithSong:[self lastSong] action:DOWNLOADED extra:[self lastOrigin]];
+    //if ([self lastSuccess])
+    //    [Activity addWithSong:[self lastSong] action:DOWNLOADED extra:[self lastOrigin]];
     
     [Flurry logEvent:@"Song Download"
       withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]

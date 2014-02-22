@@ -9,7 +9,6 @@
 #import "AlbumViewController.h"
 #import "Song.h"
 #import "UIImageView+AFNetworking.h"
-#import "Activity.h"
 #import "User.h"
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
@@ -165,7 +164,7 @@
 
 - (IBAction)reportIncorrectData:(UIButton *)sender
 {
-    [Activity addWithSong:[[[self album] songs] firstObject] action:INCORRECTDATA];
+    //[Activity addWithSong:[[[self album] songs] firstObject] action:INCORRECTDATA];
     [[[UIAlertView alloc] initWithTitle:@"Thanks" message:nil delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
 }
 

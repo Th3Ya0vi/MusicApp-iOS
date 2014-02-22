@@ -51,7 +51,6 @@
 		780A1802184B621A0082A89F /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A17F1184B621A0082A89F /* UIWebView+AFNetworking.m */; };
 		780A180B184D0DE00082A89F /* BVReorderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A180A184D0DE00082A89F /* BVReorderTableView.m */; };
 		780A180D184D2BC60082A89F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780A180C184D2BC60082A89F /* MediaPlayer.framework */; };
-		780A1810184FB6DE0082A89F /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 780A180F184FB6DE0082A89F /* Activity.m */; };
 		7828E74B1880683800A2C2E9 /* BollywoodAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */; };
 		78424B0318904BC3000F6E99 /* ExploreCollectionCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */; };
 		78424B05189053C7000F6E99 /* ExploreTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B04189053C7000F6E99 /* ExploreTableCellView.xib */; };
@@ -174,8 +173,6 @@
 		780A1809184D0DE00082A89F /* BVReorderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVReorderTableView.h; sourceTree = "<group>"; };
 		780A180A184D0DE00082A89F /* BVReorderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVReorderTableView.m; sourceTree = "<group>"; };
 		780A180C184D2BC60082A89F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		780A180E184FB6DE0082A89F /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Activity.h; sourceTree = "<group>"; };
-		780A180F184FB6DE0082A89F /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
 		7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BollywoodAPIClient.h; sourceTree = "<group>"; };
 		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BollywoodAPIClient.m; sourceTree = "<group>"; };
 		7828E7511880AA4200A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
@@ -353,8 +350,6 @@
 				780A179418452C1E0082A89F /* Song.m */,
 				780A179618452C9E0082A89F /* Album.h */,
 				780A179718452C9E0082A89F /* Album.m */,
-				780A180E184FB6DE0082A89F /* Activity.h */,
-				780A180F184FB6DE0082A89F /* Activity.m */,
 				78705C4F1857BA1000708E20 /* Player.h */,
 				78705C501857BA1000708E20 /* Player.m */,
 				78B5110C189596F000AA7534 /* Playlist.h */,
@@ -676,7 +671,6 @@
 				780A17F5184B621A0082A89F /* AFNetworkReachabilityManager.m in Sources */,
 				780A179F184673A10082A89F /* AlbumViewController.m in Sources */,
 				78705C561857C04D00708E20 /* PlayerViewController.m in Sources */,
-				780A1810184FB6DE0082A89F /* Activity.m in Sources */,
 				780A172718451C3C0082A89F /* AppDelegate.m in Sources */,
 				780A17FC184B621A0082A89F /* AFNetworkActivityIndicatorManager.m in Sources */,
 				7869C82F185E3C6500F877EE /* AlbumArtManager.m in Sources */,

@@ -9,7 +9,6 @@
 #import "Flurry.h"
 #import "AFNetworkReachabilityManager.h"
 #import "Player.h"
-#import "Activity.h"
 #import "AlbumArtManager.h"
 #import "Playlist.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -258,7 +257,7 @@
     {
         if ([self getPercentCompleted] >= 0.01)
         {
-            [Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
+            //[Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
             
             NSString *percentCompletedBucket = @"75 - 100%";
             if ([self getPercentCompleted] < 0.25)

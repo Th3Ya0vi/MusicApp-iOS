@@ -11,7 +11,6 @@
 #import "SearchViewController.h"
 #import "DownloadsViewController.h"
 #import "ExploreViewController.h"
-#import "Activity.h"
 #import "PlayerViewController.h"
 #import "BollywoodAPIClient.h"
 #import "Playlist.h"
@@ -78,7 +77,7 @@
         }
         else
         {
-            [[BollywoodAPIClient shared] postUserActivity];
+//            [[BollywoodAPIClient shared] postUserActivity];
             [self loadMainView];
         }
     }

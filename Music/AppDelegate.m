@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "LoadingViewController.h"
-#import "Activity.h"
 #import "Player.h"
 #import "Playlist.h"
 #import "BollywoodAPIClient.h"
@@ -45,7 +44,7 @@
     {
     }
     
-    [[BollywoodAPIClient shared] postUserActivity];
+//    [[BollywoodAPIClient shared] postUserActivity];
     [[User currentUser] save];
     
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];

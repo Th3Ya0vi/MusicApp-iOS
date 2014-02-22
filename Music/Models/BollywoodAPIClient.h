@@ -48,7 +48,7 @@ enum SearchScope {SONG, ALBUM};
 - (void)fetchAlbumWithAlbumID: (NSString *)albumid
               CompletionBlock: (void(^)(Album *album))block;
 
-- (void)postUserActivity;
+//- (void)postUserActivity;
 
 - (void)cancelCurrentSearch;
 

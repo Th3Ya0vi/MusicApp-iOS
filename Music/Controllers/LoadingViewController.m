@@ -118,31 +118,19 @@
 
 #pragma mark - iRate Delegate
 
-- (void)iRateDidPromptForRating
-{
-    [self logiRateEventWithEvent:@"iRate Prompt"];
-}
-
 - (void)iRateUserDidAttemptToRateApp
 {
-    [self logiRateEventWithEvent:@"iRate Attempt"];
+    [Flurry logEvent:@"Rate" withParameters:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
 }
 
 - (void)iRateUserDidDeclineToRateApp
 {
-    [self logiRateEventWithEvent:@"iRate Decline"];
+    [Flurry logEvent:@"Rate" withParameters:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
 }
 
 - (void)iRateUserDidRequestReminderToRateApp
 {
-    [self logiRateEventWithEvent:@"iRate Remind"];
-}
-
-#pragma mark - iRate Delegate Helper Method(s)
-
-- (void)logiRateEventWithEvent: (NSString *)event
-{
-    [Flurry logEvent:event withParameters:[NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:[[iRate sharedInstance] usesCount]] forKey:@"Use Count"]];
+    [Flurry logEvent:@"Rate" withParameters:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
 }
 
 #pragma mark - Cache methods

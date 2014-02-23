@@ -40,9 +40,9 @@
 
 #pragma mark - View
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewDidAppear:animated];
+    [super viewDidLoad];
     
     if ([self didAppCrashLastTime])
     {
@@ -50,37 +50,43 @@
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:crashResolver];
         [self presentViewController:navController animated:YES completion:nil];
     }
-    else
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    if ([User currentUser] == nil)
     {
-        if ([User currentUser] == nil)
+        [[BollywoodAPIClient shared] createNewUserWithSuccess:^(User *user) {
+            [self loadMainView];
+        } Failure:^{
+            [[[UIAlertView alloc] initWithTitle:@"Can't Connect" message:@"Please make sure you are connected to the internet" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+        }];
+    }
+    else if([[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] != nil)
+    {
+        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] objectForKey:@"Type"] isEqualToString:@"Release"])
         {
-            [[BollywoodAPIClient shared] createNewUserWithSuccess:^(User *user) {
-                [self loadMainView];
-            } Failure:^{
-                [[[UIAlertView alloc] initWithTitle:@"Can't Connect" message:@"Please make sure you are connected to the internet" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+            NSString *albumid = [[[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] objectForKey:@"AlbumID"];
+            [[BollywoodAPIClient shared] fetchAlbumWithAlbumID:albumid CompletionBlock:^(Album *album) {
+                
+                AlbumViewController *albumView = [[AlbumViewController alloc] initWithAlbum:album Origin:@"Notification"];
+                UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];
+                
+                [self presentViewController:navControllerForAlbumView animated:YES completion:nil];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NotificationInfo"];
             }];
         }
-        else if([[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] != nil)
-        {
-            if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] objectForKey:@"Type"] isEqualToString:@"Release"])
-            {
-                NSString *albumid = [[[NSUserDefaults standardUserDefaults] objectForKey:@"NotificationInfo"] objectForKey:@"AlbumID"];
-                [[BollywoodAPIClient shared] fetchAlbumWithAlbumID:albumid CompletionBlock:^(Album *album) {
-                    
-                    AlbumViewController *albumView = [[AlbumViewController alloc] initWithAlbum:album Origin:@"Notification"];
-                    UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];
-                    
-                    [self presentViewController:navControllerForAlbumView animated:YES completion:nil];
-                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NotificationInfo"];
-                }];
-            }
-        }
         else
-        {
-//            [[BollywoodAPIClient shared] postUserActivity];
             [self loadMainView];
-        }
     }
+    else
+    {
+//            [[BollywoodAPIClient shared] postUserActivity];
+        [self loadMainView];
+    }
+
 }
 
 - (void)loadMainView

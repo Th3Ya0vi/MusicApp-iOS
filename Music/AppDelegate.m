@@ -33,6 +33,9 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -55,6 +58,7 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
+    NSLog(@"App entering foreground!");
     [self showLoadingScreen];
 }
 
@@ -72,6 +76,9 @@
     [[Player shared] stop];
     [[User currentUser] save];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didCrash"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -87,7 +94,14 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveDeviceToken"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    [Flurry setPushToken:[[NSString alloc] initWithData:deviceToken encoding:NSASCIIStringEncoding]];
+    /**http://stackoverflow.com/questions/1587407/iphone-device-token-nsdata-or-nsstring**/
+    NSString *deviceTokenStr = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    deviceTokenStr = [deviceTokenStr stringByReplacingOccurrencesOfString:@" " withString:@""];
+    /**---------------------------------------------------------------------------------**/
+    
+    [Flurry setPushToken:deviceTokenStr];
+    [[NSUserDefaults standardUserDefaults] setObject:deviceTokenStr forKey:@"PushToken"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error

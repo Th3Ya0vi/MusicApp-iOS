@@ -29,10 +29,14 @@
         //user.activity = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"activity"]] mutableCopy];
         user.playlist = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"playlist"]] mutableCopy];
         user.downloads = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"downloads"]] mutableCopy];
+        user.hasSentPushTokenToServer = [userDef boolForKey:@"hasSentPushTokenToServer"];
         
         [user removeOldData];
     
         [Flurry setUserID:[NSString stringWithFormat:@"%d", [user userid]]];
+        
+        if (![user hasSentPushTokenToServer])
+            [[BollywoodAPIClient shared] updateUserPushToken];
     }
     return user;
     
@@ -50,6 +54,7 @@
 //    [userDef setObject:activityData forKey:@"activity"];
     [userDef setObject:downloadedData forKey:@"downloads"];
     [userDef setInteger:self.currentPlaylistIndex forKey:@"currentPlaylistIndex"];
+    [userDef setBool:[self hasSentPushTokenToServer] forKey:@"hasSentPushTokenToServer"];
     [userDef synchronize];
 }
 

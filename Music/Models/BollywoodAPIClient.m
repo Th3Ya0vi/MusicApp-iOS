@@ -209,6 +209,22 @@
     }];
 }
 */
+
+- (void)updateUserPushToken
+{
+    NSLog(@"Updating user push token...");
+    [[self requestOperationManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
+    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    
+    NSString *url = [self urlForEndpoint:UPDATE_PUSHTOKEN Parameter:nil];
+    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
+    
+    [[self requestOperationManager] POST:url parameters:[NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"PushToken"] forKey:@"PushToken"] success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        if ([[responseObject objectForKey:@"message"] isEqualToString:@"success"])
+            [[User currentUser] setHasSentPushTokenToServer:YES];
+    } failure:nil];
+}
+
 - (void)createNewUserWithSuccess:(void (^)(User *))successBlock
                          Failure:(void (^)(void))failureBlock
 {
@@ -217,19 +233,7 @@
     
     NSString *url = [self urlForEndpoint:CREATE_NEW_USER Parameter:nil];
     [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
-    
-#if DEBUG
 
-        NSLog(@"Using default user");
-        NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
-        [userDef setObject:[NSNumber numberWithInt:155] forKey:@"userid"];
-        [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"playlist"];
-        [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
-        [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
-        [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
-        [userDef synchronize];
-        successBlock([User currentUser]);
-#else
         NSLog(@"Creating new user");
         [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *response = (NSDictionary *) responseObject;
@@ -239,6 +243,8 @@
             [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
             [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
             [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
+            [userDef setBool:NO forKey:@"hasSentPushTokenToServer"];
+            
             [userDef synchronize];
             
             [Flurry logEvent:@"User_Create" withParameters:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
@@ -249,7 +255,6 @@
             NSLog(@"Error creating user: %@", error);
             failureBlock();
         }];
-#endif
 }
 
 - (void)fetchSongWithSongID: (NSString *)songid CompletionBlock: (void(^)(Song *song))block
@@ -325,6 +330,9 @@
             break;
         case FETCH_ALBUM:
             return [NSString stringWithFormat:@"album/%@/songs%@", parameter, queryStrings];
+            break;
+        case UPDATE_PUSHTOKEN:
+            return [NSString stringWithFormat:@"user/%d/pushtoken%@", [[User currentUser] userid], queryStrings];
             break;
     }
 }

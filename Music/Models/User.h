@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSMutableArray *playlist;
 @property (strong, nonatomic) NSMutableArray *downloads;
 @property (nonatomic) NSInteger currentPlaylistIndex;
+@property (nonatomic) BOOL hasSentPushTokenToServer;
 
 + (instancetype) currentUser;
 - (void)save;

@@ -48,7 +48,7 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-    return UIStatusBarStyleDefault;
+    return UIStatusBarStyleLightContent;
 }
 
 + (UIImage *)screenImage
@@ -182,8 +182,9 @@
         [[self view] setAlpha:0.0];
     } completion:^(BOOL finished) {
         if (finished)
-            [self dismissViewControllerAnimated:NO completion:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
     }];
+    
 }
 
 @end

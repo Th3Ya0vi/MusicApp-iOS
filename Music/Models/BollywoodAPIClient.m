@@ -247,7 +247,7 @@
             
             [userDef synchronize];
             
-            [[Analytics shared] logEventWithName:@"User_Create" Attributes:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
+            [[Analytics shared] logEventWithName:@"New User" Attributes:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
             
             successBlock([User currentUser]);
 

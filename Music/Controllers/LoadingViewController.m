@@ -85,6 +85,8 @@
 
 - (void)loadMainView
 {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+    
     UITabBarController *tabbar = [[UITabBarController alloc] init];
     [[tabbar tabBar] setTintColor:[UIColor darkGrayColor]];
     

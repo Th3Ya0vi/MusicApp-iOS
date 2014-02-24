@@ -20,7 +20,6 @@
 {
     [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
 
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     

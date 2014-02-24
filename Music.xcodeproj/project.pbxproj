@@ -75,6 +75,7 @@
 		78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC11A118A94A2B00B45C8C /* Security.framework */; };
 		78AC11A518A9792D00B45C8C /* DownloadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC11A418A9792D00B45C8C /* DownloadsManager.m */; };
 		78AF8B7518BAA88E00A3619F /* Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AF8B7418BAA88E00A3619F /* Analytics.m */; };
+		78AF8B7E18BBBA5E00A3619F /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AF8B7D18BBBA5E00A3619F /* Crashlytics.framework */; };
 		78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B01C3B18899C4800E81CAD /* Settings.bundle */; };
 		78B511081893EC4400AA7534 /* SongOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B511061893EC4400AA7534 /* SongOptionsViewController.m */; };
 		78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B5110A1893EC7600AA7534 /* SongOptionsView.xib */; };
@@ -211,6 +212,7 @@
 		78AC11A418A9792D00B45C8C /* DownloadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DownloadsManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		78AF8B7318BAA88E00A3619F /* Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Analytics.h; path = Analytics/Analytics.h; sourceTree = "<group>"; };
 		78AF8B7418BAA88E00A3619F /* Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Analytics.m; path = Analytics/Analytics.m; sourceTree = "<group>"; };
+		78AF8B7D18BBBA5E00A3619F /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		78B01C3B18899C4800E81CAD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Music/Settings.bundle; sourceTree = "<group>"; };
 		78B511051893EC4400AA7534 /* SongOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SongOptionsViewController.h; path = Controllers/SongOptionsViewController.h; sourceTree = "<group>"; };
 		78B511061893EC4400AA7534 /* SongOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SongOptionsViewController.m; path = Controllers/SongOptionsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -235,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */,
+				78AF8B7E18BBBA5E00A3619F /* Crashlytics.framework in Frameworks */,
 				78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */,
 				780A180D184D2BC60082A89F /* MediaPlayer.framework in Frameworks */,
 				780A17B6184B3FEF0082A89F /* Accelerate.framework in Frameworks */,
@@ -423,6 +426,7 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
+				78AF8B7D18BBBA5E00A3619F /* Crashlytics.framework */,
 				78B9BB49187969980075B2A5 /* iRate */,
 				780A1808184D0DE00082A89F /* BVReorderTableView */,
 				780A17CB184B621A0082A89F /* AFNetworking */,
@@ -540,6 +544,7 @@
 				780A170F18451C3C0082A89F /* Sources */,
 				780A171018451C3C0082A89F /* Frameworks */,
 				780A171118451C3C0082A89F /* Resources */,
+				78AF8B7C18BBBA2600A3619F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -647,6 +652,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		78AF8B7C18BBBA2600A3619F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run fdb9a97bc3bd903dc82a1ab8f3d12d166348351f f0bf565704f87f88d446534d20e1f9d216c1f6677d143f0fe819fb8a0b467c28";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		780A170F18451C3C0082A89F /* Sources */ = {
@@ -815,6 +836,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Music/Music-Prefix.pch";
 				INFOPLIST_FILE = "Music/Music-Info.plist";
@@ -837,6 +862,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Music/Music-Prefix.pch";
 				INFOPLIST_FILE = "Music/Music-Info.plist";

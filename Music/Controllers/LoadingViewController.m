@@ -40,23 +40,17 @@
 
 #pragma mark - View
 
-- (void)viewDidLoad
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    
+    [super viewDidAppear:animated];
+
     if ([self didAppCrashLastTime])
     {
         CrashResolverViewController *crashResolver = [[CrashResolverViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:crashResolver];
         [self presentViewController:navController animated:YES completion:nil];
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-
-    if ([User currentUser] == nil)
+    else if ([User currentUser] == nil)
     {
         [[BollywoodAPIClient shared] createNewUserWithSuccess:^(User *user) {
             [self loadMainView];
@@ -169,12 +163,11 @@
 {
     NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
     
-    if ([userDef boolForKey:@"didCrash"] == YES)
-        return YES;
+    if ([userDef boolForKey:@"didCrash"] == YES) return YES;
     
     [userDef setBool:YES forKey:@"didCrash"];
     [userDef synchronize];
-    
+
     return NO;
 }
 

@@ -80,6 +80,8 @@
     
     NSNumber *timestamp = [NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]];
     NSNumber *userid = [NSNumber numberWithInteger:[[User currentUser] userid]];
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    NSString *countryCode = [[NSLocale currentLocale] objectForKey: NSLocaleCountryCode];
     
     NSMutableArray *attributesArray = [[NSMutableArray alloc] init];
     [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
@@ -87,8 +89,8 @@
                                                                forKeys:[NSArray arrayWithObjects:@"Name", @"Value", nil]]];
     }];
     
-    NSDictionary *event = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:name, attributesArray, timestamp, userid, nil]
-                                                      forKeys:[NSArray arrayWithObjects:@"Name", @"Attributes", @"Timestamp", @"UserID", nil]];
+    NSDictionary *event = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:name, attributesArray, timestamp, userid, appVersion, countryCode, nil]
+                                                      forKeys:[NSArray arrayWithObjects:@"Name", @"Attributes", @"Timestamp", @"UserID", @"AppVersion", @"Country", nil]];
     [[self events] addObject:event];
 }
 

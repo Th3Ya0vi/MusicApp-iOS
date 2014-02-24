@@ -74,7 +74,7 @@
 		78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */; };
 		78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC11A118A94A2B00B45C8C /* Security.framework */; };
 		78AC11A518A9792D00B45C8C /* DownloadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC11A418A9792D00B45C8C /* DownloadsManager.m */; };
-		78AF8B7118B9411A00A3619F /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AF8B7018B9411A00A3619F /* libFlurry_4.3.2.a */; };
+		78AF8B7518BAA88E00A3619F /* Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AF8B7418BAA88E00A3619F /* Analytics.m */; };
 		78B01C3C18899C4800E81CAD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78B01C3B18899C4800E81CAD /* Settings.bundle */; };
 		78B511081893EC4400AA7534 /* SongOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B511061893EC4400AA7534 /* SongOptionsViewController.m */; };
 		78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B5110A1893EC7600AA7534 /* SongOptionsView.xib */; };
@@ -108,7 +108,7 @@
 		780A172218451C3C0082A89F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		780A172418451C3C0082A89F /* Music-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Music-Prefix.pch"; sourceTree = "<group>"; };
 		780A172518451C3C0082A89F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		780A172618451C3C0082A89F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		780A172618451C3C0082A89F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		780A172818451C3C0082A89F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		780A172E18451C3C0082A89F /* MusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		780A172F18451C3C0082A89F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -147,8 +147,8 @@
 		780A17D6184B621A0082A89F /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFSecurityPolicy.m; sourceTree = "<group>"; };
 		780A17D7184B621A0082A89F /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
 		780A17D8184B621A0082A89F /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
-		780A17D9184B621A0082A89F /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLRequestSerialization.h; sourceTree = "<group>"; };
-		780A17DA184B621A0082A89F /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLRequestSerialization.m; sourceTree = "<group>"; };
+		780A17D9184B621A0082A89F /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AFURLRequestSerialization.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		780A17DA184B621A0082A89F /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AFURLRequestSerialization.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		780A17DB184B621A0082A89F /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLResponseSerialization.h; sourceTree = "<group>"; };
 		780A17DC184B621A0082A89F /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		780A17DD184B621A0082A89F /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
@@ -169,12 +169,12 @@
 		780A17EE184B621A0082A89F /* UIProgressView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIProgressView+AFNetworking.h"; sourceTree = "<group>"; };
 		780A17EF184B621A0082A89F /* UIProgressView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIProgressView+AFNetworking.m"; sourceTree = "<group>"; };
 		780A17F0184B621A0082A89F /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
-		780A17F1184B621A0082A89F /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
+		780A17F1184B621A0082A89F /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		780A1809184D0DE00082A89F /* BVReorderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVReorderTableView.h; sourceTree = "<group>"; };
 		780A180A184D0DE00082A89F /* BVReorderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVReorderTableView.m; sourceTree = "<group>"; };
 		780A180C184D2BC60082A89F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BollywoodAPIClient.h; sourceTree = "<group>"; };
-		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BollywoodAPIClient.m; sourceTree = "<group>"; };
+		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BollywoodAPIClient.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7828E7511880AA4200A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
 		78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreCollectionCellView.xib; sourceTree = "<group>"; };
 		78424B04189053C7000F6E99 /* ExploreTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreTableCellView.xib; sourceTree = "<group>"; };
@@ -204,19 +204,19 @@
 		78705C5C1859003100708E20 /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PlaylistViewController.m; path = Controllers/PlaylistViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashResolverView.xib; sourceTree = "<group>"; };
 		787AAF8D18B5B071006446A3 /* CrashResolverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashResolverViewController.h; path = Controllers/CrashResolverViewController.h; sourceTree = "<group>"; };
-		787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashResolverViewController.m; path = Controllers/CrashResolverViewController.m; sourceTree = "<group>"; };
+		787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CrashResolverViewController.m; path = Controllers/CrashResolverViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		78AC11A118A94A2B00B45C8C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		78AC11A318A9792D00B45C8C /* DownloadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DownloadsManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78AC11A418A9792D00B45C8C /* DownloadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DownloadsManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		78AF8B6F18B9411A00A3619F /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		78AF8B7018B9411A00A3619F /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
+		78AF8B7318BAA88E00A3619F /* Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Analytics.h; path = Analytics/Analytics.h; sourceTree = "<group>"; };
+		78AF8B7418BAA88E00A3619F /* Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Analytics.m; path = Analytics/Analytics.m; sourceTree = "<group>"; };
 		78B01C3B18899C4800E81CAD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Music/Settings.bundle; sourceTree = "<group>"; };
 		78B511051893EC4400AA7534 /* SongOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SongOptionsViewController.h; path = Controllers/SongOptionsViewController.h; sourceTree = "<group>"; };
 		78B511061893EC4400AA7534 /* SongOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SongOptionsViewController.m; path = Controllers/SongOptionsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		78B5110A1893EC7600AA7534 /* SongOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongOptionsView.xib; sourceTree = "<group>"; };
 		78B5110C189596F000AA7534 /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
-		78B5110D189596F000AA7534 /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
+		78B5110D189596F000AA7534 /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Playlist.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageSubtitleCellView.xib; sourceTree = "<group>"; };
 		78B9BB441879698F0075B2A5 /* iRate.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = iRate.bundle; path = iRate/iRate.bundle; sourceTree = "<group>"; };
 		78B9BB451879698F0075B2A5 /* iRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iRate.h; path = iRate/iRate.h; sourceTree = "<group>"; };
@@ -242,7 +242,6 @@
 				780A171918451C3C0082A89F /* CoreGraphics.framework in Frameworks */,
 				780A171B18451C3C0082A89F /* UIKit.framework in Frameworks */,
 				780A171718451C3C0082A89F /* Foundation.framework in Frameworks */,
-				78AF8B7118B9411A00A3619F /* libFlurry_4.3.2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +343,7 @@
 		780A175918451C9A0082A89F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				78AF8B7218BAA87500A3619F /* Analytics */,
 				780A175A18451C9A0082A89F /* User.h */,
 				780A175B18451C9A0082A89F /* User.m */,
 				780A179318452C1E0082A89F /* Song.h */,
@@ -423,7 +423,6 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
-				78AF8B6E18B9411A00A3619F /* Flurry */,
 				78B9BB49187969980075B2A5 /* iRate */,
 				780A1808184D0DE00082A89F /* BVReorderTableView */,
 				780A17CB184B621A0082A89F /* AFNetworking */,
@@ -512,13 +511,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		78AF8B6E18B9411A00A3619F /* Flurry */ = {
+		78AF8B7218BAA87500A3619F /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
-				78AF8B6F18B9411A00A3619F /* Flurry.h */,
-				78AF8B7018B9411A00A3619F /* libFlurry_4.3.2.a */,
+				78AF8B7318BAA88E00A3619F /* Analytics.h */,
+				78AF8B7418BAA88E00A3619F /* Analytics.m */,
 			);
-			path = Flurry;
+			name = Analytics;
 			sourceTree = "<group>";
 		};
 		78B9BB49187969980075B2A5 /* iRate */ = {
@@ -696,6 +695,7 @@
 				780A1802184B621A0082A89F /* UIWebView+AFNetworking.m in Sources */,
 				780A17FF184B621A0082A89F /* UIButton+AFNetworking.m in Sources */,
 				780A172318451C3C0082A89F /* main.m in Sources */,
+				78AF8B7518BAA88E00A3619F /* Analytics.m in Sources */,
 				7828E74B1880683800A2C2E9 /* BollywoodAPIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

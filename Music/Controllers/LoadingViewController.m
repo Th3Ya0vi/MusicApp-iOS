@@ -15,7 +15,7 @@
 #import "BollywoodAPIClient.h"
 #import "Playlist.h"
 #import "AlbumArtManager.h"
-#import "Flurry.h"
+#import "Analytics.h"
 #import "CrashResolverViewController.h"
 #import "AlbumViewController.h"
 
@@ -126,17 +126,17 @@
 
 - (void)iRateUserDidAttemptToRateApp
 {
-    [Flurry logEvent:@"Rate" withParameters:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
+    [[Analytics shared] logEventWithName:@"Rate" Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
 }
 
 - (void)iRateUserDidDeclineToRateApp
 {
-    [Flurry logEvent:@"Rate" withParameters:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
+    [[Analytics shared] logEventWithName:@"Rate" Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
 }
 
 - (void)iRateUserDidRequestReminderToRateApp
 {
-    [Flurry logEvent:@"Rate" withParameters:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
+    [[Analytics shared] logEventWithName:@"Rate" Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
 }
 
 #pragma mark - Cache methods

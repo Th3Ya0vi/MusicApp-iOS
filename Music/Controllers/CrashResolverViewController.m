@@ -9,7 +9,7 @@
 #import "CrashResolverViewController.h"
 #import "AppDelegate.h"
 #import "AlbumArtManager.h"
-#import "Flurry.h"
+#import "Analytics.h"
 
 @interface CrashResolverViewController ()
 
@@ -44,7 +44,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [Flurry logPageView];
+    [[Analytics shared] tagScreen:@"Crash Resolver"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,7 +87,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     if (![self didFix])
-        [Flurry logEvent:@"Crash Resolver" withParameters:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
+        [[Analytics shared] logEventWithName:@"Crash Resolver" Attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
     
     [self resumeNormalLoading];
 }
@@ -106,7 +106,7 @@
         [[self buttonFix] setEnabled:NO];
         [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
         
-        [Flurry logEvent:@"Crash Resolver" withParameters:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
+        [[Analytics shared] logEventWithName:@"Crash Resolver" Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
     }
 }
 

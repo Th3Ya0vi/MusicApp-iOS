@@ -15,7 +15,7 @@
 #import "Player.h"
 #import "SongOptionsViewController.h"
 #import "BollywoodAPIClient.h"
-#import "Flurry.h"
+#import "Analytics.h"
 
 #define MIN_SEARCH_LENGTH   3
 
@@ -62,7 +62,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [Flurry logPageView];
+    [[Analytics shared] tagScreen:@"Search"];
 }
 
 #pragma mark Table Data Source

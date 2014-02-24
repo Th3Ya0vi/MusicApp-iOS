@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Tushar Soni. All rights reserved.
 //
 
-#import "Flurry.h"
+#import "Analytics.h"
 #import "BollywoodAPIClient.h"
 
 #include <CommonCrypto/CommonDigest.h>
@@ -136,7 +136,7 @@
         
         [analyticsSearchParams setObject:@"Yes" forKey:@"Success"];
         [analyticsSearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result Count"];
-        [Flurry logEvent:@"Search" withParameters:analyticsSearchParams];
+        [[Analytics shared] logEventWithName:@"Search" Attributes:analyticsSearchParams];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
@@ -145,7 +145,7 @@
             
             [analyticsSearchParams setObject:@"No" forKey:@"Success"];
             [analyticsSearchParams setObject:[error localizedDescription] forKey:@"Error"];
-            [Flurry logEvent:@"Search" withParameters:analyticsSearchParams];
+            [[Analytics shared] logEventWithName:@"Search" Attributes:analyticsSearchParams];
         }
     }];
     
@@ -247,7 +247,7 @@
             
             [userDef synchronize];
             
-            [Flurry logEvent:@"User_Create" withParameters:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
+            [[Analytics shared] logEventWithName:@"User_Create" Attributes:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
             
             successBlock([User currentUser]);
 

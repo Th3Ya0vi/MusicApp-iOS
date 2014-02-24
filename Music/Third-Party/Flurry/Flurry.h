@@ -287,7 +287,7 @@ typedef enum {
  *  @code
  *  - (void)interestingAppAction 
  {
- [Flurry logEvent:@"Interesting_Action"];
+ [[Analytics shared] logEventWithName:@"Interesting_Action"];
  // Perform interesting action
  }
  *  @endcode
@@ -330,7 +330,7 @@ typedef enum {
  [NSDictionary dictionaryWithObjectsAndKeys:@"Cool Item", // Parameter Value
  @"Item Purchased", // Parameter Name
  nil];
- [Flurry logEvent:@"Something Cool Purchased" withParameters:params];
+ [[Analytics shared] logEventWithName:@"Something Cool Purchased" withParameters:params];
  // Give user cool item
  }
  *  @endcode
@@ -414,7 +414,7 @@ typedef enum {
  *  @code
  *  - (void)startLevel 
  {
- [Flurry logEvent:@"Level Played" timed:YES];
+ [[Analytics shared] logEventWithName:@"Level Played" timed:YES];
  // Start user on level
  }
  
@@ -455,7 +455,7 @@ typedef enum {
  @"Current Points", // Parameter Name
  nil];
  
- [Flurry logEvent:@"Level Played" withParameters:params timed:YES];
+ [[Analytics shared] logEventWithName:@"Level Played" withParameters:params timed:YES];
  // Start user on level
  }
  
@@ -503,7 +503,7 @@ typedef enum {
  @"Current Points", // Parameter Name
  nil];
  
- [Flurry logEvent:@"Level Played" withParameters:params timed:YES];
+ [[Analytics shared] logEventWithName:@"Level Played" withParameters:params timed:YES];
  // Start user on level
  }
  

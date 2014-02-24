@@ -14,7 +14,7 @@
 - (instancetype) initWithJSON:(NSDictionary *)json
 {
     self = [super init];
-    
+
     if (self)
     {
         self.albumid = [json objectForKey:@"AlbumID"];

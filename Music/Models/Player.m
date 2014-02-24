@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Tushar Soni. All rights reserved.
 //
 
-#import "Flurry.h"
+#import "Analytics.h"
 #import "AFNetworkReachabilityManager.h"
 #import "Player.h"
 #import "AlbumArtManager.h"
@@ -267,7 +267,7 @@
             else if([self getPercentCompleted] >= 0.50 && [self getPercentCompleted] < 0.75)
                 percentCompletedBucket = @"50 - 75%";
                 
-            [Flurry logEvent:@"Song Listen" withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
+            [[Analytics shared] logEventWithName:@"Song Listen" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
         }
         [self replaceCurrentItemWithPlayerItem:nil];
         [self setCurrentStatus:FINISHED];

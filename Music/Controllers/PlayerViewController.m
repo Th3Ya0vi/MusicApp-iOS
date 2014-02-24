@@ -14,7 +14,7 @@
 #import "AlbumArtManager.h"
 #import "FXBlurView.h"
 #import "NowPlayingViewController.h"
-#import "Flurry.h"
+#import "Analytics.h"
 
 @interface PlayerViewController ()
 
@@ -100,7 +100,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [Flurry logPageView];
+    [[Analytics shared] tagScreen:@"Player"];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -196,7 +196,7 @@
         else if ([[Playlist shared] songBefore:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
             [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
         
-        [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
+        [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
     }
 }
 
@@ -212,7 +212,7 @@
     [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
                                 ShouldAnimate:YES];
-    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
@@ -220,7 +220,7 @@
     [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse
                                 ShouldAnimate:YES];
-    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
 }
 
 - (IBAction)seekerTouched:(UISlider *)sender

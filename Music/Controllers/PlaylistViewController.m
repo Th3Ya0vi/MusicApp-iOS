@@ -11,7 +11,7 @@
 #import "User.h"
 #import "Playlist.h"
 #import "SongOptionsViewController.h"
-#import "Flurry.h"
+#import "Analytics.h"
 
 @interface PlaylistViewController ()
 
@@ -75,7 +75,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [Flurry logPageView];
+    [[Analytics shared] tagScreen:@"Playlist"];
 }
 
 #pragma mark - Table Data Source
@@ -143,7 +143,7 @@
     [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:YES];
     [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [Flurry logEvent:@"Song Change" withParameters:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -194,7 +194,7 @@
     
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
     
-    [Flurry logEvent:@"Shuffle" withParameters:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
+    [[Analytics shared] logEventWithName:@"Shuffle" Attributes:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
 }
 
 - (IBAction)clearPlaylist:(id)sender

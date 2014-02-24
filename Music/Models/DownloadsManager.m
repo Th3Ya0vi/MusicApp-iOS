@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Tushar Soni. All rights reserved.
 //
 
-#import "Flurry.h"
+#import "Analytics.h"
 #import "DownloadsManager.h"
 #import "AFURLSessionManager.h"
 #import "User.h"
@@ -124,8 +124,8 @@
     //if ([self lastSuccess])
     //    [Activity addWithSong:[self lastSong] action:DOWNLOADED extra:[self lastOrigin]];
     
-    [Flurry logEvent:@"Song Download"
-      withParameters:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]
+    [[Analytics shared] logEventWithName:@"Song Download"
+      Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]
                                                  forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
 }
 

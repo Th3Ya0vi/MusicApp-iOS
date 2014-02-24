@@ -10,6 +10,8 @@
 
 @interface Analytics : NSObject
 
+@property (nonatomic, getter = isLoggingEnabled) BOOL loggingEnabled;
+
 - (instancetype) init;
 + (instancetype) shared;
 

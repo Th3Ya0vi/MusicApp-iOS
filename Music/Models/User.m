@@ -7,7 +7,6 @@
 //
 
 #import "User.h"
-#import "Flurry.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "BollywoodAPIClient.h"
 
@@ -32,8 +31,6 @@
         user.hasSentPushTokenToServer = [userDef boolForKey:@"hasSentPushTokenToServer"];
         
         [user removeOldData];
-    
-        [Flurry setUserID:[NSString stringWithFormat:@"%d", [user userid]]];
         
         if (![user hasSentPushTokenToServer])
             [[BollywoodAPIClient shared] updateUserPushToken];

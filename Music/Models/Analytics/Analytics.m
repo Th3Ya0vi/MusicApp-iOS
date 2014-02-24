@@ -35,6 +35,8 @@
         [self setRequestManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://54.201.193.207/Analytics/src/index.php/"]]];
         [[self requestManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
         [[self requestManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
+        
+        [self setLoggingEnabled:NO];
     }
     
     return self;
@@ -52,19 +54,18 @@
 - (void)saveData
 {
     [NSKeyedArchiver archiveRootObject:[self events] toFile:[self localFileURL]];
-    NSLog(@"Analytics: Saved data to file.");
+    if ([self isLoggingEnabled]) NSLog(@"Analytics: Saved data to file.");
 }
 
 - (BOOL)loadData
 {
-    return NO;
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self localFileURL] isDirectory:NO])
     {
         [self setEvents:[NSKeyedUnarchiver unarchiveObjectWithFile:[self localFileURL]]];
-        NSLog(@"Analytics: Loaded events from file");
+        if ([self isLoggingEnabled]) NSLog(@"Analytics: Loaded events from file");
         return YES;
     }
-    NSLog(@"Analytics: Data file does not exist");
+    if ([self isLoggingEnabled]) NSLog(@"Analytics: Data file does not exist");
     return NO;
 }
 
@@ -75,7 +76,7 @@
 
 - (void)logEventWithName: (NSString *)name Attributes: (NSDictionary *)attributes
 {
-    NSLog(@"Analytics: Adding event (%@ => %@)", name, attributes);
+    if ([self isLoggingEnabled]) NSLog(@"Analytics: Adding event (%@ => %@)", name, attributes);
     
     NSNumber *timestamp = [NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]];
     NSNumber *userid = [NSNumber numberWithInteger:[[User currentUser] userid]];
@@ -100,21 +101,21 @@
 {
     if ([self backgroundTaskForPosting] != UIBackgroundTaskInvalid)
     {
-        NSLog(@"Analytics: Already posting. Skipping now.");
+        if ([self isLoggingEnabled]) NSLog(@"Analytics: Already posting. Skipping now.");
         return;
     }
     if ([[self events] count] == 0)
     {
-        NSLog(@"Analytics: No events to post. Skipping now.");
+        if ([self isLoggingEnabled]) NSLog(@"Analytics: No events to post. Skipping now.");
         return;
     }
     
     [self setBackgroundTaskForPosting:[[UIApplication sharedApplication] beginBackgroundTaskWithName:@"Post Analytics" expirationHandler:^{
-        NSLog(@"Analytics: Failed to post events (Background task expired)");
+        if ([self isLoggingEnabled]) NSLog(@"Analytics: Failed to post events (Background task expired)");
         [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];
         [[UIApplication sharedApplication] endBackgroundTask:[self backgroundTaskForPosting]];
     }]];
-    NSLog(@"Analytics: Attempting to post events");
+    if ([self isLoggingEnabled]) NSLog(@"Analytics: Attempting to post events");
     
     NSDictionary *toPost = [NSDictionary dictionaryWithObject:[self events] forKey:@"Events"];
     
@@ -122,16 +123,16 @@
         if ([[responseObject objectForKey:@"Message"] isEqualToString:@"Success"])
         {
             [[self events] removeObjectsInArray:[toPost objectForKey:@"Events"]];
-            NSLog(@"Analytics: Posted events");
+            if ([self isLoggingEnabled]) NSLog(@"Analytics: Posted events");
         }
         else
-            NSLog(@"Analytics: Failed to post events (%@)", responseObject);
+            if ([self isLoggingEnabled]) NSLog(@"Analytics: Failed to post events (%@)", responseObject);
 
         [[UIApplication sharedApplication] endBackgroundTask:[self backgroundTaskForPosting]];
         [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Analytics: Failed to post events (%@)", [operation responseString]);
+        if ([self isLoggingEnabled]) NSLog(@"Analytics: Failed to post events (%@)", [operation responseString]);
         
         [[UIApplication sharedApplication] endBackgroundTask:[self backgroundTaskForPosting]];
         [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];

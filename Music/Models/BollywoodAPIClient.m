@@ -40,12 +40,12 @@
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"useTestURL"] == YES)
         {
             NSLog(@"Using Test URL");
-            [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://54.201.193.207/Bollywood-API-Dev/v1/"]]];
+            [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://api-dev.filmiapp.com/"]]];
         }
         else
         {
             NSLog(@"Using Production URL");
-            [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://www.bollywoodapi.com/v1/"]]];
+            [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://api.filmiapp.com/"]]];
         }
     
     }
@@ -212,7 +212,9 @@
 
 - (void)updateUserPushToken
 {
-    NSLog(@"Updating user push token...");
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"PushToken"] == nil)
+        return;
+    
     [[self requestOperationManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
     [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
     

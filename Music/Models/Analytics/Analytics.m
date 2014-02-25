@@ -32,7 +32,7 @@
         
         [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];
         
-        [self setRequestManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://54.201.193.207/Analytics/src/index.php/"]]];
+        [self setRequestManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://analytics.filmiapp.com/api/"]]];
         [[self requestManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
         [[self requestManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
         

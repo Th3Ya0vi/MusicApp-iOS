@@ -31,11 +31,6 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -48,8 +43,8 @@
         [viewControllers replaceObjectAtIndex:0 withObject:player];
         [[self tabBarController] setViewControllers:viewControllers];
     }
-    
-    [[Analytics shared] tagScreen:@"Empty Playlist"];
+    else
+        [[Analytics shared] tagScreen:@"Empty Playlist"];
 }
 
 @end

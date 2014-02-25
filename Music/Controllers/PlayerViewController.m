@@ -91,10 +91,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
-                                ShouldAnimate:NO];
-    [self syncView];
+    if (![self showEmptyPlaylistViewIfNecessary])
+    {
+        [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
+                                    ShouldAnimate:NO];
+        [self syncView];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -108,14 +110,20 @@
     return UIStatusBarStyleLightContent;
 }
 
-- (void)showEmptyPlaylistView
+- (BOOL)showEmptyPlaylistViewIfNecessary
 {
-    EmptyPlaylistViewController *empty = [[EmptyPlaylistViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navForEmpty = [[UINavigationController alloc] initWithRootViewController:empty];
+    if ([[Playlist shared] count] == 0)
+    {
+        EmptyPlaylistViewController *empty = [[EmptyPlaylistViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *navForEmpty = [[UINavigationController alloc] initWithRootViewController:empty];
 
-    NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
-    [viewControllers replaceObjectAtIndex:0 withObject:navForEmpty];
-    [[self tabBarController] setViewControllers:viewControllers];
+        NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
+        [viewControllers replaceObjectAtIndex:0 withObject:navForEmpty];
+        [[self tabBarController] setViewControllers:viewControllers];
+        
+        return YES;
+    }
+    return NO;
 }
 
 - (void)syncNowPlayingViewWithPageDirection: (UIPageViewControllerNavigationDirection) direction ShouldAnimate: (BOOL)animate
@@ -131,12 +139,6 @@
 
 - (void)syncView
 {
-    if ([[Playlist shared] count] == 0)
-    {
-        [self showEmptyPlaylistView];
-        return;
-    }
-    
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
     [[self sliderSeeker] setValue:[[Player shared] getPercentCompleted] animated:YES];
     [[self buttonNext] setEnabled:![[Playlist shared] isCurrentSongLast]];

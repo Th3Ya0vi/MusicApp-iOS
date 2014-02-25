@@ -15,7 +15,6 @@ enum BOLLYWOODAPI_ENDPOINT {    SEARCH_SONG,
                                 SEARCH_ALBUM,
                                 SEARCH_LIKE_ALBUM,
                                 CREATE_NEW_USER,
-                                POST_USER_ACTIVITY,
                                 EXPLORE,
                                 FETCH_SONG,
                                 FETCH_ALBUM,
@@ -50,8 +49,6 @@ enum SearchScope {SONG, ALBUM};
               CompletionBlock: (void(^)(Album *album))block;
 
 - (void)updateUserPushToken;
-
-//- (void)postUserActivity;
 
 - (void)cancelCurrentSearch;
 

@@ -76,7 +76,6 @@
         return;
     
     [[self playlist] addObject:[song copy]];
-    //[Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
     [[Analytics shared] logEventWithName:@"Song Add Playlist" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
@@ -89,7 +88,6 @@
         return [self addSongInEnd:song Origin:origin];
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:after] + 1];
-    //[Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
     [[Analytics shared] logEventWithName:@"Song Add Playlist" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
@@ -102,7 +100,6 @@
         return [self addSongInEnd:song Origin:origin];
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:before] - 1];
-    //[Activity addWithSong:song action:ADDEDTOPLAYLIST extra:origin];
     [[Analytics shared] logEventWithName:@"Song Add Playlist" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }

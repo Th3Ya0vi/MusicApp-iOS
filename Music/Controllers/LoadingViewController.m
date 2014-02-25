@@ -76,11 +76,7 @@
             [self loadMainView];
     }
     else
-    {
-//            [[BollywoodAPIClient shared] postUserActivity];
         [self loadMainView];
-    }
-
 }
 
 - (void)loadMainView

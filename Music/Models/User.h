@@ -12,7 +12,6 @@
 @interface User : NSObject
 
 @property (nonatomic) NSInteger userid;
-//@property (strong, nonatomic) NSMutableArray *activity;
 @property (strong, nonatomic) NSMutableArray *playlist;
 @property (strong, nonatomic) NSMutableArray *downloads;
 @property (nonatomic) NSInteger currentPlaylistIndex;

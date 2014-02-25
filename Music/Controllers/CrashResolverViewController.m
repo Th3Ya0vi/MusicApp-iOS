@@ -59,8 +59,7 @@
     
     [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
     
-    [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
-                forKey:@"activity"];
+    [userDef removeObjectForKey:@"activity"];
     [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]
                 forKey:@"playlist"];
     [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSMutableArray alloc] init]]

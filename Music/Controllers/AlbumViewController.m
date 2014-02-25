@@ -164,7 +164,6 @@
 
 - (IBAction)reportIncorrectData:(UIButton *)sender
 {
-    //[Activity addWithSong:[[[self album] songs] firstObject] action:INCORRECTDATA];
     [[[UIAlertView alloc] initWithTitle:@"Thanks" message:nil delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
 }
 

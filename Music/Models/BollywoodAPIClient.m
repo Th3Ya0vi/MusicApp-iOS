@@ -151,64 +151,6 @@
     
     [self setCurrentSearch:newSearch];
 }
-/*
-- (void)postUserActivity
-{
-    if ([self activityTask] != UIBackgroundTaskInvalid)
-    {
-        NSLog(@"Already posting activity. Skipping.. %d", [self activityTask]);
-        return;
-    }
-    if ([[[User currentUser] activity] count] == 0)
-    {
-        NSLog(@"No activity to post. Skipping..");
-        return;
-    }
-    
-    [[self requestOperationManager] setResponseSerializer:[AFJSONResponseSerializer serializer]];
-    [[self requestOperationManager] setRequestSerializer:[AFJSONRequestSerializer serializer]];
-    
-    NSString *url = [self urlForEndpoint:POST_USER_ACTIVITY Parameter:nil];
-    [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
-    
-    
-    NSArray *activityCopy = [[[User currentUser] activity] copy];
-    [[[User currentUser] activity] removeAllObjects];
-    
-    NSMutableArray *activityToPost = [[NSMutableArray alloc] init];
-    [activityCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [activityToPost addObject:[obj dictionary]];
-    }];
-    
-    [self setActivityTask:[[UIApplication sharedApplication] beginBackgroundTaskWithName:@"PostActivity" expirationHandler:^{
-        NSLog(@"Failed to post activity: background time exceeded");
-        [[[User currentUser] activity] addObjectsFromArray:activityCopy];
-        [[UIApplication sharedApplication] endBackgroundTask:[self activityTask]];
-        [self setActivityTask:UIBackgroundTaskInvalid];
-    }]];
-    
-    NSMutableDictionary *json = [NSMutableDictionary dictionaryWithObject:activityToPost forKey:@"data"];
-    
-    [[self requestOperationManager] POST:url parameters:json success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if ([[responseObject objectForKey:@"message"] isEqualToString:@"success"])
-            NSLog(@"Posted activity");
-        else
-        {
-            NSLog(@"Failed to post activity (invalid response): %@", responseObject);
-            [[[User currentUser] activity] addObjectsFromArray:activityCopy];
-        }
-        
-        [[UIApplication sharedApplication] endBackgroundTask:[self activityTask]];
-        [self setActivityTask:UIBackgroundTaskInvalid];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed to post activity: %@", [operation responseString]);
-        [[[User currentUser] activity] addObjectsFromArray:activityCopy];
-        
-        [[UIApplication sharedApplication] endBackgroundTask:[self activityTask]];
-        [self setActivityTask:UIBackgroundTaskInvalid];
-    }];
-}
-*/
 
 - (void)updateUserPushToken
 {
@@ -242,7 +184,6 @@
             NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
             [userDef setObject:[response objectForKey:@"UserID"] forKey:@"userid"];
             [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"playlist"];
-            [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"activity"];
             [userDef setObject:[NSKeyedArchiver archivedDataWithRootObject:[[NSArray alloc] init]] forKey:@"downloads"];
             [userDef setInteger:0 forKey:@"currentPlaylistIndex"];
             [userDef setBool:NO forKey:@"hasSentPushTokenToServer"];
@@ -320,9 +261,6 @@
             break;
         case CREATE_NEW_USER:
             return [NSString stringWithFormat:@"user/create%@", queryStrings];
-            break;
-        case POST_USER_ACTIVITY:
-            return [NSString stringWithFormat:@"user/%d/activity%@", [[User currentUser] userid], queryStrings];
             break;
         case EXPLORE:
             return [NSString stringWithFormat:@"explore%@", queryStrings];

@@ -257,8 +257,6 @@
     {
         if ([self getPercentCompleted] >= 0.01)
         {
-            //[Activity addWithSong:[[Playlist shared] currentSong] action:FINISHEDLISTENING extra:[NSString stringWithFormat:@"%f", [[Player shared] getPercentCompleted]]];
-            
             NSString *percentCompletedBucket = @"75 - 100%";
             if ([self getPercentCompleted] < 0.25)
                 percentCompletedBucket = @"0 - 25%";

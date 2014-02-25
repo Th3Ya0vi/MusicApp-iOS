@@ -25,7 +25,6 @@
         user = [[User alloc] init];
         user.userid = [[userDef objectForKey:@"userid"] integerValue];
         user.currentPlaylistIndex = [userDef integerForKey:@"currentPlaylistIndex"];
-        //user.activity = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"activity"]] mutableCopy];
         user.playlist = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"playlist"]] mutableCopy];
         user.downloads = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"downloads"]] mutableCopy];
         user.hasSentPushTokenToServer = [userDef boolForKey:@"hasSentPushTokenToServer"];
@@ -42,13 +41,11 @@
 - (void) save
 {
     NSData *playlistData = [NSKeyedArchiver archivedDataWithRootObject:[self playlist]];
-    //NSData *activityData = [NSKeyedArchiver archivedDataWithRootObject:[self activity]];
     NSData *downloadedData = [NSKeyedArchiver archivedDataWithRootObject:[self downloads]];
     
     NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
     [userDef setObject:[NSString stringWithFormat:@" %@", [userDef objectForKey:@"userid"]] forKey:@"useridSettings"];
     [userDef setObject:playlistData forKey:@"playlist"];
-//    [userDef setObject:activityData forKey:@"activity"];
     [userDef setObject:downloadedData forKey:@"downloads"];
     [userDef setInteger:self.currentPlaylistIndex forKey:@"currentPlaylistIndex"];
     [userDef setBool:[self hasSentPushTokenToServer] forKey:@"hasSentPushTokenToServer"];

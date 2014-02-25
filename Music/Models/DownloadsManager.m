@@ -121,7 +121,7 @@
 
 - (void)addActivity
 {
-    [[Analytics shared] logEventWithName:@"Song Download"
+    [[Analytics shared] logEventWithName:EVENT_SONG_DOWNLOAD
       Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[self lastSong] songid], [self lastOrigin], ([self lastSuccess]) ? @"Yes" : @"No", nil]
                                                  forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", @"Success", nil]]];
 }

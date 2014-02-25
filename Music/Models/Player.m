@@ -265,7 +265,7 @@
             else if([self getPercentCompleted] >= 0.50 && [self getPercentCompleted] < 0.75)
                 percentCompletedBucket = @"50 - 75%";
                 
-            [[Analytics shared] logEventWithName:@"Song Listen" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
+            [[Analytics shared] logEventWithName:EVENT_SONG_LISTEN Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[[Playlist shared] currentSong] songid], percentCompletedBucket, nil] forKeys:[NSArray arrayWithObjects:@"SongID", @"Completed Percent", nil]]];
         }
         [self replaceCurrentItemWithPlayerItem:nil];
         [self setCurrentStatus:FINISHED];

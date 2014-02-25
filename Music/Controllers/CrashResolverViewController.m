@@ -86,7 +86,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     if (![self didFix])
-        [[Analytics shared] logEventWithName:@"Crash Resolver" Attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
+        [[Analytics shared] logEventWithName:EVENT_CRASH_RESOLVER Attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Fix"]];
     
     [self resumeNormalLoading];
 }
@@ -105,7 +105,7 @@
         [[self buttonFix] setEnabled:NO];
         [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
         
-        [[Analytics shared] logEventWithName:@"Crash Resolver" Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
+        [[Analytics shared] logEventWithName:EVENT_CRASH_RESOLVER Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
     }
 }
 

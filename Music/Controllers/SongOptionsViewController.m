@@ -145,7 +145,7 @@
 
     [[Player shared] loadSong:[[Playlist shared] songInPlaylistWithSong:[self song]] ShouldPlay:YES];
     
-    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Song Options" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Song Options" forKey:@"How"]];
     
     [self close];
 }

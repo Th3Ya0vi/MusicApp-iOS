@@ -76,7 +76,7 @@
         return;
     
     [[self playlist] addObject:[song copy]];
-    [[Analytics shared] logEventWithName:@"Song Add Playlist" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+    [[Analytics shared] logEventWithName:EVENT_SONG_ADD Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
@@ -88,7 +88,7 @@
         return [self addSongInEnd:song Origin:origin];
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:after] + 1];
-    [[Analytics shared] logEventWithName:@"Song Add Playlist" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+    [[Analytics shared] logEventWithName:EVENT_SONG_ADD Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 
@@ -100,7 +100,7 @@
         return [self addSongInEnd:song Origin:origin];
     
     [[self playlist] insertObject:[song copy] atIndex:[[self playlist] indexOfObjectIdenticalTo:before] - 1];
-    [[Analytics shared] logEventWithName:@"Song Add Playlist" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
+    [[Analytics shared] logEventWithName:EVENT_SONG_ADD Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[song songid], origin, nil]
                                                                                      forKeys:[NSArray arrayWithObjects:@"SongID", @"Origin", nil]]];
 }
 

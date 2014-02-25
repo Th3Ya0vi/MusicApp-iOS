@@ -143,7 +143,7 @@
     [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:YES];
     [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -194,7 +194,7 @@
     
     [[self tablePlaylist] insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
     
-    [[Analytics shared] logEventWithName:@"Shuffle" Attributes:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
+    [[Analytics shared] logEventWithName:EVENT_SHUFFLE Attributes:[NSDictionary dictionaryWithObject:([sender isKindOfClass:[UISwipeGestureRecognizer class]]) ? @"Yes" : @"No" forKey:@"Swipe"]];
 }
 
 - (IBAction)clearPlaylist:(id)sender

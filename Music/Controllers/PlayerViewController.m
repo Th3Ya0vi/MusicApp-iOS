@@ -196,7 +196,7 @@
         else if ([[Playlist shared] songBefore:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
             [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
         
-        [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
+        [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
     }
 }
 
@@ -212,7 +212,7 @@
     [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
                                 ShouldAnimate:YES];
-    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
 }
 
 - (IBAction)playPreviousSong:(UIButton *)sender
@@ -220,7 +220,7 @@
     [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionReverse
                                 ShouldAnimate:YES];
-    [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
+    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
 }
 
 - (IBAction)seekerTouched:(UISlider *)sender

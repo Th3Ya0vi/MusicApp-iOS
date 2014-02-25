@@ -91,7 +91,7 @@
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveDeviceToken"] == NO)
     {
-        [[Analytics shared] logEventWithName:@"Device Token" Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Success"]];
+        [[Analytics shared] logEventWithName:EVENT_DEVICE_TOKEN Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Success"]];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveDeviceToken"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
@@ -106,7 +106,7 @@
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
-    [[Analytics shared] logEventWithName:@"Device Token" Attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Success"]];
+    [[Analytics shared] logEventWithName:EVENT_DEVICE_TOKEN Attributes:[NSDictionary dictionaryWithObject:@"No" forKey:@"Success"]];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -129,11 +129,11 @@
                 break;
             case UIEventSubtypeRemoteControlPreviousTrack:
                 [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
-                [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
                 [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
-                [[Analytics shared] logEventWithName:@"Song Change" Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
                 break;
             default:
                 break;

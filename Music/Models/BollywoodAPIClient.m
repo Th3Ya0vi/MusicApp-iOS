@@ -136,7 +136,7 @@
         
         [analyticsSearchParams setObject:@"Yes" forKey:@"Success"];
         [analyticsSearchParams setObject:[NSNumber numberWithInteger:[responseObject count]] forKey:@"Result Count"];
-        [[Analytics shared] logEventWithName:@"Search" Attributes:analyticsSearchParams];
+        [[Analytics shared] logEventWithName:EVENT_SEARCH Attributes:analyticsSearchParams];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([error code] != NSURLErrorCancelled)
@@ -145,7 +145,7 @@
             
             [analyticsSearchParams setObject:@"No" forKey:@"Success"];
             [analyticsSearchParams setObject:[error localizedDescription] forKey:@"Error"];
-            [[Analytics shared] logEventWithName:@"Search" Attributes:analyticsSearchParams];
+            [[Analytics shared] logEventWithName:EVENT_SEARCH Attributes:analyticsSearchParams];
         }
     }];
     
@@ -190,7 +190,7 @@
             
             [userDef synchronize];
             
-            [[Analytics shared] logEventWithName:@"New User" Attributes:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
+            [[Analytics shared] logEventWithName:EVENT_NEW_USER Attributes:[NSDictionary dictionaryWithObject:[response objectForKey:@"UserID"] forKey:@"UserID"]];
             
             successBlock([User currentUser]);
 

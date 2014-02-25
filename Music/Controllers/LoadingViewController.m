@@ -118,17 +118,17 @@
 
 - (void)iRateUserDidAttemptToRateApp
 {
-    [[Analytics shared] logEventWithName:@"Rate" Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
 }
 
 - (void)iRateUserDidDeclineToRateApp
 {
-    [[Analytics shared] logEventWithName:@"Rate" Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
 }
 
 - (void)iRateUserDidRequestReminderToRateApp
 {
-    [[Analytics shared] logEventWithName:@"Rate" Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
 }
 
 #pragma mark - Cache methods

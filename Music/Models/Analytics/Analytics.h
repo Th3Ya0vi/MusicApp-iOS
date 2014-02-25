@@ -8,6 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+#define EVENT_DEVICE_TOKEN      @"Device Token"
+#define EVENT_SONG_CHANGE       @"Song Change"
+#define EVENT_SEARCH            @"Search"
+#define EVENT_NEW_USER          @"New User"
+#define EVENT_CRASH_RESOLVER    @"Crash Resolver"
+#define EVENT_SONG_DOWNLOAD     @"Song Download"
+#define EVENT_RATE              @"Rate"
+#define EVENT_SONG_LISTEN       @"Song Listen"
+#define EVENT_SONG_ADD          @"Song Add Playlist"
+#define EVENT_SHUFFLE           @"Shuffle"
+
+
 @interface Analytics : NSObject
 
 @property (nonatomic, getter = isLoggingEnabled) BOOL loggingEnabled;

@@ -15,6 +15,8 @@
 #import "Player.h"
 #import "SongOptionsViewController.h"
 #import "Analytics.h"
+#import "DownloadsManager.h"
+#import "Playlist.h"
 
 @interface AlbumViewController ()
 
@@ -23,6 +25,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelYear;
 @property (weak, nonatomic) IBOutlet UILabel *labelCast;
 @property (weak, nonatomic) IBOutlet UILabel *labelMusicDirector;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *buttonDownloadAll;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *buttonAddAllPlaylist;
 
 @property (nonatomic) NSInteger selectedRow;
 
@@ -165,6 +169,36 @@
 - (IBAction)reportIncorrectData:(UIButton *)sender
 {
     [[[UIAlertView alloc] initWithTitle:@"Thanks" message:nil delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+}
+
+- (IBAction)downloadAllSongs:(id)sender
+{
+    [[[self album] songs] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        Album *albumCopy = [[self album] copy];
+        [albumCopy setSongs:nil];
+        [obj setAlbum:albumCopy];
+        [[DownloadsManager shared] downloadSong:[obj copy] Origin:[self origin]];
+    }];
+    [[Analytics shared] logEventWithName:EVENT_DOWNLOAD_ALL];
+    
+    [[self buttonDownloadAll] setEnabled:NO];
+    
+    [[[UIAlertView alloc] initWithTitle:@"All songs are downloading.." message:@"Check the Downloads tab for progress." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+}
+
+- (IBAction)addAllSongsToPlaylist:(id)sender
+{
+    [[[self album] songs] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        Album *albumCopy = [[self album] copy];
+        [albumCopy setSongs:nil];
+        [obj setAlbum:albumCopy];
+        [[Playlist shared] addSongInEnd:obj Origin:[self origin]];
+    }];
+    [[Analytics shared] logEventWithName:EVENT_SONG_ADD_ALL];
+    
+    [[self buttonAddAllPlaylist] setEnabled:NO];
+    
+    [[[UIAlertView alloc] initWithTitle:@"All songs have been added to the playlist" message:@"Go to your Playlist to listen to them." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
 }
 
 @end

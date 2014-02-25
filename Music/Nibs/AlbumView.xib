@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5051" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AlbumViewController">
             <connections>
+                <outlet property="buttonAddAllPlaylist" destination="EUJ-ZN-adO" id="hLr-7o-B6I"/>
+                <outlet property="buttonDownloadAll" destination="2IT-q5-yCM" id="E6U-N6-ywC"/>
                 <outlet property="imageAlbumArt" destination="zrA-bI-5PY" id="VsB-Ox-Bkx"/>
                 <outlet property="imageBackground" destination="Ell-zI-cWk" id="pVb-4u-WNY"/>
                 <outlet property="labelCast" destination="1JU-LQ-a2z" id="QDd-aS-pML"/>
@@ -54,7 +56,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <tableView clipsSubviews="YES" tag="105" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Xa-mV-Rsn">
-                    <rect key="frame" x="0.0" y="223" width="320" height="345"/>
+                    <rect key="frame" x="0.0" y="223" width="320" height="301"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
@@ -77,11 +79,29 @@
                         <action selector="reportIncorrectData:" destination="-1" eventType="touchUpInside" id="TSn-TD-mrR"/>
                     </connections>
                 </button>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="POg-Hl-4BD">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="B05-um-Jfd"/>
+                        <barButtonItem title="Download All" id="2IT-q5-yCM">
+                            <connections>
+                                <action selector="downloadAllSongs:" destination="-1" id="Npy-EG-jLx"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="gyW-de-eQ6"/>
+                        <barButtonItem title="Add All To Playlist" id="EUJ-ZN-adO">
+                            <connections>
+                                <action selector="addAllSongsToPlaylist:" destination="-1" id="shu-a0-LKL"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="1Xa-mV-Rsn" firstAttribute="top" secondItem="1" secondAttribute="top" constant="223" id="DuY-oW-ntz"/>
-                <constraint firstAttribute="bottom" secondItem="1Xa-mV-Rsn" secondAttribute="bottom" id="P5v-be-xQp"/>
+                <constraint firstAttribute="bottom" secondItem="1Xa-mV-Rsn" secondAttribute="bottom" constant="44" id="P5v-be-xQp"/>
                 <constraint firstItem="1Xa-mV-Rsn" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="ebk-xc-VgV"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>

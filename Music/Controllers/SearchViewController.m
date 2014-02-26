@@ -50,6 +50,13 @@
 
 #pragma mark - View
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [[self searchField] setBackgroundColor:[UIColor whiteColor]];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -154,9 +161,7 @@
     else
     {
         AlbumViewController *albumDetails = [[AlbumViewController alloc] initWithAlbum:[[self results] objectAtIndex:indexPath.row] Origin:@"Search"];
-        UINavigationController *uiNavControllerForAlbumDetails = [[UINavigationController alloc] initWithRootViewController:albumDetails];
-        [[self tabBarController] setModalPresentationStyle:UIModalPresentationNone];
-        [[self tabBarController] presentViewController:uiNavControllerForAlbumDetails animated:YES completion:nil];
+        [[self navigationController] pushViewController:albumDetails animated:YES];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

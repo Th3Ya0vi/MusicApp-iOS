@@ -11,9 +11,6 @@
 #import "Song.h"
 #import "Album.h"
 
-#define nextSongInPlaylist  [[Playlist shared] songAfter:[[Playlist shared] currentSong]]
-#define previousSongInPlaylist [[Playlist shared] songBefore:[[Playlist shared] currentSong]]
-
 @interface Playlist : NSObject
 
 @property (strong, nonatomic) Song *currentSong;

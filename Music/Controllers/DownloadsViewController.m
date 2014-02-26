@@ -13,9 +13,6 @@
 #import "DownloadsManager.h"
 #import "Analytics.h"
 
-#define currentRowAvailability [[[self searchResults] objectAtIndex:indexPath.row] availability]
-#define didCurrentRowFailed    currentRowAvailability != LOCAL && currentRowAvailability != DOWNLOADING
-
 @interface DownloadsViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableDownloads;
@@ -81,7 +78,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (didCurrentRowFailed)
+    if (didCurrentRowFail)
         return 65;
     return (currentRowAvailability == LOCAL) ? 65: 80;
 }
@@ -113,7 +110,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return currentRowAvailability == LOCAL || (didCurrentRowFailed);
+    return currentRowAvailability == LOCAL || (didCurrentRowFail);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -165,7 +162,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (currentRowAvailability == LOCAL || (didCurrentRowFailed))
+    if (currentRowAvailability == LOCAL || (didCurrentRowFail))
     {
         Song *song = [[self searchResults] objectAtIndex:indexPath.row];
         

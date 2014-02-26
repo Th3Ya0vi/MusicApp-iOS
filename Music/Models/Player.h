@@ -9,8 +9,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "User.h"
 
-#define isPlayerPlaying [[Player shared] currentStatus] == PLAYING
-
 enum Status {LOADING, PLAYING, PAUSED, NOT_STARTED, FINISHED};
 
 /*

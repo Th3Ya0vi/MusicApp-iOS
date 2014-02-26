@@ -177,6 +177,7 @@
 		7828E7491880683800A2C2E9 /* BollywoodAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BollywoodAPIClient.h; sourceTree = "<group>"; };
 		7828E74A1880683800A2C2E9 /* BollywoodAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BollywoodAPIClient.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7828E7511880AA4200A2C2E9 /* secret.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secret.h; sourceTree = "<group>"; };
+		783E24F018BE37CB0009BCA6 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreCollectionCellView.xib; sourceTree = "<group>"; };
 		78424B04189053C7000F6E99 /* ExploreTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExploreTableCellView.xib; sourceTree = "<group>"; };
 		78424B0D18905F50000F6E99 /* ExploreCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExploreCollectionView.h; path = Music/Views/ExploreCollectionView.h; sourceTree = SOURCE_ROOT; };
@@ -321,6 +322,7 @@
 				780A172218451C3C0082A89F /* main.m */,
 				780A172418451C3C0082A89F /* Music-Prefix.pch */,
 				7828E7511880AA4200A2C2E9 /* secret.h */,
+				783E24F018BE37CB0009BCA6 /* Defines.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

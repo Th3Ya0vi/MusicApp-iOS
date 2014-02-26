@@ -17,8 +17,6 @@
 #import "BollywoodAPIClient.h"
 #import "Analytics.h"
 
-#define MIN_SEARCH_LENGTH   3
-
 @interface SearchViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView *viewResults;

@@ -15,6 +15,7 @@
 
 @interface PlaylistViewController ()
 
+@property (weak, nonatomic) IBOutlet UIButton *buttonOfflineMode;
 @property (weak, nonatomic) IBOutlet BVReorderTableView *tablePlaylist;
 @property (nonatomic) BOOL isShuffling;
 
@@ -69,6 +70,7 @@
 {
     [super viewWillAppear:animated];
     
+    [[self buttonOfflineMode] setSelected:[[Player shared] isOfflineModeOn]];
     [[self tablePlaylist] reloadData];
 }
 
@@ -115,6 +117,14 @@
     
     [title setText:[[[Playlist shared] songAtIndex:indexPath.row] name]];
     
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        if ([[Player shared] isOfflineModeOn] && [[[Playlist shared] songAtIndex:indexPath.row] availability] == CLOUD)
+            [[cell contentView] setAlpha:0.2];
+        else
+            [[cell contentView] setAlpha:1];
+    }];
+    
     return cell;
 }
 
@@ -140,10 +150,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [[Player shared] loadSong:[[Playlist shared] songAtIndex:indexPath.row] ShouldPlay:YES];
-    [tableView reloadData];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
+    
+    Song *songToPlay = [[Playlist shared] songAtIndex:indexPath.row];
+    if ([[Player shared] isOfflineModeOn] && [songToPlay availability] != LOCAL)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Offline Mode is On" message:@"This song will use data. Turn off offline mode to play this song." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    }
+    else
+    {
+        [[Player shared] loadSong:songToPlay ShouldPlay:YES];
+        [tableView reloadData];
+        [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Playlist" forKey:@"How"]];
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -200,6 +219,30 @@
 - (IBAction)clearPlaylist:(id)sender
 {
     [[[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Do you want to clear your playlist?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes" , nil] show];
+}
+
+- (IBAction)toggleOfflineMode:(UIButton *)sender
+{
+    [[Player shared] setIsOfflineModeOn:![[Player shared] isOfflineModeOn]];
+    [sender setSelected:[[Player shared] isOfflineModeOn]];
+    
+    if ([[Player shared] isOfflineModeOn] && [[[Playlist shared] currentSong] availability] != LOCAL)
+    {
+        Song *nextSong = nextLocalSongInPlaylist;
+        if (nextSong == nil)
+            nextSong = previousLocalSongInPlaylist;
+        
+        if (nextSong)
+            [[Player shared] loadSong:nextLocalSongInPlaylist ShouldPlay:isPlayerPlaying];
+        else
+        {
+            [[[UIAlertView alloc] initWithTitle:@"No Downloaded Songs In Playlist" message:@"You need downloaded songs in your playlist to switch to offline mode." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+            [[Player shared] setIsOfflineModeOn:NO];
+            [sender setSelected:NO];
+        }
+    }
+    
+    [[self tablePlaylist] reloadData];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

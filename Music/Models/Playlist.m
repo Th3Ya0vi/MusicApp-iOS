@@ -118,6 +118,24 @@
     return [[self playlist] objectAtIndex:[[self playlist] indexOfObjectIdenticalTo:song] + 1];
 }
 
+- (Song *) localSongAfter: (Song *)song
+{
+    Song *nextSong = [self songAfter:song];
+    while ([nextSong availability] != LOCAL && nextSong != song && nextSong != nil) {
+        nextSong = [self songAfter:nextSong];
+    }
+    return nextSong;
+}
+
+- (Song *) localSongBefore: (Song *)song
+{
+    Song *previousSong = [self songBefore:song];
+    while ([previousSong availability] != LOCAL && previousSong != song && previousSong != nil) {
+        previousSong = [self songBefore:previousSong];
+    }
+    return previousSong;
+}
+
 - (Song *)songAtIndex:(NSUInteger)index
 {
     if (index >= [self count])
@@ -144,12 +162,14 @@
 
 - (BOOL) isCurrentSongFirst
 {
-    return [self songBefore:[self currentSong]] == nil;
+    Song *song = previousSongAuto;
+    return song == nil;
 }
 
 - (BOOL) isCurrentSongLast
 {
-    return [self songAfter:[self currentSong]] == nil;
+    Song *song = nextSongAuto;
+    return song == nil;
 }
 
 - (NSUInteger) indexOfSong: (Song *)song

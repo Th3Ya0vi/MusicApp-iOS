@@ -128,11 +128,11 @@
                 [[Player shared] togglePlayPause];
                 break;
             case UIEventSubtypeRemoteControlPreviousTrack:
-                [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
+                [[Player shared] loadSong:previousSongAuto ShouldPlay:isPlayerPlaying];
                 [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
-                [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
+                [[Player shared] loadSong:nextSongAuto ShouldPlay:isPlayerPlaying];
                 [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
                 break;
             default:

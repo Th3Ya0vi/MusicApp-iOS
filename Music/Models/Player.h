@@ -27,6 +27,7 @@ FINISHED: A song has been completely downloaded from the network and has been pl
 @property (nonatomic, getter = getPercentCompleted) float percentCompleted;
 @property (nonatomic) BOOL isRepeatOn;
 @property (nonatomic) NSInteger timesFailed;
+@property (nonatomic) BOOL isOfflineModeOn;
 
 + (instancetype)shared;
 - (void)togglePlayPause;

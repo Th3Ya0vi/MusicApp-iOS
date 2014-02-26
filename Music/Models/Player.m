@@ -32,6 +32,7 @@
         self.currentStatus = NOT_STARTED;
         self.isRepeatOn = NO;
         self.timesFailed = 0;
+        [self setIsOfflineModeOn:NO];
         self.bgTask = UIBackgroundTaskInvalid;
         
         __block Player *weakSelf = self;
@@ -144,7 +145,7 @@
             [self play];
             break;
         case FINISHED:
-            [self loadSong:nextSongInPlaylist ShouldPlay:YES];
+            [self loadSong:nextSongAuto ShouldPlay:YES];
             [self play];
             break;
         case LOADING:
@@ -179,7 +180,12 @@
 
 - (void)loadNextSongDependingOnRepeat
 {
-    ([self isRepeatOn]) ? [self loadSong:[[Playlist shared] currentSong] ShouldPlay:YES] : [self loadSong:nextSongInPlaylist ShouldPlay:YES];
+    Song *nextSong = nextSongAuto;
+    if (nextSong)
+        [self loadSong:([self isRepeatOn]) ? [[Playlist shared] currentSong] : nextSong ShouldPlay:YES];
+    else
+        [self stop];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SongFinished" object:nil];
 }
 

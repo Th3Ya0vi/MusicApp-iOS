@@ -26,6 +26,8 @@
 - (void) addSong: (Song *)song After: (Song *)after Origin: (NSString *)origin;
 - (void) addSong: (Song *)song Before: (Song *)before Origin: (NSString *)origin;
 
+- (Song *) localSongAfter: (Song *)song;
+- (Song *) localSongBefore: (Song *)song;
 - (Song *) songAtIndex: (NSUInteger) index;
 - (Song *) songAfter: (Song *)song;
 - (Song *) songBefore: (Song *)song;

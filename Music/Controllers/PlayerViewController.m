@@ -173,31 +173,29 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(NowPlayingViewController *)viewController
 {
-    if ([[Playlist shared] songAfter:[viewController song]] == nil)
+    Song *song = ([[Player shared] isOfflineModeOn]) ? [[Playlist shared] localSongAfter:[viewController song]] : [[Playlist shared] songAfter:[viewController song]];
+    if (song == nil)
         return nil;
     
-    return [[NowPlayingViewController alloc] initWithSong:[[Playlist shared] songAfter:[viewController song]]];
+    return [[NowPlayingViewController alloc] initWithSong:song];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(NowPlayingViewController *)viewController
 {
-    if ([[Playlist shared] songBefore:[viewController song]] == nil)
+    Song *song = ([[Player shared] isOfflineModeOn]) ? [[Playlist shared] localSongBefore:[viewController song]] : [[Playlist shared] songBefore:[viewController song]];
+    if (song == nil)
         return nil;
 
-    return [[NowPlayingViewController alloc] initWithSong:[[Playlist shared] songBefore:[viewController song]]];
+    return [[NowPlayingViewController alloc] initWithSong:song];
 }
 
 #pragma mark - Page View Controller Delegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
 {
-    if (completed && finished)
+    if (completed)
     {
-        if ([[Playlist shared] songAfter:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
-            [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
-        else if ([[Playlist shared] songBefore:[[previousViewControllers firstObject] song]] == [[[pageViewController viewControllers] firstObject] song])
-            [[Player shared] loadSong:previousSongInPlaylist ShouldPlay:isPlayerPlaying];
-        
+        [[Player shared] loadSong:[[[pageViewController viewControllers] firstObject] song] ShouldPlay:isPlayerPlaying];
         [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Swipe" forKey:@"How"]];
     }
 }
@@ -211,7 +209,7 @@
 
 - (IBAction)playNextSong:(UIButton *)sender
 {
-    [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:isPlayerPlaying];
+    [[Player shared] loadSong:nextSongAuto ShouldPlay:isPlayerPlaying];
     [self syncNowPlayingViewWithPageDirection:UIPageViewControllerNavigationDirectionForward
                                 ShouldAnimate:YES];
     [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Player Control" forKey:@"How"]];
@@ -267,7 +265,7 @@
     [[Player shared] setCurrentStatus:NOT_STARTED];
     [self syncView];
     
-    [[Player shared] loadSong:nextSongInPlaylist ShouldPlay:YES];
+    [[Player shared] loadSong:nextSongAuto ShouldPlay:YES];
 }
 
 @end

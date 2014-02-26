@@ -27,12 +27,8 @@
         user.currentPlaylistIndex = [userDef integerForKey:@"currentPlaylistIndex"];
         user.playlist = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"playlist"]] mutableCopy];
         user.downloads = [[NSKeyedUnarchiver unarchiveObjectWithData:[userDef dataForKey:@"downloads"]] mutableCopy];
-        user.hasSentPushTokenToServer = [userDef boolForKey:@"hasSentPushTokenToServer"];
         
         [user removeOldData];
-        
-        if (![user hasSentPushTokenToServer])
-            [[BollywoodAPIClient shared] updateUserPushToken];
     }
     return user;
     
@@ -48,7 +44,6 @@
     [userDef setObject:playlistData forKey:@"playlist"];
     [userDef setObject:downloadedData forKey:@"downloads"];
     [userDef setInteger:self.currentPlaylistIndex forKey:@"currentPlaylistIndex"];
-    [userDef setBool:[self hasSentPushTokenToServer] forKey:@"hasSentPushTokenToServer"];
     [userDef synchronize];
 }
 

@@ -19,7 +19,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
-    [[Analytics shared] setLoggingEnabled:YES];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
@@ -89,19 +88,13 @@
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveDeviceToken"] == NO)
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveSavedDeviceToken"] == NO)
     {
+        [[Analytics shared] setPushToken:deviceToken];
         [[Analytics shared] logEventWithName:EVENT_DEVICE_TOKEN Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Success"]];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveSavedDeviceToken"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    /**http://stackoverflow.com/questions/1587407/iphone-device-token-nsdata-or-nsstring**/
-    NSString *deviceTokenStr = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    deviceTokenStr = [deviceTokenStr stringByReplacingOccurrencesOfString:@" " withString:@""];
-    /**---------------------------------------------------------------------------------**/
-    
-    [[NSUserDefaults standardUserDefaults] setObject:deviceTokenStr forKey:@"PushToken"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error

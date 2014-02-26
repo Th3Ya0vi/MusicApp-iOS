@@ -15,6 +15,8 @@
 - (instancetype) init;
 + (instancetype) shared;
 
+- (void)setPushToken: (NSData *)pushToken;
+
 - (void)tagScreen: (NSString *)screenName;
 
 - (void)logEventWithName: (NSString *)name;

@@ -17,8 +17,7 @@ enum BOLLYWOODAPI_ENDPOINT {    SEARCH_SONG,
                                 CREATE_NEW_USER,
                                 EXPLORE,
                                 FETCH_SONG,
-                                FETCH_ALBUM,
-                                UPDATE_PUSHTOKEN
+                                FETCH_ALBUM
                             };
 
 enum SearchScope {SONG, ALBUM};
@@ -47,8 +46,6 @@ enum SearchScope {SONG, ALBUM};
 
 - (void)fetchAlbumWithAlbumID: (NSString *)albumid
               CompletionBlock: (void(^)(Album *album))block;
-
-- (void)updateUserPushToken;
 
 - (void)cancelCurrentSearch;
 

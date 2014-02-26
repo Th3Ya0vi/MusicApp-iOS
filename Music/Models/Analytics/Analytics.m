@@ -57,6 +57,18 @@
     if ([self isLoggingEnabled]) NSLog(@"Analytics: Saved data to file.");
 }
 
+- (void)setPushToken:(NSData *)pushToken
+{
+    /**http://stackoverflow.com/questions/1587407/iphone-device-token-nsdata-or-nsstring**/
+    NSString *deviceTokenStr = [[pushToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    deviceTokenStr = [deviceTokenStr stringByReplacingOccurrencesOfString:@" " withString:@""];
+    /**---------------------------------------------------------------------------------**/
+    
+    NSNumber *userid = [NSNumber numberWithInteger:[[User currentUser] userid]];
+    [self logEventWithName:@"__PUSHTOKEN" Attributes:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:userid, deviceTokenStr, nil]
+                                                                                 forKeys:[NSArray arrayWithObjects:@"UserID", @"PushToken", nil]]];
+}
+
 - (BOOL)loadData
 {
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self localFileURL] isDirectory:NO])
@@ -96,7 +108,7 @@
 
 - (void)tagScreen: (NSString *)screenName
 {
-    [self logEventWithName:@"Page View" Attributes:[NSDictionary dictionaryWithObject:screenName forKey:@"Screen"]];
+    [self logEventWithName:@"__PAGEVIEW" Attributes:[NSDictionary dictionaryWithObject:screenName forKey:@"Screen"]];
 }
 
 - (void)post

@@ -242,6 +242,7 @@
         }
     }
     
+    [[Analytics shared] logEventWithName:EVENT_TOGGLE_OFFLINE];
     [[self tablePlaylist] reloadData];
 }
 

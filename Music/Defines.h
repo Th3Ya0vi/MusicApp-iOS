@@ -24,6 +24,7 @@
 #define EVENT_SHUFFLE               @"Shuffle"
 #define EVENT_DOWNLOAD_ALL          @"Download All Songs"
 #define EVENT_SONG_ADD_ALL          @"Add All Songs Playlist"
+#define EVENT_TOGGLE_OFFLINE        @"Toggle Offline Mode"
 /**----------**/
 
 #define currentRowAvailability [[[self searchResults] objectAtIndex:indexPath.row] availability]

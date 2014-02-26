@@ -86,6 +86,7 @@
     [[self view] addSubview:[[self nowPlayingPageController] view]];
     [self addGestures];
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [[self sliderSeeker] setThumbImage:[UIImage imageNamed:@"thumb"] forState:UIControlStateNormal];
 }
 
 - (void)viewWillAppear:(BOOL)animated

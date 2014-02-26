@@ -10,7 +10,7 @@
 #import "Album.h"
 
 
-@interface AlbumViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface AlbumViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) Album* album;
 @property (strong, nonatomic) NSString *origin;

@@ -6,8 +6,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AlbumViewController">
             <connections>
-                <outlet property="buttonAddAllPlaylist" destination="EUJ-ZN-adO" id="hLr-7o-B6I"/>
-                <outlet property="buttonDownloadAll" destination="2IT-q5-yCM" id="E6U-N6-ywC"/>
+                <outlet property="buttonAddAllPlaylist" destination="Fxm-hC-60h" id="B4S-8I-Hmc"/>
+                <outlet property="buttonDownloadAll" destination="SnN-QV-BiQ" id="SeC-qE-OK7"/>
                 <outlet property="imageAlbumArt" destination="zrA-bI-5PY" id="VsB-Ox-Bkx"/>
                 <outlet property="imageBackground" destination="Ell-zI-cWk" id="pVb-4u-WNY"/>
                 <outlet property="labelCast" destination="1JU-LQ-a2z" id="QDd-aS-pML"/>
@@ -21,14 +21,40 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" tag="550" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DefaultAlbumArtDark" translatesAutoresizingMaskIntoConstraints="NO" id="Ell-zI-cWk">
+                <imageView userInteractionEnabled="NO" tag="550" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DefaultAlbumArtDark" translatesAutoresizingMaskIntoConstraints="NO" id="Ell-zI-cWk">
                     <rect key="frame" x="0.0" y="63" width="320" height="157"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <view alpha="0.40000000000000002" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-yD-dQu">
-                    <rect key="frame" x="0.0" y="63" width="320" height="158"/>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-cb-BRK">
+                    <rect key="frame" x="0.0" y="220" width="320" height="35"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fxm-hC-60h">
+                            <rect key="frame" x="160" y="0.0" width="160" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="13"/>
+                            <state key="normal" title="Add All To Playlist">
+                                <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="addAllSongsToPlaylist:" destination="-1" eventType="touchUpInside" id="2B9-de-6iW"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SnN-QV-BiQ">
+                            <rect key="frame" x="0.0" y="0.0" width="160" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="13"/>
+                            <state key="normal" title="Download All">
+                                <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="downloadAllSongs:" destination="-1" eventType="touchUpInside" id="eZh-i6-3yD"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                 </view>
                 <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DefaultAlbumArt" translatesAutoresizingMaskIntoConstraints="NO" id="zrA-bI-5PY">
                     <rect key="frame" x="20" y="82" width="120" height="120"/>
@@ -44,7 +70,7 @@
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="103" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Cast" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="152" translatesAutoresizingMaskIntoConstraints="NO" id="1JU-LQ-a2z">
                     <rect key="frame" x="154" y="77" width="152" height="63"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" name="Futura-CondensedExtraBold" family="Futura" pointSize="10"/>
+                    <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="12"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -55,10 +81,10 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <tableView clipsSubviews="YES" tag="105" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Xa-mV-Rsn">
-                    <rect key="frame" x="0.0" y="223" width="320" height="301"/>
+                <tableView clipsSubviews="YES" tag="105" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1Xa-mV-Rsn">
+                    <rect key="frame" x="0.0" y="265" width="320" height="260"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="320" id="xzq-qH-8gP"/>
                     </constraints>
@@ -79,33 +105,16 @@
                         <action selector="reportIncorrectData:" destination="-1" eventType="touchUpInside" id="TSn-TD-mrR"/>
                     </connections>
                 </button>
-                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="POg-Hl-4BD">
-                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                    <items>
-                        <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="B05-um-Jfd"/>
-                        <barButtonItem title="Download All" id="2IT-q5-yCM">
-                            <connections>
-                                <action selector="downloadAllSongs:" destination="-1" id="Npy-EG-jLx"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="gyW-de-eQ6"/>
-                        <barButtonItem title="Add All To Playlist" id="EUJ-ZN-adO">
-                            <connections>
-                                <action selector="addAllSongsToPlaylist:" destination="-1" id="shu-a0-LKL"/>
-                            </connections>
-                        </barButtonItem>
-                    </items>
-                </toolbar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="1Xa-mV-Rsn" firstAttribute="top" secondItem="1" secondAttribute="top" constant="223" id="DuY-oW-ntz"/>
-                <constraint firstAttribute="bottom" secondItem="1Xa-mV-Rsn" secondAttribute="bottom" constant="44" id="P5v-be-xQp"/>
+                <constraint firstItem="1Xa-mV-Rsn" firstAttribute="top" secondItem="1" secondAttribute="top" constant="265" id="DuY-oW-ntz"/>
+                <constraint firstAttribute="bottom" secondItem="1Xa-mV-Rsn" secondAttribute="bottom" constant="43" id="Nri-BO-xwK"/>
                 <constraint firstItem="1Xa-mV-Rsn" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="ebk-xc-VgV"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>

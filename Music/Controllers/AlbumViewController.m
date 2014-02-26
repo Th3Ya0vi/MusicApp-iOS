@@ -17,6 +17,7 @@
 #import "Analytics.h"
 #import "DownloadsManager.h"
 #import "Playlist.h"
+#import "AFNetworkReachabilityManager.h"
 
 @interface AlbumViewController ()
 
@@ -25,8 +26,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelYear;
 @property (weak, nonatomic) IBOutlet UILabel *labelCast;
 @property (weak, nonatomic) IBOutlet UILabel *labelMusicDirector;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *buttonDownloadAll;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *buttonAddAllPlaylist;
+@property (weak, nonatomic) IBOutlet UIButton *buttonDownloadAll;
+@property (weak, nonatomic) IBOutlet UIButton *buttonAddAllPlaylist;
 
 @property (nonatomic) NSInteger selectedRow;
 
@@ -42,9 +43,6 @@
     {
         [self setAlbum:album];
         [self setOrigin:origin];
-        
-        UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeAlbumView)];
-        [self.navigationItem setRightBarButtonItem:closeButton];
     }
     
     return self;
@@ -108,11 +106,6 @@
     return 65;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return @"Songs";
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"SubtitleCell";
@@ -149,17 +142,12 @@
     [song setAlbum:albumCopy];
     
     SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:[self origin]];
-    [[self navigationController] setModalPresentationCapturesStatusBarAppearance:YES];
-    [[self navigationController] setModalPresentationStyle:UIModalPresentationCurrentContext];
-    [[self navigationController] presentViewController:songOptions animated:NO completion:nil];
+    [[self tabBarController] setModalPresentationCapturesStatusBarAppearance:YES];
+    [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
+    [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
 }
 
 #pragma mark Others
-
-- (void)closeAlbumView
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 - (void)songIsUnavailable
 {
@@ -173,17 +161,10 @@
 
 - (IBAction)downloadAllSongs:(id)sender
 {
-    [[[self album] songs] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
-        Album *albumCopy = [[self album] copy];
-        [albumCopy setSongs:nil];
-        [obj setAlbum:albumCopy];
-        [[DownloadsManager shared] downloadSong:[obj copy] Origin:[self origin]];
-    }];
-    [[Analytics shared] logEventWithName:EVENT_DOWNLOAD_ALL];
-    
-    [[self buttonDownloadAll] setEnabled:NO];
-    
-    [[[UIAlertView alloc] initWithTitle:@"All songs are downloading.." message:@"Check the Downloads tab for progress." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    if ([[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi])
+        [[[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Download all songs from this album?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil] show];
+    else
+        [[[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Download all songs from this album? NOTE: You are currently using celluar data." delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil] show];
 }
 
 - (IBAction)addAllSongsToPlaylist:(id)sender
@@ -198,7 +179,27 @@
     
     [[self buttonAddAllPlaylist] setEnabled:NO];
     
-    [[[UIAlertView alloc] initWithTitle:@"All songs have been added to the playlist" message:@"Go to your Playlist to listen to them." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    [[[UIAlertView alloc] initWithTitle:@"All songs have been added to the playlist" message:Nil delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+}
+
+#pragma mark - Alert view delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [[[self album] songs] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+            Album *albumCopy = [[self album] copy];
+            [albumCopy setSongs:nil];
+            [obj setAlbum:albumCopy];
+            [[DownloadsManager shared] downloadSong:[obj copy] Origin:[self origin]];
+        }];
+        [[Analytics shared] logEventWithName:EVENT_DOWNLOAD_ALL];
+        
+        [[self buttonDownloadAll] setEnabled:NO];
+        
+        [[[UIAlertView alloc] initWithTitle:@"All songs are downloading.." message:@"Check the Downloads tab for progress." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    }
 }
 
 @end

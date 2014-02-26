@@ -39,6 +39,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [[self lblStatus] setText:@""];
+    [[self buttonContinue] setBackgroundColor:UIColorFromRGB(0xFFBB14)];
+    [[self buttonFix] setBackgroundColor:UIColorFromRGB(0xFFBB14)];
+    [[[self buttonContinue] layer] setCornerRadius:15];
+    [[[self buttonFix] layer] setCornerRadius:15];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -103,7 +108,7 @@
         [self setDidFix:YES];
         [[self lblStatus] setText:@"Filmi should be fixed now. Tap 'Continue'"];
         [[self buttonFix] setEnabled:NO];
-        [[self buttonContinue] setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+        [[self buttonContinue] setTitle:@"Continue" forState:UIControlStateNormal];
         
         [[Analytics shared] logEventWithName:EVENT_CRASH_RESOLVER Attributes:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"Fix"]];
     }

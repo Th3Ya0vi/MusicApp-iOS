@@ -18,6 +18,7 @@
 #import "Analytics.h"
 #import "CrashResolverViewController.h"
 #import "AlbumViewController.h"
+#import "AFNetworkReachabilityManager.h"
 
 @interface LoadingViewController ()
 
@@ -30,6 +31,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+        [[UINavigationBar appearance] setTintColor:[UIColor darkGrayColor]];
         [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
         [self configureiRate];
         [self setupCache];
@@ -81,6 +83,7 @@
 
 - (void)loadMainView
 {
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     
     UITabBarController *tabbar = [[UITabBarController alloc] init];

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5051" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NowPlayingViewController">
@@ -22,10 +22,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <view alpha="0.40000000596046448" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vSh-p6-E8v">
+                <view alpha="0.25" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vSh-p6-E8v">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultAlbumArt" translatesAutoresizingMaskIntoConstraints="NO" id="MS3-2p-GbT">
@@ -42,8 +42,7 @@
                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
                     <color key="textColor" red="0.93987165179999999" green="0.93987165179999999" blue="0.93987165179999999" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="highlightedColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <color key="shadowColor" red="0.21336052040603437" green="0.24631861831373555" blue="0.28318319515306123" alpha="1" colorSpace="calibratedRGB"/>
-                    <size key="shadowOffset" width="-1" height="1"/>
+                    <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wny-6b-zj5">
                     <rect key="frame" x="36" y="359" width="252" height="21"/>
@@ -55,8 +54,7 @@
                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                     <color key="textColor" red="0.93987165179999999" green="0.93987165179999999" blue="0.93987165179999999" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="highlightedColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <color key="shadowColor" red="0.21336052040603437" green="0.24631861831373555" blue="0.28318319515306123" alpha="1" colorSpace="calibratedRGB"/>
-                    <size key="shadowOffset" width="-1" height="1"/>
+                    <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

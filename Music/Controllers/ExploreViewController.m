@@ -141,12 +141,8 @@
 - (void)collectionView:(ExploreCollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSArray *albums = [[self albums] objectAtIndex:[collectionView belongsToRow]];
-    
     AlbumViewController *albumView = [[AlbumViewController alloc] initWithAlbum:[albums objectAtIndex:indexPath.row] Origin:@"Explore"];
-    UINavigationController *navControllerForAlbumView = [[UINavigationController alloc] initWithRootViewController:albumView];
-    
-    [[self tabBarController] setModalPresentationStyle:UIModalPresentationNone];
-    [[self tabBarController] presentViewController:navControllerForAlbumView animated:YES completion:nil];
+    [[self navigationController] pushViewController:albumView animated:YES];
 }
 
 @end

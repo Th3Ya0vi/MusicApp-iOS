@@ -88,8 +88,6 @@
 
 - (void)logEventWithName: (NSString *)name Attributes: (NSDictionary *)attributes
 {
-    if ([self isLoggingEnabled]) NSLog(@"Analytics: Adding event (%@ => %@)", name, attributes);
-    
     NSNumber *timestamp = [NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]];
     NSNumber *userid = [NSNumber numberWithInteger:[[User currentUser] userid]];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
@@ -104,6 +102,8 @@
     NSDictionary *event = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:name, attributesArray, timestamp, userid, appVersion, countryCode, nil]
                                                       forKeys:[NSArray arrayWithObjects:@"Name", @"Attributes", @"Timestamp", @"UserID", @"AppVersion", @"Country", nil]];
     [[self events] addObject:event];
+    
+    if ([self isLoggingEnabled]) NSLog(@"Analytics: Adding event (%@)", event);
 }
 
 - (void)tagScreen: (NSString *)screenName
@@ -126,12 +126,12 @@
     
     [self setBackgroundTaskForPosting:[[UIApplication sharedApplication] beginBackgroundTaskWithName:@"Post Analytics" expirationHandler:^{
         if ([self isLoggingEnabled]) NSLog(@"Analytics: Failed to post events (Background task expired)");
-        [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];
         [[UIApplication sharedApplication] endBackgroundTask:[self backgroundTaskForPosting]];
+        [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];
     }]];
     if ([self isLoggingEnabled]) NSLog(@"Analytics: Attempting to post events");
     
-    NSDictionary *toPost = [NSDictionary dictionaryWithObject:[self events] forKey:@"Events"];
+    NSDictionary *toPost = [NSDictionary dictionaryWithObject:[[self events] copy] forKey:@"Events"];
     
     [[self requestManager] POST:@"activity" parameters:toPost success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
         if ([[responseObject objectForKey:@"Message"] isEqualToString:@"Success"])

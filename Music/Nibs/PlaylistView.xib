@@ -16,16 +16,19 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GO0-C9-Fg5" customClass="BVReorderTableView">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GO0-C9-Fg5" customClass="BVReorderTableView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="533"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="320" id="hAt-TK-qWv"/>
+                    </constraints>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="See-vA-u3T"/>
                         <outlet property="delegate" destination="-1" id="dXU-bv-OGw"/>
                     </connections>
                 </tableView>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P6Q-Ld-rSF">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6Q-Ld-rSF">
                     <rect key="frame" x="0.0" y="533" width="320" height="35"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
@@ -59,7 +62,7 @@
                             <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="13"/>
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" title="Offline Mode">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </state>
                             <state key="selected">
@@ -71,9 +74,20 @@
                         </button>
                     </subviews>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="320" id="O3N-0X-bDn"/>
+                        <constraint firstAttribute="height" constant="35" id="v9r-q5-F29"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="P6Q-Ld-rSF" firstAttribute="top" secondItem="GO0-C9-Fg5" secondAttribute="bottom" id="4je-Ux-KsG"/>
+                <constraint firstItem="GO0-C9-Fg5" firstAttribute="top" secondItem="1" secondAttribute="top" id="CAI-Hg-OGf"/>
+                <constraint firstItem="P6Q-Ld-rSF" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="VO1-o1-JtB"/>
+                <constraint firstItem="GO0-C9-Fg5" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="eVN-LB-3nC"/>
+                <constraint firstAttribute="bottom" secondItem="P6Q-Ld-rSF" secondAttribute="bottom" id="slz-Zo-msC"/>
+            </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

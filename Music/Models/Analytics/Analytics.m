@@ -129,15 +129,16 @@
         [[UIApplication sharedApplication] endBackgroundTask:[self backgroundTaskForPosting]];
         [self setBackgroundTaskForPosting:UIBackgroundTaskInvalid];
     }]];
-    if ([self isLoggingEnabled]) NSLog(@"Analytics: Attempting to post events");
     
     NSDictionary *toPost = [NSDictionary dictionaryWithObject:[[self events] copy] forKey:@"Events"];
     
+    if ([self isLoggingEnabled]) NSLog(@"Analytics: Attempting to post %d events", [[toPost objectForKey:@"Events"] count]);
+    
     [[self requestManager] POST:@"activity" parameters:toPost success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
-        if ([[responseObject objectForKey:@"Message"] isEqualToString:@"Success"])
+        if ([responseObject objectForKey:@"Events"] != nil)
         {
-            [[self events] removeObjectsInArray:[toPost objectForKey:@"Events"]];
-            if ([self isLoggingEnabled]) NSLog(@"Analytics: Posted events");
+            [[self events] removeObjectsInArray:[responseObject objectForKey:@"Events"]];
+            if ([self isLoggingEnabled]) NSLog(@"Analytics: Posted %d events", [[responseObject objectForKey:@"Events"] count]);
         }
         else
             if ([self isLoggingEnabled]) NSLog(@"Analytics: Failed to post events (%@)", responseObject);

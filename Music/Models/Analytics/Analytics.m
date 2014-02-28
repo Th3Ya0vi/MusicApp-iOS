@@ -137,7 +137,18 @@
     [[self requestManager] POST:@"activity" parameters:toPost success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
         if ([responseObject objectForKey:@"Events"] != nil)
         {
-            [[self events] removeObjectsInArray:[responseObject objectForKey:@"Events"]];
+            NSMutableArray *eventsToRemove = [[NSMutableArray alloc] init];
+            NSArray *responseEvents = [responseObject objectForKey:@"Events"];
+            [[self events] enumerateObjectsUsingBlock:^(NSDictionary *localEvent, NSUInteger idx, BOOL *stop) {
+                [responseEvents enumerateObjectsUsingBlock:^(NSDictionary *event, NSUInteger idx, BOOL *stop) {
+                    if ([[localEvent objectForKey:@"Name"] isEqualToString:[event objectForKey:@"Name"]] &&
+                        [[localEvent objectForKey:@"Timestamp"] isEqualToNumber:[event objectForKey:@"Timestamp"]])
+                        [eventsToRemove addObject:localEvent];
+                    
+                }];
+            }];
+            [[self events] removeObjectsInArray:eventsToRemove];
+            
             if ([self isLoggingEnabled]) NSLog(@"Analytics: Posted %d events", [[responseObject objectForKey:@"Events"] count]);
         }
         else

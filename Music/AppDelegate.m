@@ -118,12 +118,18 @@
                 [[Player shared] togglePlayPause];
                 break;
             case UIEventSubtypeRemoteControlPreviousTrack:
-                [[Player shared] loadSong:previousSongAuto ShouldPlay:isPlayerPlaying];
-                [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                if ([[Playlist shared] isCurrentSongFirst] == NO)
+                {
+                    [[Player shared] loadSong:previousSongAuto ShouldPlay:isPlayerPlaying];
+                    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                }
                 break;
             case UIEventSubtypeRemoteControlNextTrack:
-                [[Player shared] loadSong:nextSongAuto ShouldPlay:isPlayerPlaying];
-                [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                if ([[Playlist shared] isCurrentSongLast] == NO)
+                {
+                    [[Player shared] loadSong:nextSongAuto ShouldPlay:isPlayerPlaying];
+                    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Remote Control" forKey:@"How"]];
+                }
                 break;
             default:
                 break;

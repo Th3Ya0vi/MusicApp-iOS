@@ -233,7 +233,7 @@
             nextSong = previousLocalSongInPlaylist;
         
         if (nextSong)
-            [[Player shared] loadSong:nextLocalSongInPlaylist ShouldPlay:isPlayerPlaying];
+            [[Player shared] loadSong:nextSong ShouldPlay:isPlayerPlaying];
         else
         {
             [[[UIAlertView alloc] initWithTitle:@"No Downloaded Songs In Playlist" message:@"You need downloaded songs in your playlist to switch to offline mode." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];

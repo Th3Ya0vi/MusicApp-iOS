@@ -10,7 +10,9 @@
 #import "Player.h"
 #import "Analytics.h"
 
-@interface Playlist ()
+@interface Playlist () {
+    Song *_currentSong;
+}
 
 @property (strong, nonatomic) NSMutableArray *playlist;
 
@@ -68,6 +70,12 @@
     if (_currentSong == nil && [self count] > 0)
         _currentSong = [[self playlist] objectAtIndex:0];
     return _currentSong;
+}
+
+- (void)setCurrentSong:(Song *)currentSong
+{
+    if (currentSong != nil && [self indexOfSong:currentSong] != NSNotFound)
+        _currentSong = currentSong;
 }
 
 - (void)addSongInEnd:(Song *)song Origin: (NSString *)origin
@@ -174,16 +182,7 @@
 
 - (NSUInteger) indexOfSong: (Song *)song
 {
-    __block NSInteger index = NSNotFound;
-    [[self playlist] enumerateObjectsUsingBlock:^(Song* obj, NSUInteger idx, BOOL *stop)
-     {
-         if ([song isEqual:obj])
-         {
-             index = idx;
-             *stop = YES;
-         }
-     }];
-    return index;
+    return [[self playlist] indexOfObject:song];
 }
 
 - (void) shuffle

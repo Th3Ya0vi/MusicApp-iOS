@@ -61,7 +61,7 @@
 - (void)removeSong:(Song *)song
 {
     if ([self currentSong] == song)
-        [self setCurrentSong:nil];
+        _currentSong = nil;
     [[self playlist] removeObjectIdenticalTo:song];
 }
 
@@ -114,14 +114,16 @@
 
 - (Song *)songBefore: (Song *)song
 {
-    if ([[self playlist] indexOfObjectIdenticalTo:song] == 0)
+    if ([[self playlist] indexOfObjectIdenticalTo:song] == 0 ||
+        [[self playlist] indexOfObject:song] == NSNotFound)
         return nil;
     return [[self playlist] objectAtIndex:[[self playlist] indexOfObjectIdenticalTo:song] - 1];
 }
 
 - (Song *)songAfter:(Song *)song
 {
-    if ([[self playlist] indexOfObjectIdenticalTo:song] == [self count] - 1)
+    if ([[self playlist] indexOfObjectIdenticalTo:song] == [self count] - 1 ||
+        [[self playlist] indexOfObject:song] == NSNotFound)
         return nil;
     return [[self playlist] objectAtIndex:[[self playlist] indexOfObjectIdenticalTo:song] + 1];
 }
@@ -195,7 +197,7 @@
 - (void) clear
 {
     [[self playlist] removeAllObjects];
-    [self setCurrentSong:nil];
+    _currentSong = nil;
 }
 
 - (void)moveSong:(Song *)songA After:(Song *)songB

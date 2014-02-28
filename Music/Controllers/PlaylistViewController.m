@@ -167,7 +167,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (previousSongInPlaylist && [[Playlist shared] currentIndex] == indexPath.row) ? NO : YES;
+    return [[Playlist shared] currentSong] != [[Playlist shared] songAtIndex:indexPath.row];
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath

@@ -143,11 +143,16 @@
     if ([[Playlist shared] indexOfSong:[self song]] == NSNotFound)
         [[Playlist shared] addSong:[self song] After:[[Playlist shared] currentSong] Origin:[self origin]];
 
-    [[Player shared] loadSong:[[Playlist shared] songInPlaylistWithSong:[self song]] ShouldPlay:YES];
-    
-    [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Song Options" forKey:@"How"]];
-    
-    [self close];
+    if ([[Player shared] isOfflineModeOn])
+    {
+        [[[UIAlertView alloc] initWithTitle:@"Offline Mode is On" message:@"This song will use data. Turn off offline mode to play this song." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+    }
+    else
+    {
+        [[Player shared] loadSong:[[Playlist shared] songInPlaylistWithSong:[self song]] ShouldPlay:YES];
+        [[Analytics shared] logEventWithName:EVENT_SONG_CHANGE Attributes:[NSDictionary dictionaryWithObject:@"Song Options" forKey:@"How"]];
+        [self close];
+    }
 }
 
 - (IBAction)playNext:(UIButton *)sender

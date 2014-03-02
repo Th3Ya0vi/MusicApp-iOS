@@ -111,6 +111,13 @@
     [self logEventWithName:@"__PAGEVIEW" Attributes:[NSDictionary dictionaryWithObject:screenName forKey:@"Screen"]];
 }
 
++ (BOOL)isEvent: (NSDictionary *)event1 EqualTo: (NSDictionary *)event2
+{
+    return ([[event1 objectForKey:@"Name"] isEqualToString:[event2 objectForKey:@"Name"]] &&
+            [[event1 objectForKey:@"Timestamp"] isEqualToNumber:[event2 objectForKey:@"Timestamp"]] &&
+            [[event1 objectForKey:@"Attributes"] count] == [[event2 objectForKey:@"Attributes"] count]);
+}
+
 - (void)post
 {
     if ([self backgroundTaskForPosting] != UIBackgroundTaskInvalid)
@@ -141,10 +148,8 @@
             NSArray *responseEvents = [responseObject objectForKey:@"Events"];
             [[self events] enumerateObjectsUsingBlock:^(NSDictionary *localEvent, NSUInteger idx, BOOL *stop) {
                 [responseEvents enumerateObjectsUsingBlock:^(NSDictionary *event, NSUInteger idx, BOOL *stop) {
-                    if ([[localEvent objectForKey:@"Name"] isEqualToString:[event objectForKey:@"Name"]] &&
-                        [[localEvent objectForKey:@"Timestamp"] isEqualToNumber:[event objectForKey:@"Timestamp"]])
+                    if ([Analytics isEvent:localEvent EqualTo:event])
                         [eventsToRemove addObject:localEvent];
-                    
                 }];
             }];
             [[self events] removeObjectsInArray:eventsToRemove];

@@ -31,6 +31,9 @@
         [self setTitle:@"Downloads"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"cloud_downloads"]];
         
+        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(editDownloads)];
+        [[self navigationItem] setLeftBarButtonItem:editButton];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillData) name:@"didStartDownloadingSong" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidProgress:) name:@"DownloadingSong" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillData) name:@"DownloadedSong" object:nil];
@@ -245,6 +248,20 @@ dispatch_async(dispatch_get_main_queue(), ^{
     
     [self setBadge];
     [[self tableDownloads] reloadData];
+}
+
+- (void)editDownloads
+{
+    if ([[self tableDownloads] isEditing])
+    {
+        [[self tableDownloads] setEditing:NO animated:YES];
+        [[[self navigationItem] leftBarButtonItem] setTitle:@"Edit"];
+    }
+    else
+    {
+        [[self tableDownloads] setEditing:YES animated:YES];
+        [[[self navigationItem] leftBarButtonItem] setTitle:@"Done"];
+    }
 }
 
 @end

@@ -62,6 +62,17 @@
 {
     [super viewWillAppear:animated];
     
+    if ([[[User currentUser] downloads] count] == 0)
+    {
+        [[self labelDownloadSongs] setHidden:NO];
+        [[self tableDownloads] setHidden:YES];
+    }
+    else
+    {
+        [[self labelDownloadSongs] setHidden:YES];
+        [[self tableDownloads] setHidden:NO];
+    }
+    
     [self fillData];
 }
 
@@ -93,16 +104,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([[[User currentUser] downloads] count] == 0)
-    {
-        [[self labelDownloadSongs] setHidden:NO];
-        [[self tableDownloads] setHidden:YES];
-    }
-    else
-    {
-        [[self labelDownloadSongs] setHidden:YES];
-        [[self tableDownloads] setHidden:NO];
-    }
     return ([self searchResults]) ? [[self searchResults] count] : [[self searchResults] count];
 }
 

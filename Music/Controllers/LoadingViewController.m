@@ -121,7 +121,7 @@
 
 - (void)configureiRate
 {
-    [iRate sharedInstance].daysUntilPrompt = 3;
+    [iRate sharedInstance].daysUntilPrompt = 1;
     [iRate sharedInstance].usesUntilPrompt = 5;
 }
 

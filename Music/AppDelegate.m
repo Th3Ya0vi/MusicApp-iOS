@@ -148,4 +148,21 @@
     [self.window makeKeyAndVisible];
 }
 
+#pragma mark - iRate Delegate
+
+- (void)iRateUserDidAttemptToRateApp
+{
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
+}
+
+- (void)iRateUserDidDeclineToRateApp
+{
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
+}
+
+- (void)iRateUserDidRequestReminderToRateApp
+{
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
+}
+
 @end

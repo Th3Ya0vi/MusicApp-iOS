@@ -12,13 +12,17 @@
 #import "SongOptionsViewController.h"
 #import "DownloadsManager.h"
 #import "Analytics.h"
+#import "RNBlurModalView.h"
+#import "AlbumViewController.h"
+#import "BollywoodAPIClient.h"
+#import "AlbumArtManager.h"
 
 @interface DownloadsViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableDownloads;
 @property (weak, nonatomic) IBOutlet UILabel *labelDownloadSongs;
 @property (strong, nonatomic) NSMutableArray *searchResults;
-
+@property (nonatomic) BOOL showingBySongs;
 @end
 
 @implementation DownloadsViewController
@@ -28,11 +32,14 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+        [self setShowingBySongs:YES];
         [self setTitle:@"Downloads"];
         [[self tabBarItem] setImage:[UIImage imageNamed:@"cloud_downloads"]];
         
         UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(editDownloads)];
         [[self navigationItem] setLeftBarButtonItem:editButton];
+        UIBarButtonItem *showByButton = [[UIBarButtonItem alloc] initWithTitle:@"Albums" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleShowBy:)];
+        [[self navigationItem] setRightBarButtonItem:showByButton];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillData) name:@"didStartDownloadingSong" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadDidProgress:) name:@"DownloadingSong" object:nil];
@@ -71,9 +78,8 @@
     {
         [[self labelDownloadSongs] setHidden:YES];
         [[self tableDownloads] setHidden:NO];
+        [self fillData];
     }
-    
-    [self fillData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -92,9 +98,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (didCurrentRowFail)
-        return 65;
-    return (currentRowAvailability == LOCAL) ? 65: 80;
+    if (![self showingBySongs])
+        return 95;
+    
+    if ((didCurrentRowFail) ||
+        currentRowAvailability == LOCAL)
+        return 60;
+    
+    return 80;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -114,20 +125,24 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return currentRowAvailability == LOCAL || (didCurrentRowFail);
+    return ![self showingBySongs] || currentRowAvailability == LOCAL || (didCurrentRowFail);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = @"SubtitleCell";
-    NSString *cellNib = @"SubtitleCellView";
+    NSString *cellIdentifier = @"OrderedCell";
+    NSString *cellNib = @"OrderedCellView";
     
-    Song *song = [[self searchResults] objectAtIndex:indexPath.row];
-    
-    if ([song availability] == DOWNLOADING)
+    if ([self showingBySongs] &&
+        [[[self searchResults] objectAtIndex:indexPath.row] availability] == DOWNLOADING)
     {
         cellIdentifier = @"ProgressCell";
         cellNib = @"ProgressCellView";
+    }
+    if (![self showingBySongs])
+    {
+        cellIdentifier = @"ImageSubtitleCell";
+        cellNib = @"ImageSubtitleCellView";
     }
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -137,14 +152,49 @@
         cell = [bundle firstObject];
     }
     
-    UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
-    UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
+    [cell setClipsToBounds:YES];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     
-    [labelTitle setText:[song name]];
-    [labelSubtitle setText:[[song album] name]];
+    
+    if ([self showingBySongs])
+    {
+        UILabel *labelNumber = (UILabel *)[cell viewWithTag:100];
+        UILabel *labelTitle = (UILabel *)[cell viewWithTag:101];
+        UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:102];
+        
+        Song *song = [[self searchResults] objectAtIndex:indexPath.row];
+        
+        [labelNumber setText:[NSString stringWithFormat:@"%d", indexPath.row + 1]];
+        [labelTitle setText:[song name]];
+        [labelSubtitle setText:[[song album] name]];
+    }
+    else
+    {
+        UIImageView *imageAlbumArt = (UIImageView *)[cell viewWithTag:102];
+        UILabel *labelTitle = (UILabel *)[cell viewWithTag:100];
+        UILabel *labelSubtitle = (UILabel *)[cell viewWithTag:101];
+        
+        Album *album = [[self searchResults] objectAtIndex:indexPath.row];
+        [labelTitle setText:[album name]];
+        [labelSubtitle setText:[NSString stringWithFormat:@"%d", [album year]]];
+        
+        [[AlbumArtManager shared] fetchAlbumArtForAlbum:album Size:SMALL From:@"Downloads" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
+            [imageAlbumArt setImage:image];
+        }];
+    }
+    
+    if ([self showingBySongs] &&
+        [[[self searchResults] objectAtIndex:indexPath.row] availability] != LOCAL &&
+        [[[self searchResults] objectAtIndex:indexPath.row] availability] != DOWNLOADING)
+    {
+        [[cell contentView] setAlpha:0.2];
+//        [labelSubtitle setText:@"FAILED TO DOWNLOAD"];
+    }
+    else
+    {
+        [[cell contentView] setAlpha:1.0];
+    }
 
-    if ([song availability] != LOCAL && [song availability] != DOWNLOADING)
-        [labelSubtitle setText:@"FAILED TO DOWNLOAD"];
     
     return cell;
 }
@@ -153,9 +203,29 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        Song *songToDelete = [[self searchResults] objectAtIndex:indexPath.row];
-        [[DownloadsManager shared] deleteSongFromDownloads:songToDelete];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        if ([self showingBySongs])
+        {
+            Song *songToDelete = [[self searchResults] objectAtIndex:indexPath.row];
+            [[DownloadsManager shared] deleteSongFromDownloads:songToDelete];
+            
+            [CATransaction begin];
+            [tableView beginUpdates];
+            [CATransaction setCompletionBlock:^{
+                [self fillData];
+            }];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+            [tableView endUpdates];
+            [CATransaction commit];
+        }
+        else
+        {
+            Album *albumToDelete = [[self searchResults] objectAtIndex:indexPath.row];
+            [[DownloadsManager shared] deleteAlbumFromDownloads:albumToDelete];
+            [self fillData];
+        }
+        
+        
     }
 }
 
@@ -166,13 +236,24 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (currentRowAvailability == LOCAL || (didCurrentRowFail))
+    if ([self showingBySongs] && (currentRowAvailability == LOCAL || (didCurrentRowFail)))
     {
         Song *song = [[self searchResults] objectAtIndex:indexPath.row];
-        
         SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:@"Downloads"];
-        [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
-        [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
+        [self addChildViewController:songOptions];
+        RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
+        [songOptions setBlurView:blurView];
+        [blurView show];
+    }
+    else if ([self showingBySongs] == NO)
+    {
+        Album *album = [[self searchResults] objectAtIndex:indexPath.row];
+        [[BollywoodAPIClient shared] fetchAlbumWithAlbumID:[album albumid] CompletionBlock:^(Album *album) {
+            AlbumViewController *albumVC = [[AlbumViewController alloc] initWithAlbum:album Origin:@"Downloads"];
+            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:albumVC];
+            [albumVC setDownloadsOnly:YES];
+            [[self tabBarController] presentViewController:navController animated:YES completion:nil];
+        }];
     }
     
 }
@@ -184,7 +265,11 @@
     if ([searchText length] > 0)
     {
         NSPredicate *songsPredicate = [NSPredicate predicateWithFormat:@"%K contains[cd] %@", @"name", searchText];
-        [self setSearchResults:[[[[User currentUser] downloads] filteredArrayUsingPredicate:songsPredicate] mutableCopy]];
+        if ([self showingBySongs])
+            [self setSearchResults:[[[[User currentUser] downloads] filteredArrayUsingPredicate:songsPredicate] mutableCopy]];
+        else
+            [self setSearchResults:[[[[DownloadsManager shared] uniqueAlbumsWithNoData] filteredArrayUsingPredicate:songsPredicate] mutableCopy]];
+        
         [[self tableDownloads] reloadData];
     }
     else
@@ -224,6 +309,8 @@ dispatch_async(dispatch_get_main_queue(), ^{
     
     [self setBadge];
     
+    if (![self showingBySongs]) return;
+    
     NSDictionary *progress = [notification object];
     Song *song = [progress objectForKey:@"Song"];
     float progressValue = [[progress objectForKey:@"Progress"] floatValue];
@@ -233,7 +320,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
         return;
     
     UITableViewCell *cell = [[self tableDownloads] cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
-    UIProgressView *progressView = (UIProgressView *)[cell viewWithTag:102];
+    UIProgressView *progressView = (UIProgressView *)[cell viewWithTag:103];
     [progressView setProgress: progressValue animated:YES];
     
 });
@@ -241,12 +328,14 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 - (void) fillData
 {
-    [self setSearchResults:[[User currentUser] downloads]];
-
-    [[self searchResults] sortUsingComparator:^NSComparisonResult(Song *obj1, Song *obj2) {
+    if ([self showingBySongs])
+        [self setSearchResults:[[User currentUser] downloads]];
+    else
+        [self setSearchResults:[[DownloadsManager shared] uniqueAlbumsWithNoData]];
+    
+    [[self searchResults] sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         return [[obj1 name] compare:[obj2 name]];
     }];
-    
     [self setBadge];
     [[self tableDownloads] reloadData];
 }
@@ -263,6 +352,14 @@ dispatch_async(dispatch_get_main_queue(), ^{
         [[self tableDownloads] setEditing:YES animated:YES];
         [[[self navigationItem] leftBarButtonItem] setTitle:@"Done"];
     }
+}
+
+- (void)toggleShowBy: (UIBarButtonItem *)sender
+{
+    [self setShowingBySongs:![self showingBySongs]];
+    sender.title = ([self showingBySongs]) ? @"Albums" : @"Songs";
+    [self fillData];
+    [[self tableDownloads] reloadData];
 }
 
 @end

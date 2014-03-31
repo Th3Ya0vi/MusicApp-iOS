@@ -22,5 +22,6 @@
 
 - (instancetype) initWithJSON:(NSDictionary *)json;
 + (NSArray *) albumsWithJSONArray: (NSArray *)jsonArray;
+- (BOOL) isEqual:(Album *)object;
 
 @end

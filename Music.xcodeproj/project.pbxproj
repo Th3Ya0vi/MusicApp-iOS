@@ -58,7 +58,6 @@
 		78424B1218906031000F6E99 /* ExploreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B1118906031000F6E99 /* ExploreCollectionViewCell.m */; };
 		78424B5E1891850C000F6E99 /* NowPlayingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78424B5D1891850C000F6E99 /* NowPlayingView.xib */; };
 		78424B6718918C16000F6E99 /* NowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78424B6618918C16000F6E99 /* NowPlayingViewController.m */; };
-		7869C825185D1B3000F877EE /* PlayingCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C824185D1B3000F877EE /* PlayingCellView.xib */; };
 		7869C829185DFBB600F877EE /* EmptyPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */; };
 		7869C82C185DFD5300F877EE /* EmptyPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C82B185DFD5300F877EE /* EmptyPlaylistViewController.m */; };
 		7869C82F185E3C6500F877EE /* AlbumArtManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7869C82E185E3C6500F877EE /* AlbumArtManager.m */; };
@@ -87,6 +86,11 @@
 		78C802511862504E00AE709E /* ExploreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C802501862504E00AE709E /* ExploreViewController.m */; };
 		78CA43E318510AE200E4A9C9 /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CA43E218510AE200E4A9C9 /* DownloadsViewController.m */; };
 		78CA43E518510BB400E4A9C9 /* DownloadsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78CA43E418510BB400E4A9C9 /* DownloadsView.xib */; };
+		78DE671818E349D2001A199C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE671718E349D2001A199C /* QuartzCore.framework */; };
+		78DE671C18E34A1A001A199C /* RNBlurModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DE671B18E34A1A001A199C /* RNBlurModalView.m */; };
+		78DE671E18E90A8B001A199C /* RevMobAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE671D18E90A8A001A199C /* RevMobAds.framework */; };
+		78DE672018E90AB1001A199C /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE671F18E90AB1001A199C /* AdSupport.framework */; };
+		78DE672218E90AB9001A199C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE672118E90AB9001A199C /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,7 +191,6 @@
 		78424B5D1891850C000F6E99 /* NowPlayingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NowPlayingView.xib; sourceTree = "<group>"; };
 		78424B6518918C16000F6E99 /* NowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NowPlayingViewController.h; path = Controllers/NowPlayingViewController.h; sourceTree = "<group>"; };
 		78424B6618918C16000F6E99 /* NowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NowPlayingViewController.m; path = Controllers/NowPlayingViewController.m; sourceTree = "<group>"; };
-		7869C824185D1B3000F877EE /* PlayingCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayingCellView.xib; sourceTree = "<group>"; };
 		7869C828185DFBB600F877EE /* EmptyPlaylistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyPlaylistView.xib; sourceTree = "<group>"; };
 		7869C82A185DFD5300F877EE /* EmptyPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyPlaylistViewController.h; path = Controllers/EmptyPlaylistViewController.h; sourceTree = "<group>"; };
 		7869C82B185DFD5300F877EE /* EmptyPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmptyPlaylistViewController.m; path = Controllers/EmptyPlaylistViewController.m; sourceTree = "<group>"; };
@@ -230,6 +233,12 @@
 		78CA43E118510AE200E4A9C9 /* DownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadsViewController.h; path = Controllers/DownloadsViewController.h; sourceTree = "<group>"; };
 		78CA43E218510AE200E4A9C9 /* DownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadsViewController.m; path = Controllers/DownloadsViewController.m; sourceTree = "<group>"; };
 		78CA43E418510BB400E4A9C9 /* DownloadsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadsView.xib; sourceTree = "<group>"; };
+		78DE671718E349D2001A199C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		78DE671A18E34A1A001A199C /* RNBlurModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNBlurModalView.h; sourceTree = "<group>"; };
+		78DE671B18E34A1A001A199C /* RNBlurModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNBlurModalView.m; sourceTree = "<group>"; };
+		78DE671D18E90A8A001A199C /* RevMobAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RevMobAds.framework; sourceTree = "<group>"; };
+		78DE671F18E90AB1001A199C /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		78DE672118E90AB9001A199C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +246,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78DE672218E90AB9001A199C /* StoreKit.framework in Frameworks */,
+				78DE672018E90AB1001A199C /* AdSupport.framework in Frameworks */,
+				78DE671818E349D2001A199C /* QuartzCore.framework in Frameworks */,
 				78AC11A218A94A2B00B45C8C /* Security.framework in Frameworks */,
 				78AF8B7E18BBBA5E00A3619F /* Crashlytics.framework in Frameworks */,
 				78AC11A018A94A1E00B45C8C /* SystemConfiguration.framework in Frameworks */,
@@ -244,6 +256,7 @@
 				780A17B6184B3FEF0082A89F /* Accelerate.framework in Frameworks */,
 				780A17AB18493AB60082A89F /* AVFoundation.framework in Frameworks */,
 				780A171918451C3C0082A89F /* CoreGraphics.framework in Frameworks */,
+				78DE671E18E90A8B001A199C /* RevMobAds.framework in Frameworks */,
 				780A171B18451C3C0082A89F /* UIKit.framework in Frameworks */,
 				780A171718451C3C0082A89F /* Foundation.framework in Frameworks */,
 			);
@@ -285,6 +298,9 @@
 		780A171518451C3C0082A89F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78DE672118E90AB9001A199C /* StoreKit.framework */,
+				78DE671F18E90AB1001A199C /* AdSupport.framework */,
+				78DE671718E349D2001A199C /* QuartzCore.framework */,
 				780A17CA184B621A0082A89F /* Third-Party */,
 				78AC11A118A94A2B00B45C8C /* Security.framework */,
 				78AC119F18A94A1E00B45C8C /* SystemConfiguration.framework */,
@@ -417,7 +433,6 @@
 				78B9BB42187719460075B2A5 /* ImageSubtitleCellView.xib */,
 				78705C451854A8DC00708E20 /* ProgressCellView.xib */,
 				780A17BE184B62040082A89F /* OrderedCellView.xib */,
-				7869C824185D1B3000F877EE /* PlayingCellView.xib */,
 				78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */,
 				78424B04189053C7000F6E99 /* ExploreTableCellView.xib */,
 				787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */,
@@ -428,6 +443,8 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
+				78DE671D18E90A8A001A199C /* RevMobAds.framework */,
+				78DE671918E34A1A001A199C /* RNBlurModalView */,
 				78AF8B7D18BBBA5E00A3619F /* Crashlytics.framework */,
 				78B9BB49187969980075B2A5 /* iRate */,
 				780A1808184D0DE00082A89F /* BVReorderTableView */,
@@ -536,6 +553,15 @@
 			name = iRate;
 			sourceTree = "<group>";
 		};
+		78DE671918E34A1A001A199C /* RNBlurModalView */ = {
+			isa = PBXGroup;
+			children = (
+				78DE671A18E34A1A001A199C /* RNBlurModalView.h */,
+				78DE671B18E34A1A001A199C /* RNBlurModalView.m */,
+			);
+			path = RNBlurModalView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -638,7 +664,6 @@
 				78424B5E1891850C000F6E99 /* NowPlayingView.xib in Resources */,
 				78CA43E518510BB400E4A9C9 /* DownloadsView.xib in Resources */,
 				780A172918451C3C0082A89F /* Images.xcassets in Resources */,
-				7869C825185D1B3000F877EE /* PlayingCellView.xib in Resources */,
 				78705C5A1858FFFE00708E20 /* PlaylistView.xib in Resources */,
 				78705C531857BEB600708E20 /* PlayerView.xib in Resources */,
 				78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */,
@@ -693,6 +718,7 @@
 				780A17F5184B621A0082A89F /* AFNetworkReachabilityManager.m in Sources */,
 				780A179F184673A10082A89F /* AlbumViewController.m in Sources */,
 				78705C561857C04D00708E20 /* PlayerViewController.m in Sources */,
+				78DE671C18E34A1A001A199C /* RNBlurModalView.m in Sources */,
 				780A172718451C3C0082A89F /* AppDelegate.m in Sources */,
 				780A17FC184B621A0082A89F /* AFNetworkActivityIndicatorManager.m in Sources */,
 				7869C82F185E3C6500F877EE /* AlbumArtManager.m in Sources */,
@@ -841,6 +867,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party",
+					"$(PROJECT_DIR)/Music/Third-Party",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Music/Music-Prefix.pch";
@@ -867,6 +894,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/tushar/Developer/MusicApp-iOS/Music/Third-Party",
+					"$(PROJECT_DIR)/Music/Third-Party",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Music/Music-Prefix.pch";

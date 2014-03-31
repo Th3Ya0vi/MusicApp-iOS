@@ -19,6 +19,7 @@
 #import "CrashResolverViewController.h"
 #import "AlbumViewController.h"
 #import "AFNetworkReachabilityManager.h"
+#import <RevMobAds/RevMobAds.h>
 
 @interface LoadingViewController ()
 
@@ -31,11 +32,16 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        [[UINavigationBar appearance] setTintColor:[UIColor darkGrayColor]];
-        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
         [self configureiRate];
         [self setupCache];
         [self clearCacheIfNecessary];
+        
+        [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0xffbb14)];
+        [[UINavigationBar appearance] setTintColor:UIColorFromRGB(0x333)];
+        [[UINavigationBar appearance]
+         setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                 [UIFont fontWithName:@"Helvetica Nueue" size:18.0], NSFontAttributeName,
+                                 [UIColor darkGrayColor], NSForegroundColorAttributeName, nil]];
     }
     return self;
 }
@@ -86,10 +92,13 @@
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     
+    [[RevMobAds session] showFullscreen];
+    
     UITabBarController *tabbar = [[UITabBarController alloc] init];
     [[tabbar tabBar] setTintColor:[UIColor darkGrayColor]];
     
     PlayerViewController *playerViewController = [[PlayerViewController alloc] initWithNibName:nil bundle:nil];
+    UINavigationController *uiNavControllerForPlayer = [[UINavigationController alloc] initWithRootViewController:playerViewController];
     
     SearchViewController *searchViewController = [[SearchViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *uiNavControllerForSearch = [[UINavigationController alloc] initWithRootViewController:searchViewController];
@@ -100,7 +109,7 @@
     ExploreViewController *exploreViewController = [[ExploreViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *uiNavControllerForExplore = [[UINavigationController alloc] initWithRootViewController:exploreViewController];
     
-    tabbar.viewControllers = [NSArray arrayWithObjects:playerViewController,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];
+    tabbar.viewControllers = [NSArray arrayWithObjects:uiNavControllerForPlayer,uiNavControllerForExplore,uiNavControllerForSearch,uiNavControllerForDownloads,nil];
     
     [self presentViewController:tabbar animated:NO completion:^{
         if ([[Playlist shared] count] == 0)

@@ -160,12 +160,36 @@
     }];
 }
 
+- (void) deleteAlbumFromDownloads: (Album *)album
+{
+    NSArray *allSongs = [[[User currentUser] downloads] copy];
+    [allSongs enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj album] isEqual:album])
+            [self deleteSongFromDownloads:obj];
+    }];
+}
+
 - (BOOL) isSongDownloaded: (Song *)song
 {
     BOOL isSongInUserDownloads = [[[User currentUser] downloads] indexOfObject:song] != NSNotFound;
     BOOL isSongAvailibilityLocal = [song availability] == LOCAL;
     
     return isSongAvailibilityLocal && isSongInUserDownloads;
+}
+
+- (NSMutableArray *) uniqueAlbumsWithNoData
+{
+    NSArray *allSongs = [[User currentUser] downloads];
+    NSMutableArray *allAlbums = [[NSMutableArray alloc] init];
+    [allSongs enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
+        [allAlbums addObject:[[obj album] copy]];
+    }];
+    NSMutableArray *uniqueAlbums = [[NSMutableArray alloc] init];
+    [allAlbums enumerateObjectsUsingBlock:^(Album *obj, NSUInteger idx, BOOL *stop) {
+        if ([uniqueAlbums indexOfObject:obj] == NSNotFound)
+            [uniqueAlbums addObject:obj];
+    }];
+    return uniqueAlbums;
 }
 
 @end

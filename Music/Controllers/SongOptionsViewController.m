@@ -9,10 +9,11 @@
 #import "SongOptionsViewController.h"
 #import "Player.h"
 #import "Playlist.h"
-#import "FXBlurView.h"
 #import "DownloadsManager.h"
 #import "Analytics.h"
-#import <QuartzCore/QuartzCore.h>
+#import "RNBlurModalView.h"
+#import "AlbumArtManager.h"
+#import "FXBlurView.h"
 
 @interface SongOptionsViewController ()
 
@@ -27,6 +28,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelPlayNext;
 @property (weak, nonatomic) IBOutlet UILabel *labelAddToPlaylist;
 
+@property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
+
 @end
 
 @implementation SongOptionsViewController
@@ -38,54 +41,41 @@
     {
         [self setSong:song];
         [self setOrigin:origin];
-        
-        [(FXBlurView *)[self view] setTintColor:[UIColor clearColor]];
-        [(FXBlurView *)[self view] setBlurRadius:5];
-        [(FXBlurView *)[self view] setDynamic:NO];
+        [self setIsBackgroundTransparent:NO];
     }
     return self;
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle
+- (void)viewWillAppear:(BOOL)animated
 {
-    return UIStatusBarStyleLightContent;
-}
-
-+ (UIImage *)screenImage
-{
-    UIGraphicsBeginImageContextWithOptions([[[UIApplication sharedApplication] delegate] window].bounds.size, NO, [UIScreen mainScreen].scale);
-    
-    [[[[[UIApplication sharedApplication] delegate] window] layer] renderInContext:UIGraphicsGetCurrentContext()];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext()
-    ;
-    return image;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    [[self view] setAlpha:0.0];
+    [super viewWillAppear:animated];
     [self syncView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    [UIView animateWithDuration:0.2 animations:^{
-        [[self view] setAlpha:1.0];
-    }];
-    
     [[Analytics shared] tagScreen:@"Song Options"];
 }
 
 - (void)syncView
 {
     [[self labelTitle] setText:[[self song] name]];
+    [[self blurView] hideCloseButton:YES];
+    
+    if ([self isBackgroundTransparent] == NO)
+    {
+        [[AlbumArtManager shared] fetchAlbumArtForAlbum:[[self song] album] Size:BIG From:@"Song Options" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
+            if (didSucceed)
+            {
+                [[self imageBackground] setImage:[image blurredImageWithRadius:50 iterations:2 tintColor:[UIColor clearColor]]];
+            }
+        }];
+    }
+    else
+    {
+        [[self imageBackground] removeFromSuperview];
+    }
     
     if ([[self song] availability] == UNAVAILABLE)
     {
@@ -183,13 +173,8 @@
 
 - (void)close
 {
-    [UIView animateWithDuration:0.2 animations:^{
-        [[self view] setAlpha:0.0];
-    } completion:^(BOOL finished) {
-        if (finished)
-            [self dismissViewControllerAnimated:YES completion:nil];
-    }];
-    
+    [[self blurView] hide];
+    [self removeFromParentViewController];
 }
 
 @end

@@ -18,14 +18,12 @@
 #import "DownloadsManager.h"
 #import "Playlist.h"
 #import "AFNetworkReachabilityManager.h"
+#import "RNBlurModalView.h"
 
 @interface AlbumViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageBackground;
 @property (weak, nonatomic) IBOutlet UIImageView *imageAlbumArt;
-@property (weak, nonatomic) IBOutlet UILabel *labelYear;
-@property (weak, nonatomic) IBOutlet UILabel *labelCast;
-@property (weak, nonatomic) IBOutlet UILabel *labelMusicDirector;
 @property (weak, nonatomic) IBOutlet UIButton *buttonDownloadAll;
 @property (weak, nonatomic) IBOutlet UIButton *buttonAddAllPlaylist;
 
@@ -43,6 +41,10 @@
     {
         [self setAlbum:album];
         [self setOrigin:origin];
+        [self setDownloadsOnly:NO];
+        
+        UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(close)];
+        [[self navigationItem] setRightBarButtonItem:closeButton];
     }
     
     return self;
@@ -50,10 +52,20 @@
 
 #pragma mark - View
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    UIView *blackMask = [[UIView alloc] initWithFrame:[[self imageBackground] frame]];
+    [blackMask setFrame:CGRectMake(0, 0, [[self imageBackground] frame].size.width, [[self imageBackground] frame].size.height)];
+    [blackMask setBackgroundColor:[UIColor blackColor]];
+    [blackMask setAlpha:0.15];
+    [[self imageBackground] addSubview:blackMask];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [self updateUI];
 }
 
@@ -73,21 +85,12 @@
 - (void)updateUI
 {
     [self setTitle:[[self album] name]];
-
-    if ([self.album year]>0)
-        [[self labelYear] setText:[NSString stringWithFormat:@"%ld", (long)[self.album year]]];
-    else
-        [[self labelYear] setText:@""];
-    
-    [[self labelCast] setText:[[self.album cast] componentsJoinedByString:@", "]];
-    [[self labelMusicDirector] setText:[[self.album musicDirector] componentsJoinedByString:@", "]];
-    
     [self setAlbumArt];
 }
 
 - (void) setAlbumArt
 {
-    [[AlbumArtManager shared] fetchAlbumArtForAlbum:[self album] Size:SMALL From:@"AlbumView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
+    [[AlbumArtManager shared] fetchAlbumArtForAlbum:[self album] Size:BIG From:@"AlbumView" CompletionBlock:^(UIImage *image, BOOL didSucceed) {
         
         [[self imageAlbumArt] setImage:image];
         [[self imageBackground] setImage:[image blurredImageWithRadius:50 iterations:2 tintColor:[UIColor clearColor]]];
@@ -103,7 +106,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 65;
+    return 55;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,6 +130,11 @@
     lblTitle.text = [song name];
     lblSubtitle.text = [[song singers] componentsJoinedByString:@", "];
     
+    if ([self downloadsOnly] && [song availability] == CLOUD)
+        [[cell contentView] setAlpha:0.3];
+    else
+        [[cell contentView] setAlpha:1.0];
+    
     return cell;
 }
 
@@ -134,7 +142,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     Song *song = [[[self album] songs] objectAtIndex:indexPath.row];
     Album *albumCopy = [[self album] copy];
@@ -142,9 +150,11 @@
     [song setAlbum:albumCopy];
     
     SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:[self origin]];
-    [[self tabBarController] setModalPresentationCapturesStatusBarAppearance:YES];
-    [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
-    [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
+    [self addChildViewController:songOptions];
+    RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
+    [songOptions setBlurView:blurView];
+    [songOptions setIsBackgroundTransparent:YES];
+    [blurView show];
 }
 
 #pragma mark Others
@@ -152,11 +162,6 @@
 - (void)songIsUnavailable
 {
     [[[UIAlertView alloc] initWithTitle:@"Sorry!" message:@"This song is currently unavailable." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
-}
-
-- (IBAction)reportIncorrectData:(UIButton *)sender
-{
-    [[[UIAlertView alloc] initWithTitle:@"Thanks" message:nil delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
 }
 
 - (IBAction)downloadAllSongs:(id)sender
@@ -180,6 +185,11 @@
     [[self buttonAddAllPlaylist] setEnabled:NO];
     
     [[[UIAlertView alloc] initWithTitle:@"All songs have been added to the playlist" message:Nil delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil] show];
+}
+
+- (void)close
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Alert view delegate

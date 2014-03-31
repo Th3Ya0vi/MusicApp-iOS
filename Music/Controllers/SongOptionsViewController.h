@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "Song.h"
 #import "User.h"
-#import <QuartzCore/QuartzCore.h>
+#import "RNBlurModalView.h"
 
 @interface SongOptionsViewController : UIViewController
 
 @property (strong, nonatomic) Song *song;
 @property (strong, nonatomic) NSString *origin;
+@property (strong, nonatomic) RNBlurModalView *blurView;
+@property (nonatomic) BOOL isBackgroundTransparent;
 
 - (id)initWithSong: (Song *)song Origin: (NSString *)origin;
 

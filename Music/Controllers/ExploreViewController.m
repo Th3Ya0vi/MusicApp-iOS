@@ -142,7 +142,8 @@
 {
     NSArray *albums = [[self albums] objectAtIndex:[collectionView belongsToRow]];
     AlbumViewController *albumView = [[AlbumViewController alloc] initWithAlbum:[albums objectAtIndex:indexPath.row] Origin:@"Explore"];
-    [[self navigationController] pushViewController:albumView animated:YES];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:albumView];
+    [[self tabBarController] presentViewController:navController animated:YES completion:nil];
 }
 
 @end

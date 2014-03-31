@@ -44,12 +44,27 @@
         [self syncView];
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self addBlackMask];
+}
+
 - (void)resetView
 {
     [[self labelTitle] setText:@""];
     [[self labelSubtitle] setText:@""];
     [[self imageMain] setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
     [[self imageBackground] setImage:[UIImage imageNamed:@"DefaultAlbumArtDark"]];
+}
+
+- (void)addBlackMask
+{
+    UIView *blackmask = [[UIView alloc] initWithFrame:[[self imageBackground] frame]];
+    [blackmask setBackgroundColor:[UIColor blackColor]];
+    [blackmask setAlpha:0.15];
+    [[self imageBackground] addSubview:blackmask];
 }
 
 - (void)syncView

@@ -12,11 +12,13 @@
 @interface DownloadsManager : NSObject
 
 @property (nonatomic, readonly) NSInteger currentNumberOfDownloadTasks;
+@property (weak, nonatomic, readonly) NSMutableArray *uniqueAlbumsWithNoData;
 
 + (instancetype) shared;
 
 - (void) downloadSong: (Song *)song Origin: (NSString *)origin;
 - (void) deleteSongFromDownloads: (Song *)song;
+- (void) deleteAlbumFromDownloads: (Album *)album;
 - (BOOL) isSongDownloaded: (Song *)song;
 
 @end

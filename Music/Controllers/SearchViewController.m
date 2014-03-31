@@ -16,12 +16,15 @@
 #import "SongOptionsViewController.h"
 #import "BollywoodAPIClient.h"
 #import "Analytics.h"
+#import "RNBlurModalView.h"
 
 @interface SearchViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView *viewResults;
 @property (weak, nonatomic) IBOutlet UITextField *searchField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIButton *albumsButton;
+@property (weak, nonatomic) IBOutlet UIButton *songsButton;
 @property (strong, nonatomic) UIBarButtonItem *cancelButton;
 @property (nonatomic) enum SearchScope selectedScope;
 @property (nonatomic) BOOL isFinalSearch;
@@ -55,6 +58,7 @@
     [super viewDidLoad];
     
     [[self searchField] setBackgroundColor:[UIColor whiteColor]];
+    [[self albumsButton] setSelected:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -99,8 +103,8 @@
     }
     else
     {
-        cellIdentifier = @"SubtitleCell";
-        cellNib = @"SubtitleCellView";
+        cellIdentifier = @"OrderedCell";
+        cellNib = @"OrderedCellView";
     }
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -111,26 +115,38 @@
         cell = [bundle firstObject];
     }
     
-    UILabel *lblTitle = (UILabel *)[cell viewWithTag:100];
-    UILabel *lblSubtitle = (UILabel *)[cell viewWithTag:101];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     
     if ([self selectedScope] == SONG)
     {
+        UILabel *lblNumber = (UILabel *)[cell viewWithTag:100];
+        UILabel *lblTitle = (UILabel *)[cell viewWithTag:101];
+        UILabel *lblSubtitle = (UILabel *)[cell viewWithTag:102];
+        
         Song *song = [self.results objectAtIndex:indexPath.row];
         
-        lblTitle.text = [song name];
+        [lblNumber setText:[NSString stringWithFormat:@"%d", indexPath.row + 1]];
+        [lblTitle setText:[song name]];
         
         if ([[song album] year]>0)
             lblSubtitle.text = [NSString stringWithFormat:@"%@ (%ld)", [[song album] name], (long)[[song album] year]];
         else
             lblSubtitle.text= [NSString stringWithFormat:@"%@", [[song album] name]];
     }
-    else
+    else if ([self selectedScope] == ALBUM)
     {
+        UILabel *lblNumber = (UILabel *)[cell viewWithTag:100];
+        UILabel *lblTitle = (UILabel *)[cell viewWithTag:101];
+        UILabel *lblSubtitle = (UILabel *)[cell viewWithTag:102];
+        
         Album *album = [[self results] objectAtIndex:indexPath.row];
         
+        
+        [lblNumber setText:@""];
         if ([self isFinalSearch])
         {
+            lblTitle = (UILabel *)[cell viewWithTag:100];
+            lblSubtitle = (UILabel *)[cell viewWithTag:101];
             UIImageView *imageAlbumArt = (UIImageView *)[cell viewWithTag:102];
             [imageAlbumArt setImage:[UIImage imageNamed:@"DefaultAlbumArt"]];
             
@@ -150,21 +166,25 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [[self searchField] resignFirstResponder];
+    
     if ([self selectedScope] == SONG)
     {
         Song *song = [self.results objectAtIndex:indexPath.row];
         
         SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:song Origin:@"Search"];
-        [[self tabBarController] setModalPresentationStyle:UIModalPresentationCurrentContext];
-        [[self tabBarController] presentViewController:songOptions animated:NO completion:nil];
+        [self addChildViewController:songOptions];
+        RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
+        [songOptions setBlurView:blurView];
+        [blurView show];
     }
     else
     {
         AlbumViewController *albumDetails = [[AlbumViewController alloc] initWithAlbum:[[self results] objectAtIndex:indexPath.row] Origin:@"Search"];
-        [[self navigationController] pushViewController:albumDetails animated:YES];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:albumDetails];
+        [[self tabBarController] presentViewController:navController animated:YES completion:nil];
     }
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -174,17 +194,28 @@
 
 #pragma mark - Action Methods
 
-- (IBAction)updateScope:(UISegmentedControl *)sender
+- (IBAction)updateScopeAlbums:(UIButton *)sender
 {
-    if (sender.selectedSegmentIndex == 0)
-        self.selectedScope = ALBUM;
-    else if(sender.selectedSegmentIndex == 1)
-        self.selectedScope = SONG;
-
+    self.selectedScope = ALBUM;
+    
     self.results = [[NSArray alloc] init];
     [self setIsFinalSearch:YES];
     [self prepareToSearchWithQuery:[[self searchField] text]];
     
+    [sender setSelected:YES];
+    [[self songsButton] setSelected:NO];
+}
+
+- (IBAction)updateScopeSongs:(UIButton *)sender
+{
+    self.selectedScope = SONG;
+    
+    self.results = [[NSArray alloc] init];
+    [self setIsFinalSearch:YES];
+    [self prepareToSearchWithQuery:[[self searchField] text]];
+    
+    [sender setSelected:YES];
+    [[self albumsButton] setSelected:NO];
 }
 
 - (IBAction)updateSearchString:(UITextField *)sender
@@ -219,7 +250,7 @@
 - (void)loadTableForResults
 {
     CGSize size = [[self viewResults] frame].size;
-    UITableView *tableResults = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) style:UITableViewStyleGrouped];
+    UITableView *tableResults = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) style:UITableViewStylePlain];
     
     [tableResults setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     
@@ -227,6 +258,7 @@
     [tableResults setDelegate:self];
     
     [tableResults setAlpha:0.0];
+    [tableResults setBackgroundColor:[UIColor clearColor]];
     [[self viewResults] addSubview:tableResults];
     [UIView animateWithDuration:0.3 animations:^{
         [tableResults setAlpha:1.0];
@@ -248,7 +280,6 @@
         return;
     
     [[self activityIndicator] startAnimating];
-    NSLog(@"Starting search!");
     [[BollywoodAPIClient shared] searchFor:[self selectedScope] IsFinal:[self isFinalSearch] Query:[[self searchField] text] Success:^(NSArray *objects) {
         [[self activityIndicator] stopAnimating];
         [self setResults:objects];

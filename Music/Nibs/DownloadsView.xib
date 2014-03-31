@@ -16,17 +16,15 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DownloadBackground" translatesAutoresizingMaskIntoConstraints="NO" id="Y9v-fI-iaC">
-                    <rect key="frame" x="0.0" y="65" width="320" height="460"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4mt-Hm-x7j">
-                    <rect key="frame" x="0.0" y="65" width="320" height="452"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="517"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Downloads" id="9TZ-ZY-2Mc">
+                    <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
+                    <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Search Downloads" id="9TZ-ZY-2Mc">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                        <color key="barTintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                         <connections>
                             <outlet property="delegate" destination="-1" id="DiF-Mw-7nR"/>
@@ -44,12 +42,12 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="deviceRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="4mt-Hm-x7j" secondAttribute="trailing" id="4ec-dQ-RE8"/>
                 <constraint firstItem="4mt-Hm-x7j" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="5gG-0e-53j"/>
                 <constraint firstAttribute="bottom" secondItem="4mt-Hm-x7j" secondAttribute="bottom" constant="51" id="Yoj-k4-6IW"/>
-                <constraint firstItem="4mt-Hm-x7j" firstAttribute="top" secondItem="1" secondAttribute="top" constant="65" id="xJC-O6-7dB"/>
+                <constraint firstItem="4mt-Hm-x7j" firstAttribute="top" secondItem="1" secondAttribute="top" id="xJC-O6-7dB"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -57,7 +55,4 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>
-    <resources>
-        <image name="DownloadBackground" width="320" height="460"/>
-    </resources>
 </document>

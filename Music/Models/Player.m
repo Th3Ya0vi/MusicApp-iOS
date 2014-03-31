@@ -245,12 +245,25 @@
 {
     float duration = CMTimeGetSeconds([[self currentItem] duration]) - CMTimeGetSeconds([self currentTime]);
     if (duration >= 0 == NO)
-        return @"0:00";
+        return @"00:00";
     float mins = duration / 60.00;
     NSInteger secs = (mins - floor(mins)) * 60.00;
     NSInteger intMins = mins;
     
-    NSString *strVal = [NSString stringWithFormat:@"%d:%02d", intMins, secs];
+    NSString *strVal = [NSString stringWithFormat:@"%02d:%02d", intMins, secs];
+    return strVal;
+}
+
+- (NSString *)timeFinishedAsString
+{
+    float duration = CMTimeGetSeconds([self currentTime]);
+    if (duration >= 0 == NO)
+        return @"00:00";
+    float mins = duration / 60.00;
+    NSInteger secs = (mins - floor(mins)) * 60.00;
+    NSInteger intMins = mins;
+    
+    NSString *strVal = [NSString stringWithFormat:@"%02d:%02d", intMins, secs];
     return strVal;
 }
 

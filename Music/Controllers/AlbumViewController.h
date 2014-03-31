@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) Album* album;
 @property (strong, nonatomic) NSString *origin;
+@property (nonatomic) BOOL downloadsOnly;
 
 - (id)initWithAlbum: (Album *) album Origin: (NSString *)origin;
 

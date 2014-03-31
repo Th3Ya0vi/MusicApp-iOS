@@ -29,8 +29,10 @@
     if (self)
     {
         [self setTitle:@"Playlist"];
-        UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeView)];
+        UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(closeView)];
         [self.navigationItem setRightBarButtonItem:closeButton];
+        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEditingMode:)];
+        [[self navigationItem] setLeftBarButtonItem:editButton];
         
         UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(shuffle:)];
         [swipe setDirection:UISwipeGestureRecognizerDirectionRight];
@@ -92,12 +94,17 @@
     return nil;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60.0;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     BOOL isCurrent = indexPath.row == [[Playlist shared] currentIndex];
     
-    NSString *cellIdentifier = (isCurrent) ? @"PlayingCell" : @"OrderedCell";
-    NSString *cellNib = (isCurrent) ? @"PlayingCellView" : @"OrderedCellView";
+    NSString *cellIdentifier = @"OrderedCell";
+    NSString *cellNib = @"OrderedCellView";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
@@ -109,14 +116,21 @@
     
     UILabel *number = (UILabel *)[cell viewWithTag:100];
     UILabel *title = (UILabel *)[cell viewWithTag:101];
+    UILabel *subtitle = (UILabel *)[cell viewWithTag:102];
+    UIView *existingSongMark = (UIView *)[cell viewWithTag:103];
+    
+    [existingSongMark removeFromSuperview];
+    
+    UIView *currentSongMark = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 60)];
+    [currentSongMark setBackgroundColor:UIColorFromRGB(0xffbb14)];
+    [currentSongMark setTag:103];
     
     if (isCurrent)
-        [number setText: @""];
-    else
-        [number setText: [NSString stringWithFormat:@"%d.", indexPath.row + 1]];
+        [cell addSubview:currentSongMark];
     
+    [number setText: [NSString stringWithFormat:@"%d.", indexPath.row + 1]];
     [title setText:[[[Playlist shared] songAtIndex:indexPath.row] name]];
-    
+    [subtitle setText:[[[[Playlist shared] songAtIndex:indexPath.row] album] name]];
     
     [UIView animateWithDuration:0.2 animations:^{
         if ([[Player shared] isOfflineModeOn] && [[[Playlist shared] songAtIndex:indexPath.row] availability] == CLOUD)
@@ -173,9 +187,10 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
     SongOptionsViewController *songOptions = [[SongOptionsViewController alloc] initWithSong:[[Playlist shared] songAtIndex:indexPath.row] Origin:@"Playlist"];
-    [[self navigationController] setModalPresentationCapturesStatusBarAppearance:YES];
-    [[self navigationController] setModalPresentationStyle:UIModalPresentationCurrentContext];
-    [[self navigationController] presentViewController:songOptions animated:NO completion:nil];
+    [self addChildViewController:songOptions];
+    RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
+    [songOptions setBlurView:blurView];
+    [blurView show];
 }
 
 #pragma mark Table Row Draggable Delegate
@@ -244,6 +259,20 @@
     
     [[Analytics shared] logEventWithName:EVENT_TOGGLE_OFFLINE];
     [[self tablePlaylist] reloadData];
+}
+
+- (void)toggleEditingMode: (UIBarButtonItem *)sender
+{
+    if ([[self tablePlaylist] isEditing])
+    {
+        [sender setTitle:@"Edit"];
+        [[self tablePlaylist] setEditing:NO animated:YES];
+    }
+    else
+    {
+        [sender setTitle:@"Done"];
+        [[self tablePlaylist] setEditing:YES animated:YES];
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

@@ -19,6 +19,7 @@
 @interface PlayerViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
+@property (weak, nonatomic) IBOutlet UILabel *labelTimeFinished;
 @property (weak, nonatomic) IBOutlet UISlider *sliderSeeker;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPlayPause;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPrevious;
@@ -83,10 +84,13 @@
     [super viewDidLoad];
     
     [[[self nowPlayingPageController] view] setFrame:[[self viewForNowPlaying] frame]];
-    [[self view] addSubview:[[self nowPlayingPageController] view]];
+    [[[self nowPlayingPageController] view] setFrame:CGRectMake(0, 0, 320, [[self viewForNowPlaying] frame].size.height)];
+    [[self viewForNowPlaying] addSubview:[[self nowPlayingPageController] view]];
     [self addGestures];
     [[self buttonRepeat] setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [[self sliderSeeker] setThumbImage:[UIImage imageNamed:@"thumb"] forState:UIControlStateNormal];
+    
+    [self addBarButtons];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -109,6 +113,12 @@
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
+}
+
+- (void)addBarButtons
+{
+    UIBarButtonItem *playlistButton = [[UIBarButtonItem alloc] initWithTitle:@"Playlist" style:UIBarButtonItemStyleBordered target:self action:@selector(showPlaylist:)];
+    [[self navigationItem] setRightBarButtonItem:playlistButton];
 }
 
 - (BOOL)showEmptyPlaylistViewIfNecessary
@@ -141,6 +151,7 @@
 - (void)syncView
 {
     [[self labelTimeLeft] setText:[[Player shared] timeLeftAsString]];
+    [[self labelTimeFinished] setText:[[Player shared] timeFinishedAsString]];
     [[self sliderSeeker] setValue:[[Player shared] getPercentCompleted] animated:YES];
     [[self buttonNext] setEnabled:![[Playlist shared] isCurrentSongLast]];
     [[self buttonPrevious] setEnabled:![[Playlist shared] isCurrentSongFirst]];

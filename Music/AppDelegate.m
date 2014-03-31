@@ -13,12 +13,15 @@
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "Analytics.h"
+#import <RevMobAds/RevMobAds.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
+    [RevMobAds startSessionWithAppID:REVMOB_APP_ID];
+    
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
@@ -136,7 +139,6 @@
         }
     }
 }
-
 
 - (void)showLoadingScreen
 {

@@ -38,9 +38,9 @@
     if ( [[Playlist shared] count] > 0)
     {
         PlayerViewController *player = [[PlayerViewController alloc] initWithNibName:nil bundle:nil];
-        
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:player];
         NSMutableArray *viewControllers = [[[self tabBarController] viewControllers] mutableCopy];
-        [viewControllers replaceObjectAtIndex:0 withObject:player];
+        [viewControllers replaceObjectAtIndex:0 withObject:navController];
         [[self tabBarController] setViewControllers:viewControllers];
     }
     else

@@ -116,4 +116,9 @@
     
     return copy;
 }
+
+- (BOOL) isEqual:(Album *)object
+{
+    return [[self albumid] isEqualToString:[object albumid]];
+}
 @end

@@ -34,5 +34,6 @@ FINISHED: A song has been completely downloaded from the network and has been pl
 - (void)seekToPercent: (float)percent;
 - (void)setMediaInfo;
 - (NSString *)timeLeftAsString;
+- (NSString *)timeFinishedAsString;
 
 @end

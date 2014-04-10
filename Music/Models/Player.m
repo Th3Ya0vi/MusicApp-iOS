@@ -101,7 +101,6 @@
         }
         else if ([self timesFailed] < 3)
         {
-            NSLog(@"Failed to play song. trying again!");
             [self loadSong:[[Playlist shared] currentSong] ShouldPlay:YES];
         }
     }
@@ -113,14 +112,12 @@
             [self togglePlayPause];
             [self setCurrentStatus:LOADING];
         }
-        NSLog(@"Buffer empty");
     }
     else if([keyPath isEqualToString:@"playbackLikelyToKeepUp"]
             && [[self currentItem] isPlaybackLikelyToKeepUp])
     {
         if ([self currentStatus] == LOADING)
             [self togglePlayPause];
-        NSLog(@"Playback likely to keep up.");
     }
 }
 

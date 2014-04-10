@@ -39,12 +39,10 @@
         
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"useTestURL"] == YES)
         {
-            NSLog(@"Using Test URL");
             [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://api-dev.filmiapp.com/"]]];
         }
         else
         {
-            NSLog(@"Using Production URL");
             [self setRequestOperationManager:[[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://api.filmiapp.com/"]]];
         }
     
@@ -95,9 +93,7 @@
         
         block(titles, albums);
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed to fetch explore data");
-    }];
+    } failure:nil];
     
 }
 
@@ -161,7 +157,6 @@
     NSString *url = [self urlForEndpoint:CREATE_NEW_USER Parameter:nil];
     [[[self requestOperationManager] requestSerializer] setValue:[self hmacForRequest:url] forHTTPHeaderField:@"hmac"];
 
-        NSLog(@"Creating new user");
         [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *response = (NSDictionary *) responseObject;
             NSUserDefaults *userDef = [NSUserDefaults standardUserDefaults];
@@ -177,7 +172,6 @@
             successBlock([User currentUser]);
 
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error creating user: %@", error);
             failureBlock();
         }];
 }
@@ -194,10 +188,7 @@
     [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         Song *song = [[Song alloc] initWithJSON:responseObject];
         block(song);
-        NSLog(@"Fetched data for %@", [song name]);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error fetching song: %@", error);
-    }];
+    } failure:nil];
 }
 
 - (void)fetchAlbumWithAlbumID: (NSString *)albumid CompletionBlock: (void(^)(Album *album))block
@@ -212,10 +203,7 @@
     [[self requestOperationManager] GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         Album *album = [[Album alloc] initWithJSON:responseObject];
         block(album);
-        NSLog(@"Fetched data for %@", [album name]);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error fetching album: %@", error);
-    }];
+    } failure:nil];
 }
 
 

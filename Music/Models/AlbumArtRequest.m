@@ -47,8 +47,6 @@
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
     {
-        NSLog(@"Failed to fetch album art for %@: %@", [[self album] name],[error localizedDescription]);
-        
         if ([self size] == SMALL)
         {
             self.completionBlock([UIImage imageNamed:@"DefaultAlbumArtDark"], NO);

@@ -173,6 +173,7 @@
 
 - (void)close
 {
+    [self willMoveToParentViewController:nil];
     [[self blurView] hide];
     [self removeFromParentViewController];
 }

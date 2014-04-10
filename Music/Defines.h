@@ -25,6 +25,7 @@
 #define EVENT_DOWNLOAD_ALL          @"Download All Songs"
 #define EVENT_SONG_ADD_ALL          @"Add All Songs Playlist"
 #define EVENT_TOGGLE_OFFLINE        @"Toggle Offline Mode"
+#define EVENT_SHARE                 @"Share"
 /**----------**/
 
 #define currentRowAvailability [[[self searchResults] objectAtIndex:indexPath.row] availability]

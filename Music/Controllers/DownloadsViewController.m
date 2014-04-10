@@ -16,11 +16,13 @@
 #import "AlbumViewController.h"
 #import "BollywoodAPIClient.h"
 #import "AlbumArtManager.h"
+#import "UpsellViewController.h"
 
 @interface DownloadsViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableDownloads;
 @property (weak, nonatomic) IBOutlet UILabel *labelDownloadSongs;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) NSMutableArray *searchResults;
 @property (nonatomic) BOOL showingBySongs;
 @end
@@ -62,7 +64,11 @@
     [super viewDidLoad];
 	
     [[self tableDownloads] setBackgroundColor:[UIColor clearColor]];
-    [self.tableDownloads setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    
+    UpsellViewController *upsellVC = [[UpsellViewController alloc] initWithOrigin:@"Downloads"];
+    [self addChildViewController:upsellVC];
+    [[self tableDownloads] setTableFooterView:[upsellVC view]];
+    [upsellVC didMoveToParentViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -188,7 +194,6 @@
         [[[self searchResults] objectAtIndex:indexPath.row] availability] != DOWNLOADING)
     {
         [[cell contentView] setAlpha:0.2];
-//        [labelSubtitle setText:@"FAILED TO DOWNLOAD"];
     }
     else
     {
@@ -224,8 +229,6 @@
             [[DownloadsManager shared] deleteAlbumFromDownloads:albumToDelete];
             [self fillData];
         }
-        
-        
     }
 }
 
@@ -235,6 +238,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [[self searchBar] resignFirstResponder];
     
     if ([self showingBySongs] && (currentRowAvailability == LOCAL || (didCurrentRowFail)))
     {
@@ -243,7 +247,9 @@
         [self addChildViewController:songOptions];
         RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
         [songOptions setBlurView:blurView];
-        [blurView show];
+        [blurView showWithDuration:0.1 delay:0 options:kNilOptions completion:^{
+            [songOptions didMoveToParentViewController:self];
+        }];;
     }
     else if ([self showingBySongs] == NO)
     {

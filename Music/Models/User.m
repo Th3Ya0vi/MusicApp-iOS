@@ -54,7 +54,6 @@
     [[self playlist] enumerateObjectsUsingBlock:^(Song *obj, NSUInteger idx, BOOL *stop) {
         if ([obj cloudMp3Path] == nil)
         {
-            NSLog(@"%@ is being removed from playlist.", [obj name]);
             [oldSongs addObject:obj];
         }
     }];

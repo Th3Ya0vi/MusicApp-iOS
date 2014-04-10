@@ -13,14 +13,12 @@
 #import "BollywoodAPIClient.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "Analytics.h"
-#import <RevMobAds/RevMobAds.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
-    [RevMobAds startSessionWithAppID:REVMOB_APP_ID];
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
@@ -104,7 +102,6 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    NSLog(@"Received notification!");
     [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"NotificationInfo"];
 }
 
@@ -152,17 +149,17 @@
 
 - (void)iRateUserDidAttemptToRateApp
 {
-    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Attempt"]];
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Attempt" forKey:@"Type"]];
 }
 
 - (void)iRateUserDidDeclineToRateApp
 {
-    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Decline"]];
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Decline" forKey:@"Type"]];
 }
 
 - (void)iRateUserDidRequestReminderToRateApp
 {
-    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Type" forKey:@"Remind"]];
+    [[Analytics shared] logEventWithName:EVENT_RATE Attributes:[NSDictionary dictionaryWithObject:@"Remind" forKey:@"Type"]];
 }
 
 @end

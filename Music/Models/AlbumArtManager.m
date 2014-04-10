@@ -77,7 +77,6 @@
             NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
             NSString *filePath = [cacheDir stringByAppendingPathComponent:obj];
             [[NSFileManager defaultManager] removeItemAtPath:[NSURL URLWithString:filePath] error:nil];
-            NSLog(@"Removing %@", filePath);
         }
     }];
 }

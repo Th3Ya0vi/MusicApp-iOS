@@ -17,6 +17,7 @@
 #import "BollywoodAPIClient.h"
 #import "Analytics.h"
 #import "RNBlurModalView.h"
+#import "UpsellViewController.h"
 
 @interface SearchViewController ()
 
@@ -59,6 +60,13 @@
     
     [[self searchField] setBackgroundColor:[UIColor whiteColor]];
     [[self albumsButton] setSelected:YES];
+    
+    UpsellViewController *upsellVC = [[UpsellViewController alloc] initWithOrigin:@"Search"];
+    [self addChildViewController:upsellVC];
+    CGSize upsellSize = [[upsellVC view] frame].size;
+    [[upsellVC view] setFrame:CGRectMake(0, 200, upsellSize.width, upsellSize.height)];
+    [[self view] insertSubview:[upsellVC view] atIndex:0];
+    [upsellVC didMoveToParentViewController:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -177,7 +185,9 @@
         [self addChildViewController:songOptions];
         RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
         [songOptions setBlurView:blurView];
-        [blurView show];
+        [blurView showWithDuration:0.1 delay:0 options:kNilOptions completion:^{
+            [songOptions didMoveToParentViewController:self];
+        }];
     }
     else
     {

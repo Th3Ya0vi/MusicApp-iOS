@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7807098118F3752C005A9F2D /* UpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807098018F3752C005A9F2D /* UpsellViewController.m */; };
+		7807098318F43D1E005A9F2D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7807098218F43D1D005A9F2D /* Social.framework */; };
+		7807098518F5C86A005A9F2D /* ShareView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7807098418F5C86A005A9F2D /* ShareView.xib */; };
+		7807098718F5CA46005A9F2D /* RateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7807098618F5CA46005A9F2D /* RateView.xib */; };
 		780A171718451C3C0082A89F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780A171618451C3C0082A89F /* Foundation.framework */; };
 		780A171918451C3C0082A89F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780A171818451C3C0082A89F /* CoreGraphics.framework */; };
 		780A171B18451C3C0082A89F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780A171A18451C3C0082A89F /* UIKit.framework */; };
@@ -88,7 +92,6 @@
 		78CA43E518510BB400E4A9C9 /* DownloadsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78CA43E418510BB400E4A9C9 /* DownloadsView.xib */; };
 		78DE671818E349D2001A199C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE671718E349D2001A199C /* QuartzCore.framework */; };
 		78DE671C18E34A1A001A199C /* RNBlurModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DE671B18E34A1A001A199C /* RNBlurModalView.m */; };
-		78DE671E18E90A8B001A199C /* RevMobAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE671D18E90A8A001A199C /* RevMobAds.framework */; };
 		78DE672018E90AB1001A199C /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE671F18E90AB1001A199C /* AdSupport.framework */; };
 		78DE672218E90AB9001A199C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DE672118E90AB9001A199C /* StoreKit.framework */; };
 /* End PBXBuildFile section */
@@ -104,6 +107,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7807097F18F3752C005A9F2D /* UpsellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UpsellViewController.h; path = Controllers/UpsellViewController.h; sourceTree = "<group>"; };
+		7807098018F3752C005A9F2D /* UpsellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UpsellViewController.m; path = Controllers/UpsellViewController.m; sourceTree = "<group>"; };
+		7807098218F43D1D005A9F2D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		7807098418F5C86A005A9F2D /* ShareView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShareView.xib; sourceTree = "<group>"; };
+		7807098618F5CA46005A9F2D /* RateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RateView.xib; sourceTree = "<group>"; };
 		780A171318451C3C0082A89F /* Filmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Filmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		780A171618451C3C0082A89F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		780A171818451C3C0082A89F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -236,7 +244,6 @@
 		78DE671718E349D2001A199C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		78DE671A18E34A1A001A199C /* RNBlurModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNBlurModalView.h; sourceTree = "<group>"; };
 		78DE671B18E34A1A001A199C /* RNBlurModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNBlurModalView.m; sourceTree = "<group>"; };
-		78DE671D18E90A8A001A199C /* RevMobAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RevMobAds.framework; sourceTree = "<group>"; };
 		78DE671F18E90AB1001A199C /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		78DE672118E90AB9001A199C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -246,6 +253,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7807098318F43D1E005A9F2D /* Social.framework in Frameworks */,
 				78DE672218E90AB9001A199C /* StoreKit.framework in Frameworks */,
 				78DE672018E90AB1001A199C /* AdSupport.framework in Frameworks */,
 				78DE671818E349D2001A199C /* QuartzCore.framework in Frameworks */,
@@ -256,7 +264,6 @@
 				780A17B6184B3FEF0082A89F /* Accelerate.framework in Frameworks */,
 				780A17AB18493AB60082A89F /* AVFoundation.framework in Frameworks */,
 				780A171918451C3C0082A89F /* CoreGraphics.framework in Frameworks */,
-				78DE671E18E90A8B001A199C /* RevMobAds.framework in Frameworks */,
 				780A171B18451C3C0082A89F /* UIKit.framework in Frameworks */,
 				780A171718451C3C0082A89F /* Foundation.framework in Frameworks */,
 			);
@@ -298,6 +305,7 @@
 		780A171518451C3C0082A89F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7807098218F43D1D005A9F2D /* Social.framework */,
 				78DE672118E90AB9001A199C /* StoreKit.framework */,
 				78DE671F18E90AB1001A199C /* AdSupport.framework */,
 				78DE671718E349D2001A199C /* QuartzCore.framework */,
@@ -412,6 +420,8 @@
 				78B511061893EC4400AA7534 /* SongOptionsViewController.m */,
 				787AAF8D18B5B071006446A3 /* CrashResolverViewController.h */,
 				787AAF8E18B5B071006446A3 /* CrashResolverViewController.m */,
+				7807097F18F3752C005A9F2D /* UpsellViewController.h */,
+				7807098018F3752C005A9F2D /* UpsellViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -436,6 +446,8 @@
 				78424B0218904BC3000F6E99 /* ExploreCollectionCellView.xib */,
 				78424B04189053C7000F6E99 /* ExploreTableCellView.xib */,
 				787AAF8B18B5A8BE006446A3 /* CrashResolverView.xib */,
+				7807098418F5C86A005A9F2D /* ShareView.xib */,
+				7807098618F5CA46005A9F2D /* RateView.xib */,
 			);
 			path = Nibs;
 			sourceTree = "<group>";
@@ -443,7 +455,6 @@
 		780A17CA184B621A0082A89F /* Third-Party */ = {
 			isa = PBXGroup;
 			children = (
-				78DE671D18E90A8A001A199C /* RevMobAds.framework */,
 				78DE671918E34A1A001A199C /* RNBlurModalView */,
 				78AF8B7D18BBBA5E00A3619F /* Crashlytics.framework */,
 				78B9BB49187969980075B2A5 /* iRate */,
@@ -662,10 +673,12 @@
 				78B9BB471879698F0075B2A5 /* iRate.bundle in Resources */,
 				78B9BB43187719460075B2A5 /* ImageSubtitleCellView.xib in Resources */,
 				78424B5E1891850C000F6E99 /* NowPlayingView.xib in Resources */,
+				7807098518F5C86A005A9F2D /* ShareView.xib in Resources */,
 				78CA43E518510BB400E4A9C9 /* DownloadsView.xib in Resources */,
 				780A172918451C3C0082A89F /* Images.xcassets in Resources */,
 				78705C5A1858FFFE00708E20 /* PlaylistView.xib in Resources */,
 				78705C531857BEB600708E20 /* PlayerView.xib in Resources */,
+				7807098718F5CA46005A9F2D /* RateView.xib in Resources */,
 				78B5110B1893EC7600AA7534 /* SongOptionsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -712,6 +725,7 @@
 				780A17FD184B621A0082A89F /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				780A17F7184B621A0082A89F /* AFURLConnectionOperation.m in Sources */,
 				787AAF8F18B5B071006446A3 /* CrashResolverViewController.m in Sources */,
+				7807098118F3752C005A9F2D /* UpsellViewController.m in Sources */,
 				780A17F3184B621A0082A89F /* AFHTTPRequestOperationManager.m in Sources */,
 				780A178918451DE40082A89F /* LoadingViewController.m in Sources */,
 				78424B6718918C16000F6E99 /* NowPlayingViewController.m in Sources */,

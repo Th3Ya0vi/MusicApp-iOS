@@ -154,7 +154,9 @@
     RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
     [songOptions setBlurView:blurView];
     [songOptions setIsBackgroundTransparent:YES];
-    [blurView show];
+    [blurView showWithDuration:0.1 delay:0 options:kNilOptions completion:^{
+        [songOptions didMoveToParentViewController:self];
+    }];
 }
 
 #pragma mark Others

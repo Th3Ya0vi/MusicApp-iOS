@@ -15,6 +15,7 @@
 #import "FXBlurView.h"
 #import "NowPlayingViewController.h"
 #import "Analytics.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface PlayerViewController ()
 

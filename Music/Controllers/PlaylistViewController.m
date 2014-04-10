@@ -12,6 +12,7 @@
 #import "Playlist.h"
 #import "SongOptionsViewController.h"
 #import "Analytics.h"
+#import "UpsellViewController.h"
 
 @interface PlaylistViewController ()
 
@@ -31,8 +32,6 @@
         [self setTitle:@"Playlist"];
         UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(closeView)];
         [self.navigationItem setRightBarButtonItem:closeButton];
-        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEditingMode:)];
-        [[self navigationItem] setLeftBarButtonItem:editButton];
         
         UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(shuffle:)];
         [swipe setDirection:UISwipeGestureRecognizerDirectionRight];
@@ -58,7 +57,10 @@
 {
     [super viewDidLoad];
     
-    [[self tablePlaylist] setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    UpsellViewController *upsellVC = [[UpsellViewController alloc] initWithOrigin:@"Playlist"];
+    [self addChildViewController:upsellVC];
+    [[self tablePlaylist] setTableFooterView:[upsellVC view]];
+    [upsellVC didMoveToParentViewController:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -190,7 +192,9 @@
     [self addChildViewController:songOptions];
     RNBlurModalView *blurView = [[RNBlurModalView alloc] initWithViewController:self view:[songOptions view]];
     [songOptions setBlurView:blurView];
-    [blurView show];
+    [blurView showWithDuration:0.1 delay:0 options:kNilOptions completion:^{
+        [songOptions didMoveToParentViewController:self];
+    }];
 }
 
 #pragma mark Table Row Draggable Delegate
@@ -261,18 +265,18 @@
     [[self tablePlaylist] reloadData];
 }
 
-- (void)toggleEditingMode: (UIBarButtonItem *)sender
+- (IBAction)toggleEditingMode: (UIButton *)sender
 {
+    [[self tablePlaylist] setEditing:![[self tablePlaylist] isEditing] animated:YES];
+    [sender setSelected:[[self tablePlaylist] isEditing]];
+    
     if ([[self tablePlaylist] isEditing])
     {
-        [sender setTitle:@"Edit"];
-        [[self tablePlaylist] setEditing:NO animated:YES];
+        UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithTitle:@"Clear" style:UIBarButtonItemStyleBordered target:self action:@selector(clearPlaylist:)];
+        [[self navigationItem] setLeftBarButtonItem:clearButton animated:YES];
     }
     else
-    {
-        [sender setTitle:@"Done"];
-        [[self tablePlaylist] setEditing:YES animated:YES];
-    }
+        [[self navigationItem] setLeftBarButtonItem:nil animated:YES];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

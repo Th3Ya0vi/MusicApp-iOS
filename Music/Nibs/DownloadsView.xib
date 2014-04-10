@@ -7,6 +7,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DownloadsViewController">
             <connections>
                 <outlet property="labelDownloadSongs" destination="w2e-MU-Uva" id="sgR-SO-F54"/>
+                <outlet property="searchBar" destination="9TZ-ZY-2Mc" id="ZrF-cQ-gmI"/>
                 <outlet property="tableDownloads" destination="4mt-Hm-x7j" id="kjP-Te-sZR"/>
                 <outlet property="view" destination="1" id="NnL-T4-T8s"/>
             </connections>

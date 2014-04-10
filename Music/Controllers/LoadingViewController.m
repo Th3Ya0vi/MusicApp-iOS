@@ -19,7 +19,6 @@
 #import "CrashResolverViewController.h"
 #import "AlbumViewController.h"
 #import "AFNetworkReachabilityManager.h"
-#import <RevMobAds/RevMobAds.h>
 
 @interface LoadingViewController ()
 
@@ -92,8 +91,6 @@
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     
-    [[RevMobAds session] showFullscreen];
-    
     UITabBarController *tabbar = [[UITabBarController alloc] init];
     [[tabbar tabBar] setTintColor:[UIColor darkGrayColor]];
     
@@ -121,6 +118,7 @@
 
 - (void)configureiRate
 {
+    [[iRate sharedInstance] setVerboseLogging:NO];
     [iRate sharedInstance].daysUntilPrompt = 1;
     [iRate sharedInstance].usesUntilPrompt = 5;
 }
@@ -144,8 +142,6 @@
         
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"resetCache"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        NSLog(@"Cleared Cache");
     }
 }
 
